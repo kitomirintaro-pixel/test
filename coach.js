@@ -4,6 +4,138 @@
  */
 
 const ISSUE_CATALOG = {
+  forehand_drive: {
+    label: "フォアドライブ（威力・前後の出し入れ）",
+    improvements: [
+      "打点が高すぎると回転が抜けやすい。ボールの「少し手前」で芯を捉える意識から始める",
+      "スイングは腰の回転→腕の加速の順。いきなり腕だけで叩かない",
+      "相手の上回転が強いほど、面を少し閉じ気味に保ち、前への送りを短くする",
+    ],
+    drills: [
+      {
+        name: "フォア一本ドライブ（定点クロス）",
+        time: "12分",
+        detail: "相手の上回転を固定コースへ。20本連続でネット・ラインを記録。ミス時は打点か面のどちらか一方だけ修正。",
+      },
+      {
+        name: "前後コントロールドライブ",
+        time: "15分",
+        detail: "同じスイングイメージで深い球／浅い球を意図的に出し分け。Spinsight で球速と回転のトレードオフを確認。",
+      },
+    ],
+    spinsight:
+      "フォアドライブはストローク練で同じ打点帯を繰り返し測り、回転・速度のブレ幅を週で比較すると伸びます。",
+  },
+  backhand_drive: {
+    label: "バックドライブ・バックループ",
+    improvements: [
+      "替えの一歩が終わってからスイングを開始。肘を支点に前へ送り出す",
+      "バックは打点が下がりやすい。膝の屈伸で低い球にも顔の高さを保つ",
+      "相手の速い球には面を立てすぎず、まずは台に返すことを優先してタイミングを合わせる",
+    ],
+    drills: [
+      {
+        name: "バッククロス連続",
+        time: "14分",
+        detail: "ライン固定で連続本数を競う。替え後の第一打だけ計測し、足と打点の相関をメモ。",
+      },
+      {
+        name: "ミドル→バック替えドライブ",
+        time: "12分",
+        detail: "中央処理後にバックへ替え、一本だけフルスイング。替え幅を一定に。",
+      },
+    ],
+    spinsight:
+      "バックは替えの直後の第一打で数値が落ちやすいです。OpenPlay で実戦軌道を混ぜて測ると弱点が見えます。",
+  },
+  cut_defense: {
+    label: "カット（チョップ・削りラリー）",
+    improvements: [
+      "刃角よりも「打球の高さ」と「落ち着いたリズム」を揃えると回転の質が安定する",
+      "強い上回転には薄く当てすぎず、ボールの下を通す距離を確保する",
+      "攻守切替のタイミングを決め、カットだけの練習日と攻め込みの練習日を分けると上達が早い",
+    ],
+    drills: [
+      {
+        name: "定点カット（深さ指定）",
+        time: "15分",
+        detail: "相手に上回転ループを固定してもらい、落とす深さを2段階で出し分け。長さのばらつきを数値化して自己採点。",
+      },
+      {
+        name: "カット→カウンター切替",
+        time: "18分",
+        detail: "5球カットの後だけ攻撃可などルールを付け、切替の足と面のリセットを鍛える。",
+      },
+    ],
+    spinsight:
+      "カットは回転方向・回転量の再現性が指標になりやすいです。同じ相手球条件で測定セットを固定してください。",
+  },
+  block_game: {
+    label: "ブロック（速球・上回転対応）",
+    improvements: [
+      "ブロックは「止める」より先に「面と打点を固定」する。指先で押さえすぎない",
+      "相手のループが速いほど、待つ位置を少し後ろに取り、前で押し潰されない",
+      "返球の長さが伸びる日は面が開いているか、打点が遅れているかを疑う",
+    ],
+    drills: [
+      {
+        name: "クロスブロック連続",
+        time: "12分",
+        detail: "相手に強めの上回転を一点に。面の角度を変えず打点で調整。",
+      },
+      {
+        name: "ブロック→カウンター一本",
+        time: "15分",
+        detail: "3ブロックに1カウンターなど割合を決め、切替のリズムを固定。",
+      },
+    ],
+    spinsight:
+      "ブロックは球速が上がるほど打点のズレが数値に出ます。受け手のリラックス度合いとセットで記録すると改善点が明確です。",
+  },
+  counter_attack: {
+    label: "カウンター・弾みつき速攻",
+    improvements: [
+      "弾みつきは「短く当てて伸ばす」。振り幅よりタイミングと芯の位置",
+      "相手球の上昇期〜最高点上で処理すると安定しやすい。遅れるとネットやラインに振られる",
+      "足は小さく、重心移動は素早く。打った直線上に体重が残るようにする",
+    ],
+    drills: [
+      {
+        name: "限定カウンターラリー",
+        time: "14分",
+        detail: "相手のドライブに対しカウンターのみ可。コースを絞り、入り率を記録。",
+      },
+      {
+        name: "速球ドライブ→一本カウンター",
+        time: "12分",
+        detail: "多球で速い上回転を入れ、一本だけ返す反復。Spinsight で球速と回転のピークを確認。",
+      },
+    ],
+    spinsight:
+      "カウンターは球速と回転の立ち上がりが特徴です。打点が1つズレると数値が大きく変わるので、再現性の観察に向きます。",
+  },
+  flick_short: {
+    label: "フリック・チキータ（短い下回転への攻め）",
+    improvements: [
+      "短い球は身体の入りが浅くなりがち。腰をテーブルに近づけるイメージで足を入れる",
+      "振りは小さく、摩擦は「ボールの横〜斜め横」を意識。振り幅で誤魔化さない",
+      "相手の下回転が強いほど、触球は短く、次の還元を早める",
+    ],
+    drills: [
+      {
+        name: "ショート一本フリック",
+        time: "12分",
+        detail: "サーブまたはドロップの短い下回転に対し、コース固定で入り率を競う。",
+      },
+      {
+        name: "フリック→第三球",
+        time: "16分",
+        detail: "フリック後の相手球に対し、決め球を一本に限定。ミス理由を毎回一言でメモ。",
+      },
+    ],
+    spinsight:
+      "短い球の攻めは回転の立ち上がりと速度のバランスがポイントです。同じサーブ条件で測ると比較が容易です。",
+  },
   underspin_receive: {
     label: "下回転の受け（ツッツキ・ストップ）",
     improvements: [
@@ -27,7 +159,7 @@ const ISSUE_CATALOG = {
       "ストローク練／スキルテストで同じ受けフォームを繰り返し、回転・スピードのブレを数値で追うと改善が早いです。",
   },
   topspin_rally: {
-    label: "上回転ラリー（フォア・バック）",
+    label: "上回転ラリー（連続・安定全般）",
     improvements: [
       "打点を一定にする（高すぎ／低すぎの自覚を Spinsight の再現性チェックに繋げる）",
       "スイングは「小さく当てる→押し込む」の順で増幅。いきなり大きく振らない",
@@ -182,34 +314,302 @@ const ISSUE_CATALOG = {
   },
 };
 
+/** ラバー別: 課題に応じたアドバイスと、ドリル末尾に付ける短いヒント */
+const RUBBER_TYPES = {
+  high_friction: {
+    label: "高摩擦裏ソフト（バランス型）",
+    short: "高摩擦裏",
+    global: [
+      "バランス型の裏ソフトは摩擦と弾みの中間にあります。数値では『打点がズレた時の落ち幅』が指標になりやすいです。",
+    ],
+    byIssue: {
+      forehand_drive: "芯を捉えた後の押し込み距離を一定に。打点が上がると回転が抜けやすいので、Spinsight の数値と打点メモをセットで残すと改善が早いです。",
+      backhand_drive: "替えが終わってからスイング。肘を支点に前へ。食いつきが強いほど面調整は小さく。",
+      topspin_rally: "ラリーでは左右の打点ブレを先に潰すと、回転・球速の再現性が上がります。",
+      underspin_receive: "下回転では食いつきが強い分、面の微調整は最小限に。戻しの長さで浮きを減らす。",
+      flick_short: "短い球は身体をテーブル側へ。摩擦は振り幅より接触の質で作る。",
+      cut_defense: "刃角より打球高さの統一を優先。回転の質はスイングの長さよりリズムで出しやすいです。",
+      serve: "サーブは腕の加速だけでなく、ボールへの圧と摩擦時間のイメージで回転差を作る。",
+      block_game: "面の微調整は指先ではなく、全体のブレの少ない姿勢で。速い球ほど打点を遅らせすぎない。",
+      counter_attack: "弾みつきは短い接触から。ラバーのグリップを信頼しつつ、体重の乗せ方で球速を作る。",
+      spin_reading: "高摩擦は回転の掛かり方の差が手元に出やすい。読みとセットで足の入りを固定する。",
+      third_ball: "第三球は替え直後の第一打で数値が落ちやすい。足の完了を先に。",
+      pace_adapt: "球速適応は『面を変える』より『打点帯を変える』練習と相性が良いです。",
+      footwork: "足が遅い日は回転が先に落ちることがあります。コンディション別にログを分ける。",
+      mental: "数値は結果のログ。ルーティンを挟んでから測定セットを始めるとブレの原因切り分けが楽です。",
+    },
+    drillNote: {
+      forehand_drive: "芯で押し切る距離を毎球そろえる。",
+      backhand_drive: "替え完了→スイングの間に余計な止まりを入れない。",
+      cut_defense: "打球の高さを2段階で意図的に出し分け。",
+      underspin_receive: "面は小さく、戻しの長さで調整。",
+      block_game: "面より打点で長さをコントロール。",
+      counter_attack: "短く当てて前へ。振り幅よりタイミング。",
+      flick_short: "腰をテーブルへ近づけ、振りは小さく。",
+    },
+  },
+  tacky_chinese: {
+    label: "中国式（粘着系）",
+    short: "粘着系",
+    global: [
+      "粘着系は摩擦時間とスイング軌道で回転を作りやすい反面、打点がズレると数値が落ちやすい傾向があります。",
+    ],
+    byIssue: {
+      forehand_drive: "引き足と最後の押し込みをセットで。薄く当てると回転だけで球が伸びないので、『厚めに捉える日』を週に一度入れるとバランスが良いです。",
+      backhand_drive: "バックでも同様に、振りの終わりまで意識を抜かない。粘着は替え直後のミートが難しいので多球で反復。",
+      topspin_rally: "ラリーでは打点の前後より、スイングの終端までの加速が数値に出やすいです。",
+      underspin_receive: "下回転では『寝かせすぎ』に注意。粘着は食い込みが深くなりがちなので、戻しは短めから試す。",
+      flick_short: "短い球は振りより、ボールの横〜斜め横への摩擦。粘着は振りが大きいとネットに寄りやすい。",
+      cut_defense: "削りは刃の使い方より、ボールの下を通す長さとリズム。粘着カットは回転の立ち上がりが特徴的です。",
+      serve: "サーブは軌道とボールへの圧で回転差を作る練習日と、入り率優先の日を分ける。",
+      block_game: "粘着のブロックは面を固定しやすい反面、速い球で押し込まれると返球が長くなりがち。打点を手前に取りすぎない。",
+      counter_attack: "弾みつきはラバーの粘性を活かしつつ、打点を上げすぎない。短いフリクションが鍵。",
+      spin_reading: "粘着は回転の違いが手元に伝わりやすい。読みの言語化→足→スイングの順で固定する。",
+      third_ball: "第三球は『引きが足りない』と回転が落ちやすい。Spinsight で引き足の日と通常日を比較。",
+      pace_adapt: "遅い球で厚く当てすぎ、速い球で薄く当てすぎに注意。速度帯ごとに面のイメージを変える。",
+      footwork: "足が遅れると粘着ほどミートが落ちます。替えの最小ステップを決める。",
+      mental: "数値が落ちた日はフォームより、疲労と照明（Spinsight の注意点）もメモに含める。",
+    },
+    drillNote: {
+      forehand_drive: "引き→加速を分けて感じる。最後まで押し切る。",
+      topspin_rally: "終端まで加速。打点の前後より加速の抜けを統一。",
+      underspin_receive: "寝かせすぎ注意。戻しは短めから。",
+      serve: "軌道と圧で回転差。腕だけにしない。",
+      flick_short: "小さく、横摩擦を意識。",
+    },
+  },
+  tensor_euro: {
+    label: "テンション系（ヨーロッパ系）",
+    short: "テンション系",
+    global: [
+      "テンション系は弾みと出球スピードを活かしやすいです。回転だけでなく『速度とのバランス』を Spinsight で見ると伸びます。",
+    ],
+    byIssue: {
+      forehand_drive: "引きつけはゆっくり、最後だけしっかり加速。弾みに任せて振り幅だけ大きくするとコントロールが落ちます。",
+      backhand_drive: "バックは替えと同時に前傾を作ると、テンションの弾みで球が伸びやすい。打点はやや手前気味に取りすぎない。",
+      topspin_rally: "ラリーでは『入射角』と『加速タイミング』が数値に出やすい。同じ振りでも打点で回転が変わるので記録を。",
+      underspin_receive: "下回転では面を立てすぎると弾みで浮く。ラバーの張りに合わせて面を少し閉じるイメージも試す。",
+      flick_short: "短い球はテンションの反発を活かし、振りはコンパクトに。大きく振るとオーバーしやすい。",
+      cut_defense: "テンションで削る場合は、刃より球の下降タイミング。回転の質は打点の低さとセット。",
+      serve: "サーブは振りの終わりの加速でスピードを出しやすい。回転差は軌道の差で作る練習を。",
+      block_game: "ブロックは面を動かしすぎず、弾みで返す。速い球は少し奥で待つ。",
+      counter_attack: "弾みつきと相性が良い。短いスイングで芯を捉える練習を優先。",
+      spin_reading: "テンションは球の伸びが出やすく、回転の体感が変わることがあります。アプリの数値で補正イメージを。",
+      third_ball: "第三球は加速のタイミングがズレるとスピードだけ出て回転が落ちる。両方ログ化。",
+      pace_adapt: "速い球では弾みが助長されすぎるので、面と打点のセットで抑える練習を。",
+      footwork: "足が遅いとテンションほど打点がズレてスピード優先の球になりがち。",
+      mental: "数値が良い日ほど振り幅に頼りすぎていないか確認。",
+    },
+    drillNote: {
+      forehand_drive: "引きは遅く、最後に加速。弾み任せにしない。",
+      backhand_drive: "前傾と替えをセット。打点は潰さない。",
+      topspin_rally: "加速タイミングを一定に。",
+      underspin_receive: "立てすぎ注意。閉じ気味も試す。",
+      counter_attack: "短く芯。振り幅よりタイミング。",
+      block_game: "面はシンプルに、奥で待つ。",
+    },
+  },
+  short_pips: {
+    label: "粒高（ショートピップス）",
+    short: "ショート粒",
+    global: [
+      "ショート粒は回転のかかり方が裏ソフトと異なります。Spinsight の数値は『自分の粒での基準』を自分用に作るのがおすすめです。",
+    ],
+    byIssue: {
+      forehand_drive: "粒の場合、回転より速度・角度の要素が出やすい。スイングはコンパクトに、芯を捉える練習を増やす。",
+      backhand_drive: "バック粒は弾み・変化の出方が独特。打点を一定にし、振りのブレを減らす。",
+      topspin_rally: "長いラリーより、中台〜前の攻防と相性が良い場合があります。無理に回転勝負しない設計を。",
+      underspin_receive: "下回転では粒の倒し方で浮きが変わる。戻しの長さより、面の向きの再現性を優先。",
+      flick_short: "粒のフリックは裏ソフトより角度勝負になりやすい。振りよりタイミングと面。",
+      cut_defense: "粒カットは回転の質が独特。相手の上回転に対する刃角の再現性を数値ログとセットで。",
+      serve: "粒サーブは変化の出方が異なる。回転差は軌道とボールの当て方のセットで練習。",
+      block_game: "粒はブロックと相性が良いことが多い。面を固定し、相手の回転を活かす返しを意識。",
+      counter_attack: "粒カウンターはスピードが出やすい。打点が遅れるとコントロールが落ちるので足を優先。",
+      spin_reading: "粒は回転の読みが難しい相手にも有効。読みと面のセットを言語化する。",
+      third_ball: "第三球は粒の得意距離に戦術を寄せる。無理なループ連打を避ける。",
+      pace_adapt: "速い球では粒の弾みが効く。遅い球では薄く当てすぎない。",
+      footwork: "粒は打点ミスが数値に出やすい。替えのステップを短く正確に。",
+      mental: "数値の解釈は『粒基準』で統一。他人の裏ソフト数値と直接比較しすぎない。",
+    },
+    drillNote: {
+      forehand_drive: "コンパクトに芯。回転一辺倒にしない。",
+      underspin_receive: "倒し方の再現性。戻しは短く試す。",
+      block_game: "面固定。相手の回転を利用。",
+      counter_attack: "打点優先。遅れると飛ぶ。",
+    },
+  },
+  medium_pips: {
+    label: "粒高（ミディアム）",
+    short: "ミディアム粒",
+    global: [
+      "ミディアム粒は変化と安定の中間域です。自分の粒での『回転と速度の典型値』をメモしておくと練習設計が楽です。",
+    ],
+    byIssue: {
+      forehand_drive: "振りは大きくしすぎず、芯とタイミング。回転とスピードのバランスを数値で把握。",
+      backhand_drive: "バック粒は打点の前後で球質が変わりやすい。同じドリル条件で測る。",
+      topspin_rally: "長いループ戦より、台上〜中台の攻防設計が現実的なことが多い。",
+      underspin_receive: "下回転処理は面と打点のセット。粒の倒し方のレパートリーを絞る。",
+      flick_short: "短い球は角度とタイミング。振り幅を増やす前に足を入れる。",
+      cut_defense: "削りはリズムと刃角の再現性。回転の質は打点の低さと相関しやすい。",
+      serve: "変化の出方を数値ログ。同じ振りの見せかけで差を作る練習。",
+      block_game: "ブロックは面の微調整より打点。速い球は奥で。",
+      counter_attack: "カウンターは打点が合えばスピードが出やすい。替えを短く。",
+      spin_reading: "粒特有の手応えを言語化し、読みとセットで固定。",
+      third_ball: "得意距離に戦術を寄せる。",
+      pace_adapt: "速度帯ごとに面のイメージを分ける。",
+      footwork: "替えの正確さが数値に直結しやすい。",
+      mental: "粒は数値の基準を自分用に持つ。",
+    },
+    drillNote: {
+      forehand_drive: "芯とタイミング。振り過ぎない。",
+      underspin_receive: "倒し方を絞って反復。",
+      block_game: "打点で長さを合わせる。",
+    },
+  },
+  long_pips: {
+    label: "粒高（ロング／一枚ラバー）",
+    short: "ロング粒",
+    global: [
+      "ロング粒は相手の回転を利用する要素が強いです。Spinsight は『自分の振り』だけでなく相手球条件のメモとセットが重要です。",
+    ],
+    byIssue: {
+      forehand_drive: "フォアが粒でない構成が多いので、フォア課題とは別にバック面の役割をはっきりさせる。",
+      backhand_drive: "バック粒で攻める場合は距離感と打点が命。無理な威力追求より精度。",
+      topspin_rally: "長い上回転ラリー主戦ではなく、戦術プランを変える練習も検討。",
+      underspin_receive: "下回転では粒の倒し方とソフトさのコントロール。戻しの回転理解を深める。",
+      flick_short: "粒側でフリック主戦にしない場合も。戦術に合わせて練習メニューを分ける。",
+      cut_defense: "粒カットは相手の上回転を活かす。刃角よりタイミングとリズム。",
+      serve: "粒面でサーブしない構成なら、サーブ課題は別面基準で設計。",
+      block_game: "粒ブロックは回転の逆利用が鍵。面を動かしすぎない日と調整日を分ける。",
+      counter_attack: "粒カウンターは難易度が高い。まずは台上〜短い球の処理精度から。",
+      spin_reading: "粒は読みの訓練とセット。相手の回転と自分の返しの因果をメモ。",
+      third_ball: "粒は第三球の選択肢を限定しやすい。得意パターンを数値で検証。",
+      pace_adapt: "速い球の粒処理は打点が命。遅い球は変化の読み。",
+      footwork: "粒は小さな足のズレがミスに直結。替えを最小に。",
+      mental: "粒は失点パターンが偏りやすい。メンタル面ではルーティンを短く。",
+    },
+    drillNote: {
+      underspin_receive: "倒し方とソフトさ。戻しのイメージを言語化。",
+      block_game: "面を動かしすぎない。逆回転利用。",
+      cut_defense: "リズム優先。相手の回転を活かす。",
+      spin_reading: "相手回転メモとセットで練習。",
+    },
+  },
+  anti: {
+    label: "アンチ・ソフトバンなど（ほぼ無摩擦）",
+    short: "アンチ系",
+    global: [
+      "アンチ系は回転のかかり方が特殊です。数値の解釈は『このラバーでの基準』を必ず自分用に持ってください。",
+    ],
+    byIssue: {
+      forehand_drive: "フォアがアンチでないことが多い。課題はバック面の役割とセットで整理。",
+      backhand_drive: "アンチで攻めるなら打点と面の極めて細かい調整。多球で反復。",
+      topspin_rally: "長い上回転ラリー主戦は難易度が高い。戦術プランの見直しとセット。",
+      underspin_receive: "下回転では回転が殺しやすい反面、飛び出しやすい。面とソフトさの練習を優先。",
+      flick_short: "アンチでの短い球処理は独特。振りよりタイミングと薄さ。",
+      cut_defense: "変化のコントロールが鍵。相手の回転を読む練習とセット。",
+      serve: "アンチ面でサーブしない場合は別面基準で。",
+      block_game: "ブロックは面とタイミング。回転が乗りにくい分、角度ミスが出やすい。",
+      counter_attack: "アンチカウンターは難易度大。まずは安定して台に返すことを優先。",
+      spin_reading: "読みがより重要。相手の回転と自分の返しの因果を毎回メモ。",
+      third_ball: "選択肢を絞り、得意パターンを反復。",
+      pace_adapt: "速い球の処理は打点固定。遅い球は薄さ注意。",
+      footwork: "小さなズレがミスに直結。替え最小。",
+      mental: "数値より入率とミスパターンの記録を優先しても良いです。",
+    },
+    drillNote: {
+      underspin_receive: "薄さとタイミング。飛び出しに注意。",
+      block_game: "角度ミスに注意。面はシンプルに。",
+      spin_reading: "相手回転のメモ必須。",
+    },
+  },
+};
+
+const STROKE_LABELS = {
+  unknown: "指定なし",
+  serve: "サーブ",
+  fh_topspin: "フォア・上回転（ループ等）",
+  bh_topspin: "バック・上回転",
+  fh_drive: "フォアドライブ",
+  bh_drive: "バックドライブ",
+  flick: "フリック・チキータ",
+  block: "ブロック",
+  cut: "カット",
+  receive: "レシーブ全般",
+  other: "その他",
+};
+
 const KEYWORD_MAP = [
-  [/下回転|ツッツキ|ストップ|チキータ|バック/, "underspin_receive"],
-  [/上回転|ループ|ドライブ|ラリー/, "topspin_rally"],
+  [/カット|チョップ|削り/, "cut_defense"],
+  [/バックハンド.*ドライブ|バック.*ドライブ|ＢＨ.*ドライブ|bh.*drive/i, "backhand_drive"],
+  [/フォア.*ドライブ|ＦＨ.*ドライブ|fh.*drive/i, "forehand_drive"],
+  [/ドライブ/, "forehand_drive"],
+  [/カウンター|弾み|速攻/, "counter_attack"],
+  [/ブロック/, "block_game"],
+  [/チキータ|フリック/, "flick_short"],
+  [/下回転|ツッツキ|ストップ/, "underspin_receive"],
+  [/上回転ラリー|連続ラリー|ラリー/, "topspin_rally"],
+  [/ループ/, "topspin_rally"],
   [/回転|読み|ミート|見極め/, "spin_reading"],
   [/サーブ|サービス/, "serve"],
-  [/第3|三球|三拍子|サーブ.*レシーブ/, "third_ball"],
+  [/第3|三球|三拍子/, "third_ball"],
   [/フット|足|ステップ|還元/, "footwork"],
   [/速い|遅い|タメ|球速/, "pace_adapt"],
   [/メンタル|試合|緊張|マインド/, "mental"],
 ];
 
 function inferIssuesFromText(text) {
-  const ids = new Set();
+  const ids = [];
   const t = text.trim();
-  if (!t) return [];
+  if (!t) return ids;
   for (const [re, id] of KEYWORD_MAP) {
-    if (re.test(t)) ids.add(id);
+    if (re.test(t)) ids.push(id);
   }
-  return [...ids];
+  return ids;
 }
 
-function spinsightContextNotes({ rpsRange, stability, freeform }) {
+function parseOptionalNumber(elId) {
+  const el = document.getElementById(elId);
+  if (!el) return null;
+  const v = parseFloat(String(el.value).replace(",", "."), 10);
+  if (Number.isFinite(v) && v > 0) return v;
+  return null;
+}
+
+function spinsightNumericLines(spinRps, ballSpeed, strokeType) {
   const lines = [];
+  if (spinRps != null) {
+    let band =
+      spinRps < 55
+        ? "今回の回転は控えめの読み取りです。打点・面・引きのどれが主因かを1つに絞って次回同条件で測りましょう。"
+        : spinRps < 95
+          ? "実戦で使える中域の回転に見えます。同じ数値を『打点がズレた打球』でも再現できるかを次の課題に。"
+          : "回転の絶対値は高めに見えます。Spinsight では球速とのバランスと、同じスイングでのブレ幅（標準偏差）も意識すると伸びます。";
+    lines.push(`入力された回転の数値: ${spinRps}（アプリ表示に合わせた単位想定）。${band}`);
+  }
+  if (ballSpeed != null) {
+    lines.push(
+      `入力された球速の数値: ${ballSpeed}（単位はアプリ表示に合わせてください）。回転とセットでログし、「速くて回る」「遅くて回る」の分布を週次で比較すると戦術が立てやすいです。`
+    );
+  }
+  if (strokeType && strokeType !== "unknown") {
+    const label = STROKE_LABELS[strokeType] || strokeType;
+    lines.push(
+      `今回の数値は主に「${label}」として記録されています。同じショット分類で毎週測ると、感覚と数値のズレが減ります。`
+    );
+  }
+  return lines;
+}
+
+function spinsightContextNotes({ rpsRange, stability, freeform, spinRps, ballSpeed, strokeType }) {
+  const lines = [];
+  lines.push(...spinsightNumericLines(spinRps, ballSpeed, strokeType));
+
   if (rpsRange && rpsRange !== "unknown") {
     const map = {
-      low: "回転の絶対値が低めの日は、打点・面のミスが数値に出やすいです。フォームの再現性を優先しましょう。",
-      mid: "中程度の回転域なら、球質の差は「摩擦の質」や「スイング軌道」で作れます。数値のブレ幅を週で比較してください。",
-      high: "高回転域に入っているなら、次は打点の安定とスピードのバランス（スピン効率）を Spinsight で追う段階です。",
+      low: "体感では回転が低めの日です。打点・面のミスが数値に出やすいので、フォームの再現性を優先しましょう。",
+      mid: "体感では中程度の回転域です。球質の差は摩擦の質やスイング軌道で作れます。数値のブレ幅を週で比較してください。",
+      high: "体感では高回転域に近い日です。打点の安定と球速のバランス（スピン効率）を Spinsight で追う段階です。",
     };
     lines.push(map[rpsRange] || "");
   }
@@ -224,12 +624,14 @@ function spinsightContextNotes({ rpsRange, stability, freeform }) {
   if (freeform.trim()) {
     lines.push(`あなたの Spinsight メモ: 「${freeform.trim()}」— 週次で同じ条件を再測定し、差分だけを見ると改善点が明確になります。`);
   }
-  if (lines.filter(Boolean).length === 0) {
-    lines.push(
+
+  const nonEmpty = lines.filter(Boolean);
+  if (nonEmpty.length === 0) {
+    nonEmpty.push(
       "Spinsight のダッシュボードで、同じメニュー（例: ストローク練）を週1回同条件で測ると、感覚と数値のズレが減ります。"
     );
   }
-  return lines.filter(Boolean);
+  return nonEmpty;
 }
 
 function uniqueByKey(items, keyFn) {
@@ -240,6 +642,52 @@ function uniqueByKey(items, keyFn) {
     seen.add(k);
     return true;
   });
+}
+
+function collectRubberAdvice(fh, bh, issueIds) {
+  const blocks = [];
+  const seenText = new Set();
+
+  const addBlock = (sideLabel, rubberId) => {
+    if (!rubberId) return;
+    const R = RUBBER_TYPES[rubberId];
+    if (!R) return;
+    const title = `${sideLabel}（${R.label}）`;
+    const bullets = [];
+    for (const line of R.global || []) {
+      if (!seenText.has(line)) {
+        seenText.add(line);
+        bullets.push(line);
+      }
+    }
+    for (const issueId of issueIds) {
+      const t = R.byIssue?.[issueId];
+      if (t && !seenText.has(t)) {
+        seenText.add(t);
+        bullets.push(t);
+      }
+    }
+    if (bullets.length) blocks.push({ title, bullets });
+  };
+
+  addBlock("フォア面", fh);
+  addBlock("バック面", bh);
+  return blocks;
+}
+
+function rubberDrillSuffix(issueId, fh, bh) {
+  const parts = [];
+  for (const [side, rid] of [
+    ["フォア", fh],
+    ["バック", bh],
+  ]) {
+    if (!rid) continue;
+    const R = RUBBER_TYPES[rid];
+    const note = R?.drillNote?.[issueId];
+    if (note) parts.push(`${side}・${R.short}: ${note}`);
+  }
+  if (parts.length === 0) return "";
+  return ` — ${parts.join(" / ")}`;
 }
 
 function buildWeeklyPlan(issueIds) {
@@ -270,13 +718,13 @@ function buildWeeklyPlan(issueIds) {
 
 function generatePlan(formData) {
   const selected = [...formData.issues];
-  const inferred = inferIssuesFromText(formData.goals + " " + formData.freeform);
+  const inferred = inferIssuesFromText(`${formData.goals} ${formData.freeform}`);
   const issueIds = uniqueByKey([...selected, ...inferred], (id) => id);
 
   if (issueIds.length === 0) {
     return {
       ok: false,
-      message: "課題を1つ以上選ぶか、「やりたいこと」にキーワード（例: 下回転、サーブ）を書いてください。",
+      message: "課題を1つ以上選ぶか、「やりたいこと」にキーワード（例: カット、ドライブ）を書いてください。",
     };
   }
 
@@ -288,21 +736,32 @@ function generatePlan(formData) {
     const cat = ISSUE_CATALOG[id];
     if (!cat) continue;
     improvements.push(...cat.improvements.map((t) => ({ id, text: t })));
-    drills.push(...cat.drills.map((d) => ({ ...d, issueId: id })));
+    for (const d of cat.drills) {
+      const suffix = rubberDrillSuffix(id, formData.rubberFh, formData.rubberBh);
+      drills.push({ ...d, issueId: id, detail: d.detail + suffix });
+    }
     spinsightHints.push(cat.spinsight);
   }
 
-  const topImprovements = uniqueByKey(improvements, (x) => x.text).slice(0, 6);
-  const topDrills = uniqueByKey(drills, (d) => `${d.name}-${d.detail}`).slice(0, 7);
-  const topHints = [...new Set(spinsightHints)].slice(0, 4);
+  const rubberAdvice = collectRubberAdvice(formData.rubberFh, formData.rubberBh, issueIds);
+
+  const topImprovements = uniqueByKey(improvements, (x) => x.text).slice(0, 8);
+  const topDrills = uniqueByKey(drills, (d) => `${d.name}-${d.detail}`).slice(0, 8);
+  const topHints = [...new Set(spinsightHints)].slice(0, 5);
   const spinsightExtra = spinsightContextNotes(formData);
 
   const summaryParts = issueIds.map((id) => ISSUE_CATALOG[id]?.label).filter(Boolean);
-  const summary = `今回の入力から、特に強化すると効果が出やすいのは「${summaryParts.join("」「")}」です。下記は優先度の高い順の改善ポイントと、週次の進め方です。`;
+  const rubberSummary =
+    [formData.rubberFh, formData.rubberBh].filter(Boolean).length === 0
+      ? ""
+      : ` ラバー設定を踏まえ、フォア／バックの特性に合わせてメニューを調整しています。`;
+
+  const summary = `今回の入力から、特に強化すると効果が出やすいのは「${summaryParts.join("」「")}」です。${rubberSummary}下記は優先度の高い順の改善ポイントと、週次の進め方です。`;
 
   return {
     ok: true,
     summary,
+    rubberAdvice,
     improvements: topImprovements,
     drills: topDrills,
     spinsightHints: topHints,
@@ -320,6 +779,30 @@ function renderPlan(plan, container) {
   intro.className = "plan-summary";
   intro.textContent = plan.summary;
   container.appendChild(intro);
+
+  if (plan.rubberAdvice?.length) {
+    const rh = document.createElement("h2");
+    rh.textContent = "ラバー特性を踏まえたアドバイス";
+    container.appendChild(rh);
+    const ul = document.createElement("ul");
+    ul.className = "rubber-list";
+    for (const block of plan.rubberAdvice) {
+      const li = document.createElement("li");
+      const strong = document.createElement("strong");
+      strong.textContent = block.title;
+      li.appendChild(strong);
+      const sub = document.createElement("ul");
+      sub.className = "plan-list";
+      for (const b of block.bullets) {
+        const sli = document.createElement("li");
+        sli.textContent = b;
+        sub.appendChild(sli);
+      }
+      li.appendChild(sub);
+      ul.appendChild(li);
+    }
+    container.appendChild(ul);
+  }
 
   const impH = document.createElement("h2");
   impH.textContent = "改善のポイント";
@@ -407,7 +890,7 @@ function renderPlan(plan, container) {
   const disclaimer = document.createElement("p");
   disclaimer.className = "disclaimer muted";
   disclaimer.textContent =
-    "本サイトは Spinsight 非公式の補助ツールです。怪我のリスクがあるドリルは無理せず、コーチやパートナーと相談してください。";
+    "本サイトは Spinsight 非公式の補助ツールです。数値の単位はアプリ表示に合わせて解釈してください。怪我のリスクがあるドリルは無理せず、コーチやパートナーと相談してください。";
   container.appendChild(disclaimer);
 }
 
@@ -417,7 +900,23 @@ function collectForm() {
   const rpsRange = document.getElementById("rpsRange").value;
   const stability = document.getElementById("stability").value;
   const freeform = document.getElementById("spinsightNotes").value;
-  return { issues, goals, rpsRange, stability, freeform };
+  const rubberFh = document.getElementById("rubberFh").value;
+  const rubberBh = document.getElementById("rubberBh").value;
+  const strokeType = document.getElementById("strokeType").value;
+  const spinRps = parseOptionalNumber("spinRps");
+  const ballSpeed = parseOptionalNumber("ballSpeed");
+  return {
+    issues,
+    goals,
+    rpsRange,
+    stability,
+    freeform,
+    rubberFh,
+    rubberBh,
+    strokeType,
+    spinRps,
+    ballSpeed,
+  };
 }
 
 function init() {

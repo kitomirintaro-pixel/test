@@ -31,8 +31,7 @@
         <h1>課題と目標を入力すると、<span class="gradient-text">改善案と練習メニュー</span>を提案します</h1>
         <p class="lead coach-lead">
           <a href="https://spinsight.com/" rel="noopener noreferrer" target="_blank">Spinsight</a>
-          はスマホで回転や球速を計測できる卓球アプリです（本サイトは非公式）。公式 API
-          に接続はしていませんが、アプリで得た数値や感覚を下のメモ欄に書き込むと、計測の活かし方も含めて文章を組み立てます。
+          で計測した回転・球速などの<strong>数値を入力</strong>できます。フォア／バックの<strong>ラバー特性</strong>を選ぶと、ドリル説明にその面向けの短いヒントを足します（本サイトは非公式・API 非連携）。
         </p>
       </div>
 
@@ -40,40 +39,114 @@
         <form id="coach-form" class="coach-form" novalidate>
           <fieldset class="fieldset">
             <legend>いま足りないと感じること（複数選択可）</legend>
-            <div class="checkbox-grid">
-              <label class="check">
-                <input type="checkbox" name="issue" value="underspin_receive" />
-                <span>下回転の受け（ツッツキ・ストップ）</span>
+            <div class="issue-groups">
+              <div>
+                <p class="fieldset-sublegend">攻め・ドライブ・ラリー</p>
+                <div class="checkbox-grid">
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="forehand_drive" />
+                    <span>フォアドライブ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="backhand_drive" />
+                    <span>バックドライブ・バックループ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="topspin_rally" />
+                    <span>上回転ラリー（連続・安定）</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="counter_attack" />
+                    <span>カウンター・弾みつき速攻</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="flick_short" />
+                    <span>フリック・チキータ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="third_ball" />
+                    <span>第3球（攻めの入り）</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p class="fieldset-sublegend">守備・処理・サーブ</p>
+                <div class="checkbox-grid">
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="cut_defense" />
+                    <span>カット（チョップ・削り）</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="block_game" />
+                    <span>ブロック</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="underspin_receive" />
+                    <span>下回転の受け（ツッツキ・ストップ）</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="spin_reading" />
+                    <span>回転の見極め・ミート</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="serve" />
+                    <span>サーブの質・変化</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p class="fieldset-sublegend">身体・適応・メンタル</p>
+                <div class="checkbox-grid">
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="footwork" />
+                    <span>フットワーク</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="pace_adapt" />
+                    <span>球速・タメへの適応</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="mental" />
+                    <span>メンタル・試合運び</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>ラバー（練習メニューのヒントに反映）</legend>
+            <div class="row-2">
+              <label class="field">
+                <span class="field-label">フォア面</span>
+                <select id="rubberFh" name="rubberFh">
+                  <option value="">指定なし</option>
+                  <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
+                  <option value="tacky_chinese">中国式（粘着系）</option>
+                  <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
+                  <option value="short_pips">粒高（ショートピップス）</option>
+                  <option value="medium_pips">粒高（ミディアム）</option>
+                  <option value="long_pips">粒高（ロング／一枚）</option>
+                  <option value="anti">アンチ・ソフトバンなど</option>
+                </select>
               </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="topspin_rally" />
-                <span>上回転ラリー</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="spin_reading" />
-                <span>回転の見極め・ミート</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="serve" />
-                <span>サーブの質・変化</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="third_ball" />
-                <span>第3球（攻めの入り）</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="footwork" />
-                <span>フットワーク</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="pace_adapt" />
-                <span>球速・タメへの適応</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" name="issue" value="mental" />
-                <span>メンタル・試合運び</span>
+              <label class="field">
+                <span class="field-label">バック面</span>
+                <select id="rubberBh" name="rubberBh">
+                  <option value="">指定なし</option>
+                  <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
+                  <option value="tacky_chinese">中国式（粘着系）</option>
+                  <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
+                  <option value="short_pips">粒高（ショートピップス）</option>
+                  <option value="medium_pips">粒高（ミディアム）</option>
+                  <option value="long_pips">粒高（ロング／一枚）</option>
+                  <option value="anti">アンチ・ソフトバンなど</option>
+                </select>
               </label>
             </div>
+            <p class="hint muted">
+              両面とも「指定なし」でも利用できます。選んだ面について、課題タグに合わせた短文が「ラバー特性を踏まえたアドバイス」と各ドリル末尾に付きます。
+            </p>
           </fieldset>
 
           <label class="field">
@@ -82,15 +155,64 @@
               id="goals"
               name="goals"
               rows="4"
-              placeholder="例: 下回転のツッツキがネットやオーバーが多い。試合で第三球に自信が持てない。サーブの下回転をもっと強くしたい。"
+              placeholder="例: フォアドライブは入るが試合で使えない。バックのカットが浮く。バックドライブのミートが安定しない。"
             ></textarea>
           </label>
           <p class="hint muted">
-            未選択でも、ここに「下回転」「サーブ」などのキーワードがあれば自動で項目を推定します。
+            未選択でも、「カット」「ドライブ」「ブロック」などのキーワードで項目を推定します。
           </p>
 
           <fieldset class="fieldset">
-            <legend>Spinsight メモ（任意）</legend>
+            <legend>Spinsight の数値（任意）</legend>
+            <div class="row-2">
+              <label class="field">
+                <span class="field-label">回転（アプリに表示される数値）</span>
+                <input
+                  type="number"
+                  id="spinRps"
+                  name="spinRps"
+                  min="0"
+                  step="0.1"
+                  inputmode="decimal"
+                  placeholder="例: 78.5"
+                />
+              </label>
+              <label class="field">
+                <span class="field-label">球速（アプリに表示される数値）</span>
+                <input
+                  type="number"
+                  id="ballSpeed"
+                  name="ballSpeed"
+                  min="0"
+                  step="0.1"
+                  inputmode="decimal"
+                  placeholder="例: 65"
+                />
+              </label>
+            </div>
+            <label class="field">
+              <span class="field-label">上記の数値は主にどのショット？</span>
+              <select id="strokeType" name="strokeType">
+                <option value="unknown">指定なし／複数混在</option>
+                <option value="serve">サーブ</option>
+                <option value="fh_topspin">フォア・上回転（ループ等）</option>
+                <option value="bh_topspin">バック・上回転</option>
+                <option value="fh_drive">フォアドライブ</option>
+                <option value="bh_drive">バックドライブ</option>
+                <option value="flick">フリック・チキータ</option>
+                <option value="block">ブロック</option>
+                <option value="cut">カット</option>
+                <option value="receive">レシーブ全般</option>
+                <option value="other">その他</option>
+              </select>
+            </label>
+            <p class="hint muted">
+              単位はアプリの表示に合わせて解釈してください（サイト側では数値のみ保持し、絶対評価はしません）。
+            </p>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>体感・メモ（任意）</legend>
             <div class="row-2">
               <label class="field">
                 <span class="field-label">回転の体感レンジ</span>
@@ -112,12 +234,12 @@
               </label>
             </div>
             <label class="field">
-              <span class="field-label">アプリの数値・所感（自由記述）</span>
+              <span class="field-label">アプリの所感・条件（自由記述）</span>
               <textarea
                 id="spinsightNotes"
                 name="spinsightNotes"
                 rows="3"
-                placeholder="例: フォア topspin の回転が週末より10%落ちた。OpenPlay の球速が安定してきた。照明が暗い日はブレが増える。"
+                placeholder="例: OpenPlay で計測。照明が暗いとブレる。フォアだけ数値を残している。"
               ></textarea>
             </label>
           </fieldset>
