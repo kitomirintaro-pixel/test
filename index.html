@@ -120,32 +120,40 @@
               <label class="field">
                 <span class="field-label">フォア面</span>
                 <select id="rubberFh" name="rubberFh">
-                  <option value="">指定なし</option>
-                  <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
-                  <option value="tacky_chinese">中国式（粘着系）</option>
-                  <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
-                  <option value="short_pips">粒高（ショートピップス）</option>
-                  <option value="medium_pips">粒高（ミディアム）</option>
-                  <option value="long_pips">粒高（ロング／一枚）</option>
-                  <option value="anti">アンチ・ソフトバンなど</option>
+                  <option value="">未指定（ラバー別ヒントなし）</option>
+                  <optgroup label="裏（裏ソフト・粒がラケット側）">
+                    <option value="high_friction">裏・高摩擦裏ソフト（バランス型）</option>
+                    <option value="tacky_chinese">裏・中国式（粘着系）</option>
+                    <option value="tensor_euro">裏・テンション系（ヨーロッパ系）</option>
+                    <option value="anti">裏・アンチ・ソフトバンなど</option>
+                  </optgroup>
+                  <optgroup label="表（粒がボール側・粒高）">
+                    <option value="short_pips">表・ショートピップス</option>
+                    <option value="medium_pips">表・ミディアムピップス</option>
+                    <option value="long_pips">表・ロングピップス／一枚ラバー</option>
+                  </optgroup>
                 </select>
               </label>
               <label class="field">
                 <span class="field-label">バック面</span>
                 <select id="rubberBh" name="rubberBh">
-                  <option value="">指定なし</option>
-                  <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
-                  <option value="tacky_chinese">中国式（粘着系）</option>
-                  <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
-                  <option value="short_pips">粒高（ショートピップス）</option>
-                  <option value="medium_pips">粒高（ミディアム）</option>
-                  <option value="long_pips">粒高（ロング／一枚）</option>
-                  <option value="anti">アンチ・ソフトバンなど</option>
+                  <option value="">未指定（ラバー別ヒントなし）</option>
+                  <optgroup label="裏（裏ソフト・粒がラケット側）">
+                    <option value="high_friction">裏・高摩擦裏ソフト（バランス型）</option>
+                    <option value="tacky_chinese">裏・中国式（粘着系）</option>
+                    <option value="tensor_euro">裏・テンション系（ヨーロッパ系）</option>
+                    <option value="anti">裏・アンチ・ソフトバンなど</option>
+                  </optgroup>
+                  <optgroup label="表（粒がボール側・粒高）">
+                    <option value="short_pips">表・ショートピップス</option>
+                    <option value="medium_pips">表・ミディアムピップス</option>
+                    <option value="long_pips">表・ロングピップス／一枚ラバー</option>
+                  </optgroup>
                 </select>
               </label>
             </div>
             <p class="hint muted">
-              両面とも「指定なし」でも利用できます。選んだ面について、課題タグに合わせた短文が「ラバー特性を踏まえたアドバイス」と各ドリル末尾に付きます。
+              <strong>「未指定」は裏ラバーという意味ではありません。</strong>（ヒントを出さないだけです）。裏ソフトを使っている場合は、近い種類を選ぶとアドバイスが具体的になります。粒がボール側に出ている面は<strong>表・〜</strong>から選んでください。
             </p>
           </fieldset>
 

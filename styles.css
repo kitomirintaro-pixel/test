@@ -324,6 +324,19 @@ body {
   min-height: 2.75rem;
 }
 
+.coach-form select optgroup {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+}
+
+.coach-form select option {
+  font-weight: 400;
+  color: var(--text);
+}
+
 .field textarea:focus-visible,
 .field select:focus-visible {
   outline: 2px solid var(--accent);
