@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="シンプルで読みやすいスタート用ウェブページ" />
+    <title>ようこそ | My Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="#">My Page</a>
+        <nav class="nav" aria-label="主要ナビゲーション">
+          <a href="#about">概要</a>
+          <a href="#features">特徴</a>
+          <a href="#contact">連絡</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="container hero-inner">
+          <p class="eyebrow">はじめてのウェブページ</p>
+          <h1>アイデアを、<br /><span class="gradient-text">かたちにする</span>場所</h1>
+          <p class="lead">
+            このページは編集の出発点です。テキストや色を変えて、自分だけのサイトに育てていけます。
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Get started</a>
+            <a class="btn btn-ghost" href="#features">詳しく見る</a>
+          </div>
+        </div>
+        <div class="hero-glow" aria-hidden="true"></div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container narrow">
+          <h2>概要</h2>
+          <p>
+            静的な HTML と CSS だけで構成されています。ホスティング（GitHub Pages、Netlify など）にそのまま置けるシンプルな構成です。
+          </p>
+        </div>
+      </section>
+
+      <section id="features" class="section section-alt">
+        <div class="container">
+          <h2>特徴</h2>
+          <ul class="feature-grid">
+            <li class="card">
+              <h3>読みやすいタイポ</h3>
+              <p>Noto Sans JP と DM Sans の組み合わせで、日本語と欧文のバランスを整えています。</p>
+            </li>
+            <li class="card">
+              <h3>レスポンシブ</h3>
+              <p>スマートフォンからデスクトップまで、画面幅に合わせてレイアウトが変わります。</p>
+            </li>
+            <li class="card">
+              <h3>アクセシビリティ</h3>
+              <p>スキップリンクや適切な見出し階層で、キーボードや読み上げにも配慮しています。</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="contact" class="section">
+        <div class="container narrow">
+          <h2>連絡・次のステップ</h2>
+          <p>
+            <code>index.html</code> の文言を差し替え、<code>styles.css</code> の CSS 変数でテーマカラーを変えてみてください。
+          </p>
+          <p class="muted">
+            ローカルで確認するには、ターミナルでこのフォルダに移動して
+            <code>npx serve .</code> や <code>python3 -m http.server</code> を実行すると便利です。
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© <span id="year"></span> My Page</p>
+        <p class="muted small">Built with HTML &amp; CSS</p>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
