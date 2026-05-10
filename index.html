@@ -31,7 +31,7 @@
         <h1>課題と目標を入力すると、<span class="gradient-text">改善案と練習メニュー</span>を提案します</h1>
         <p class="lead coach-lead">
           <a href="https://spinsight.com/" rel="noopener noreferrer" target="_blank">Spinsight</a>
-          で計測した回転・球速などの<strong>数値を入力</strong>できます。フォア／バックの<strong>ラバー特性</strong>を選ぶと、ドリル説明にその面向けの短いヒントを足します（本サイトは非公式・API 非連携）。
+          で計測した回転・球速などの<strong>数値を入力</strong>できます。フォア／バックそれぞれ<strong>裏・表・粒高</strong>の区分でラバーを選ぶと、ドリル説明にその面向けの短いヒントを足します（本サイトは非公式・API 非連携）。
         </p>
       </div>
 
@@ -121,16 +121,18 @@
                 <span class="field-label">フォア面</span>
                 <select id="rubberFh" name="rubberFh">
                   <option value="">未指定（ラバー別ヒントなし）</option>
-                  <optgroup label="裏（裏ソフト・粒がラケット側）">
-                    <option value="high_friction">裏・高摩擦裏ソフト（バランス型）</option>
-                    <option value="tacky_chinese">裏・中国式（粘着系）</option>
-                    <option value="tensor_euro">裏・テンション系（ヨーロッパ系）</option>
-                    <option value="anti">裏・アンチ・ソフトバンなど</option>
+                  <optgroup label="裏（裏ソフト）">
+                    <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
+                    <option value="tacky_chinese">中国式（粘着系）</option>
+                    <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
+                    <option value="anti">アンチ・ソフトバンなど</option>
                   </optgroup>
-                  <optgroup label="表（粒がボール側・粒高）">
-                    <option value="short_pips">表・ショートピップス</option>
-                    <option value="medium_pips">表・ミディアムピップス</option>
-                    <option value="long_pips">表・ロングピップス／一枚ラバー</option>
+                  <optgroup label="表（表ソフト・ショート）">
+                    <option value="short_pips">ショートピップス</option>
+                  </optgroup>
+                  <optgroup label="粒高（ミディアム／ロング等）">
+                    <option value="medium_pips">ミディアムピップス</option>
+                    <option value="long_pips">ロングピップス／一枚ラバー</option>
                   </optgroup>
                 </select>
               </label>
@@ -138,22 +140,24 @@
                 <span class="field-label">バック面</span>
                 <select id="rubberBh" name="rubberBh">
                   <option value="">未指定（ラバー別ヒントなし）</option>
-                  <optgroup label="裏（裏ソフト・粒がラケット側）">
-                    <option value="high_friction">裏・高摩擦裏ソフト（バランス型）</option>
-                    <option value="tacky_chinese">裏・中国式（粘着系）</option>
-                    <option value="tensor_euro">裏・テンション系（ヨーロッパ系）</option>
-                    <option value="anti">裏・アンチ・ソフトバンなど</option>
+                  <optgroup label="裏（裏ソフト）">
+                    <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
+                    <option value="tacky_chinese">中国式（粘着系）</option>
+                    <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
+                    <option value="anti">アンチ・ソフトバンなど</option>
                   </optgroup>
-                  <optgroup label="表（粒がボール側・粒高）">
-                    <option value="short_pips">表・ショートピップス</option>
-                    <option value="medium_pips">表・ミディアムピップス</option>
-                    <option value="long_pips">表・ロングピップス／一枚ラバー</option>
+                  <optgroup label="表（表ソフト・ショート）">
+                    <option value="short_pips">ショートピップス</option>
+                  </optgroup>
+                  <optgroup label="粒高（ミディアム／ロング等）">
+                    <option value="medium_pips">ミディアムピップス</option>
+                    <option value="long_pips">ロングピップス／一枚ラバー</option>
                   </optgroup>
                 </select>
               </label>
             </div>
             <p class="hint muted">
-              <strong>「未指定」は裏ラバーという意味ではありません。</strong>（ヒントを出さないだけです）。裏ソフトを使っている場合は、近い種類を選ぶとアドバイスが具体的になります。粒がボール側に出ている面は<strong>表・〜</strong>から選んでください。
+              <strong>「未指定」は裏ラバーという意味ではありません。</strong>（ヒントを出さないだけです）。<strong>裏</strong>は裏ソフト、<strong>表</strong>は一般的なショートの表ソフト、<strong>粒高</strong>はミディアム／ロングなど粒が高いラバー想定です。近い区分を選ぶとアドバイスが具体的になります。
             </p>
           </fieldset>
 
