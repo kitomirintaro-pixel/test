@@ -26,6 +26,69 @@ const ISSUE_CATALOG = {
     spinsight:
       "フォアドライブはストローク練で同じ打点帯を繰り返し測り、回転・速度のブレ幅を週で比較すると伸びます。",
   },
+  straight_drive: {
+    label: "ストレートドライブ（まっすぐ速い）",
+    improvements: [
+      "ラケット面は開きすぎない。ボールの真ん中を狙う",
+      "体は目標コースの方へ向ける。腕だけで横に振らない",
+      "最初は力を7割くらいにして入る率を上げる",
+    ],
+    drills: [
+      {
+        name: "ストレート20本",
+        time: "10分",
+        detail: "相手の上回転をストレートに返す。ネットとラインだけ記録。",
+      },
+      {
+        name: "速い球へのストレート",
+        time: "12分",
+        detail: "多球で速い球を入れてもらい、ストレート一本だけ返す。",
+      },
+    ],
+    spinsight: "同じコースで計測すると、球速の伸びがわかりやすいです。",
+  },
+  curve_drive: {
+    label: "カーブドライブ（横に曲げる）",
+    improvements: [
+      "ボールの横を少し擦る。面は少し開く",
+      "足は曲がる方向へ一歩。腰も同じ方向へ",
+      "最初は曲がりだけ。速さは後から足す",
+    ],
+    drills: [
+      {
+        name: "カーブ定点",
+        time: "12分",
+        detail: "フォアからバックサイドへ曲げる。10本連続で入り数を記録。",
+      },
+      {
+        name: "見せかけストレート→カーブ",
+        time: "14分",
+        detail: "振りは似せて、最後だけ面を変えて曲げる。",
+      },
+    ],
+    spinsight: "曲げた球は回転の向きがポイント。同じ条件で数値を残すと上達が早いです。",
+  },
+  fast_drive: {
+    label: "速いドライブ（初動・速攻）",
+    improvements: [
+      "待ちすぎない。ボールが上がったらすぐ当てる",
+      "振りは小さく、最後だけ速く出す",
+      "ミスしたら「早すぎた／遅かった」を一言でメモ",
+    ],
+    drills: [
+      {
+        name: "初動ドライブ",
+        time: "10分",
+        detail: "相手の第3球に対し、一本だけ速いドライブ可。",
+      },
+      {
+        name: "速球ラリー3球目だけ速攻",
+        time: "12分",
+        detail: "3球目だけフルスイング。計測アプリで球速のピークを見る。",
+      },
+    ],
+    spinsight: "球速のピークと打点をセットで記録してください。",
+  },
   backhand_drive: {
     label: "バックドライブ・バックループ",
     improvements: [
@@ -578,6 +641,16 @@ const ISSUE_CATALOG = {
   },
 };
 
+const INVERTED_RUBBERS = new Set(["high_friction", "tacky_chinese", "tensor_euro", "anti"]);
+
+const HARDNESS_LABELS = { soft: "柔らかめ", medium: "標準", hard: "硬め" };
+
+const HARDNESS_TIPS = {
+  soft: "柔らかめの裏は食い込みやすい。薄く当てすぎるとネットやオーバーになりやすいです。",
+  medium: "標準の硬さなら、今のフォームのまま数値を比べやすいです。",
+  hard: "硬めの裏は球が速く出やすい。面を大きく変えず、タイミングで直すと安定します。",
+};
+
 /** ラバー別: 課題に応じたアドバイスと、ドリル末尾に付ける短いヒント */
 const RUBBER_TYPES = {
   high_friction: {
@@ -845,6 +918,9 @@ const STROKE_LABELS = {
 };
 
 const KEYWORD_MAP = [
+  [/カーブドライブ|カーブ.*ドライブ/, "curve_drive"],
+  [/ストレートドライブ|ストレート.*ドライブ/, "straight_drive"],
+  [/速いドライブ|速攻ドライブ|初動ドライブ/, "fast_drive"],
   [/スマッシュ/, "smash"],
   [/ロビ(ング)?|高球.*守備|浮き球/, "lobbing"],
   [/攻めプッシュ/, "push_attack"],
@@ -970,16 +1046,29 @@ function resolveRubberByIssue(R, issueId) {
   return R.byIssue[issueId] || null;
 }
 
-function collectRubberAdvice(fh, bh, issueIds) {
+function hardnessBullets(rubberId, hardness) {
+  if (!rubberId || !INVERTED_RUBBERS.has(rubberId) || !hardness || hardness === "unknown") return [];
+  const tip = HARDNESS_TIPS[hardness];
+  if (!tip) return [];
+  return [`裏の硬さ（${HARDNESS_LABELS[hardness]}）: ${tip}`];
+}
+
+function collectRubberAdvice(fh, bh, fhHardness, bhHardness, issueIds) {
   const blocks = [];
   const seenText = new Set();
 
-  const addBlock = (sideLabel, rubberId) => {
+  const addBlock = (sideLabel, rubberId, hardness) => {
     if (!rubberId) return;
     const R = RUBBER_TYPES[rubberId];
     if (!R) return;
     const title = `${sideLabel}（${R.label}）`;
     const bullets = [];
+    for (const h of hardnessBullets(rubberId, hardness)) {
+      if (!seenText.has(h)) {
+        seenText.add(h);
+        bullets.push(h);
+      }
+    }
     for (const line of R.global || []) {
       if (!seenText.has(line)) {
         seenText.add(line);
@@ -996,8 +1085,8 @@ function collectRubberAdvice(fh, bh, issueIds) {
     if (bullets.length) blocks.push({ title, bullets });
   };
 
-  addBlock("フォア面", fh);
-  addBlock("バック面", bh);
+  addBlock("フォア面", fh, fhHardness);
+  addBlock("バック面", bh, bhHardness);
   return blocks;
 }
 
@@ -1094,7 +1183,13 @@ function generatePlan(formData) {
     spinsightHints.push(cat.spinsight);
   }
 
-  const rubberAdvice = collectRubberAdvice(formData.rubberFh, formData.rubberBh, issueIds);
+  const rubberAdvice = collectRubberAdvice(
+    formData.rubberFh,
+    formData.rubberBh,
+    formData.rubberFhHardness,
+    formData.rubberBhHardness,
+    issueIds
+  );
   const hasServeIssue = issueIds.some((id) => id.startsWith("serve_") || id === "serve");
   const serveRubberExtras = hasServeIssue ? collectServeRubberExtras(formData.rubberFh, formData.rubberBh) : [];
 
@@ -1107,13 +1202,14 @@ function generatePlan(formData) {
   const rubberSummary =
     [formData.rubberFh, formData.rubberBh].filter(Boolean).length === 0
       ? ""
-      : ` ラバー設定を踏まえ、フォア／バックの特性に合わせてメニューを調整しています。`;
+      : " 選んだラバーに合わせてヒントを足しています。";
 
-  const summary = `今回の入力から、特に強化すると効果が出やすいのは「${summaryParts.join("」「")}」です。${rubberSummary}下記は優先度の高い順の改善ポイントと、週次の進め方です。`;
+  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${rubberSummary}下に改善ポイントと練習メニューがあります。`;
 
-  return {
+  const rawPlan = {
     ok: true,
     summary,
+    playerName: formData.playerName || "",
     rubberAdvice,
     serveRubberExtras,
     improvements: topImprovements,
@@ -1122,12 +1218,78 @@ function generatePlan(formData) {
     spinsightExtra,
     week: buildWeeklyPlan(issueIds),
     issueLabels: summaryParts,
+    issueIds,
   };
+
+  return typeof simplifyPlan === "function" ? simplifyPlan(rawPlan) : rawPlan;
 }
+
+let lastPlan = null;
+let lastFormData = null;
 
 function renderPlan(plan, container) {
   container.innerHTML = "";
   container.hidden = false;
+  lastPlan = plan;
+  lastFormData = collectForm();
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "plan-toolbar no-print";
+
+  const btnPrint = document.createElement("button");
+  btnPrint.type = "button";
+  btnPrint.className = "btn btn-primary";
+  btnPrint.textContent = "PDF・印刷";
+  btnPrint.addEventListener("click", () => {
+    if (typeof printPlan === "function") {
+      printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
+    }
+  });
+
+  const btnSave = document.createElement("button");
+  btnSave.type = "button";
+  btnSave.className = "btn btn-ghost";
+  btnSave.textContent = "記録を保存";
+  btnSave.addEventListener("click", () => {
+    const name = document.getElementById("playerName")?.value;
+    const res = RecordStore.save(name, lastFormData, plan);
+    const msg = document.getElementById("save-message");
+    if (msg) {
+      msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
+      msg.hidden = false;
+    }
+    if (res.ok && typeof refreshRecordList === "function") refreshRecordList();
+  });
+
+  toolbar.append(btnPrint, btnSave);
+  container.appendChild(toolbar);
+
+  const saveMsg = document.createElement("p");
+  saveMsg.id = "save-message";
+  saveMsg.className = "save-message muted no-print";
+  saveMsg.hidden = true;
+  container.appendChild(saveMsg);
+
+  if (typeof getPosesForIssues === "function" && plan.issueIds?.length) {
+    const poses = getPosesForIssues(plan.issueIds);
+    if (poses.length) {
+      const ph = document.createElement("h2");
+      ph.textContent = "フォームのイメージ";
+      container.appendChild(ph);
+      const grid = document.createElement("div");
+      grid.className = "pose-grid";
+      for (const p of poses) {
+        const fig = document.createElement("figure");
+        fig.className = "pose-figure";
+        fig.innerHTML = p.svg;
+        const cap = document.createElement("figcaption");
+        cap.textContent = p.label;
+        fig.appendChild(cap);
+        grid.appendChild(fig);
+      }
+      container.appendChild(grid);
+    }
+  }
 
   const intro = document.createElement("p");
   intro.className = "plan-summary";
@@ -1270,6 +1432,9 @@ function collectForm() {
   const freeform = document.getElementById("spinsightNotes").value;
   const rubberFh = document.getElementById("rubberFh").value;
   const rubberBh = document.getElementById("rubberBh").value;
+  const rubberFhHardness = document.getElementById("rubberFhHardness")?.value || "unknown";
+  const rubberBhHardness = document.getElementById("rubberBhHardness")?.value || "unknown";
+  const playerName = document.getElementById("playerName")?.value || "";
   const strokeType = document.getElementById("strokeType").value;
   const spinRps = parseOptionalNumber("spinRps");
   const ballSpeed = parseOptionalNumber("ballSpeed");
@@ -1279,18 +1444,83 @@ function collectForm() {
     rpsRange,
     stability,
     freeform,
+    playerName,
     rubberFh,
     rubberBh,
+    rubberFhHardness,
+    rubberBhHardness,
     strokeType,
     spinRps,
     ballSpeed,
   };
 }
 
+function syncHardnessSelects() {
+  const fh = document.getElementById("rubberFh");
+  const bh = document.getElementById("rubberBh");
+  const fhH = document.getElementById("rubberFhHardness");
+  const bhH = document.getElementById("rubberBhHardness");
+  if (!fhH || !bhH) return;
+  const enFh = fh && INVERTED_RUBBERS.has(fh.value);
+  const enBh = bh && INVERTED_RUBBERS.has(bh.value);
+  fhH.disabled = !enFh;
+  bhH.disabled = !enBh;
+}
+
+function refreshRecordList() {
+  const listEl = document.getElementById("record-list");
+  if (!listEl || typeof RecordStore === "undefined") return;
+  const records = RecordStore.list();
+  listEl.innerHTML = "";
+  if (records.length === 0) {
+    listEl.innerHTML = "<p class=\"muted\">まだ保存された記録はありません。</p>";
+    return;
+  }
+  const ul = document.createElement("ul");
+  ul.className = "record-items";
+  for (const r of records) {
+    const li = document.createElement("li");
+    const when = new Date(r.savedAt).toLocaleString("ja-JP", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const label = document.createElement("span");
+    label.textContent = `${r.playerName}（${when}）`;
+    const openBtn = document.createElement("button");
+    openBtn.type = "button";
+    openBtn.className = "btn-link";
+    openBtn.textContent = "表示";
+    openBtn.addEventListener("click", () => {
+      document.getElementById("playerName").value = r.playerName;
+      const out = document.getElementById("plan-output");
+      renderPlan(r.plan, out);
+      out.scrollIntoView({ behavior: "smooth" });
+    });
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "btn-link btn-link-danger";
+    delBtn.textContent = "削除";
+    delBtn.addEventListener("click", () => {
+      RecordStore.remove(r.id);
+      refreshRecordList();
+    });
+    li.append(label, openBtn, delBtn);
+    ul.appendChild(li);
+  }
+  listEl.appendChild(ul);
+}
+
 function init() {
   const form = document.getElementById("coach-form");
   const out = document.getElementById("plan-output");
   const err = document.getElementById("plan-error");
+
+  document.getElementById("rubberFh")?.addEventListener("change", syncHardnessSelects);
+  document.getElementById("rubberBh")?.addEventListener("change", syncHardnessSelects);
+  syncHardnessSelects();
+  refreshRecordList();
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

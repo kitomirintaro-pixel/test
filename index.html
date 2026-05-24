@@ -30,13 +30,24 @@
         <p class="eyebrow">Table tennis · practice planner</p>
         <h1>課題と目標を入力すると、<span class="gradient-text">改善案と練習メニュー</span>を提案します</h1>
         <p class="lead coach-lead">
-          <a href="https://spinsight.com/" rel="noopener noreferrer" target="_blank">Spinsight</a>
-          で計測した回転・球速などの<strong>数値を入力</strong>できます。フォア／バックそれぞれ<strong>裏・表・粒高</strong>の区分でラバーを選ぶと、ドリル説明にその面向けの短いヒントを足します（本サイトは非公式・API 非連携）。
+          課題を選ぶと、<strong>短い改善案</strong>と練習メニューが出ます。名前を入れて<strong>記録を保存</strong>したり、<strong>PDF・印刷</strong>もできます（この端末のブラウザに保存・非公式）。
         </p>
       </div>
 
       <div class="container coach-layout">
         <form id="coach-form" class="coach-form" novalidate>
+          <label class="field">
+            <span class="field-label">お名前（記録の保存に使います）</span>
+            <input
+              type="text"
+              id="playerName"
+              name="playerName"
+              maxlength="40"
+              placeholder="例: 山田 太郎"
+              autocomplete="name"
+            />
+          </label>
+
           <fieldset class="fieldset">
             <legend>いま足りないと感じること（複数選択可）</legend>
             <div class="issue-groups">
@@ -45,7 +56,19 @@
                 <div class="checkbox-grid">
                   <label class="check">
                     <input type="checkbox" name="issue" value="forehand_drive" />
-                    <span>フォアドライブ</span>
+                    <span>フォアドライブ（一般）</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="straight_drive" />
+                    <span>ストレートドライブ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="curve_drive" />
+                    <span>カーブドライブ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="fast_drive" />
+                    <span>速いドライブ・初動</span>
                   </label>
                   <label class="check">
                     <input type="checkbox" name="issue" value="backhand_drive" />
@@ -207,9 +230,36 @@
                 </select>
               </label>
             </div>
+            <div class="row-2">
+              <label class="field">
+                <span class="field-label">フォア・裏の硬さ（裏を選んだとき）</span>
+                <select id="rubberFhHardness" name="rubberFhHardness" disabled>
+                  <option value="unknown">指定なし</option>
+                  <option value="soft">柔らかめ</option>
+                  <option value="medium">標準</option>
+                  <option value="hard">硬め</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">バック・裏の硬さ（裏を選んだとき）</span>
+                <select id="rubberBhHardness" name="rubberBhHardness" disabled>
+                  <option value="unknown">指定なし</option>
+                  <option value="soft">柔らかめ</option>
+                  <option value="medium">標準</option>
+                  <option value="hard">硬め</option>
+                </select>
+              </label>
+            </div>
             <p class="hint muted">
-              <strong>「未指定」は裏ラバーという意味ではありません。</strong>（ヒントを出さないだけです）。<strong>裏</strong>は裏ソフト、<strong>表</strong>は一般的なショートの表ソフト、<strong>粒高</strong>はミディアム／ロングなど粒が高いラバー想定です。近い区分を選ぶとアドバイスが具体的になります。
+              <strong>未指定</strong>＝ラバー別ヒントなし（裏を意味しません）。<strong>裏</strong>は裏ソフト、<strong>表</strong>はショート、<strong>粒高</strong>はミディアム／ロング想定です。
             </p>
+          </fieldset>
+
+          <fieldset class="fieldset no-print">
+            <legend>保存した記録</legend>
+            <div id="record-list" class="record-list">
+              <p class="muted">まだ保存された記録はありません。</p>
+            </div>
           </fieldset>
 
           <label class="field">
@@ -319,12 +369,18 @@
       </div>
     </main>
 
+    <div id="print-root" class="print-root" aria-hidden="true"></div>
+
     <footer class="site-footer">
       <div class="container footer-inner">
         <p>SpinCoach — Spinsight 非公式の練習補助</p>
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
+    <script src="simple-text.js"></script>
+    <script src="storage.js"></script>
+    <script src="poses.js"></script>
+    <script src="print-plan.js"></script>
     <script src="coach.js"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
