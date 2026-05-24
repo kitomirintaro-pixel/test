@@ -1119,7 +1119,7 @@ const RUBBER_TEXT_TO_PRESET = [
   [/ショート|表ソフト|スペクタル|spectral|ブラスト|党滅|vo[0-9]/i, "short_pips"],
   [/ミディアム|中粒/i, "medium_pips"],
   [/ロング|長粒|一粒|388/i, "long_pips"],
-  [/高摩擦|裏ソフト|ラバ|ラザフォ|フォレスト/i, "high_friction"],
+  [/高摩擦|裏ソフト|ラバ|ラザフォ|フォレスト|マークファイブ|mark\s*v/i, "high_friction"],
 ];
 
 function inferPresetFromText(text) {
