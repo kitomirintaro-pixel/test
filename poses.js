@@ -80,15 +80,27 @@ function playerBase(x, y, flip) {
       <rect x="-8" y="10" width="16" height="28" rx="5" fill="#3d4a5c"/>
       <line x1="-6" y1="38" x2="-10" y2="58" stroke="#3d4a5c" stroke-width="5" stroke-linecap="round"/>
       <line x1="6" y1="38" x2="10" y2="58" stroke="#3d4a5c" stroke-width="5" stroke-linecap="round"/>
+      <!-- 手（ラケット柄を握る位置の目安） -->
+      <ellipse cx="12" cy="32" rx="5" ry="4" fill="#4a5568" stroke="#6ee7ff" stroke-width="1"/>
     </g>`;
 }
 
-function paddle(x, y, angle, label) {
+/**
+ * 卓球ラケット（側面）
+ * 上: 丸いラバー面（楕円） / 下: 細いグリップが続く
+ */
+function paddle(x, y, angle) {
   return `
     <g transform="translate(${x},${y}) rotate(${angle})">
-      <rect x="-4" y="-22" width="8" height="24" rx="2" fill="#c45c26" stroke="#ff8c42" stroke-width="1.5"/>
-      <rect x="-14" y="-24" width="28" height="16" rx="3" fill="#1e293b" stroke="#6ee7ff" stroke-width="2"/>
-      ${label ? `<text x="0" y="-30" text-anchor="middle" fill="#6ee7ff" font-size="8" font-family="sans-serif">${label}</text>` : ""}
+      <!-- ラバー面（正面から見た丸いラケット頭） -->
+      <ellipse cx="0" cy="0" rx="16" ry="20" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+      <ellipse cx="0" cy="0" rx="14" ry="18" fill="#b91c1c" stroke="#ef4444" stroke-width="1"/>
+      <ellipse cx="-4" cy="-5" rx="5" ry="7" fill="#ffffff" opacity="0.12"/>
+      <!-- ラケット首（ブレードと柄のつなぎ） -->
+      <path d="M -5 17 Q 0 14 5 17 L 4 22 L -4 22 Z" fill="#334155" stroke="#64748b" stroke-width="1"/>
+      <!-- グリップ（細い柄・下に向かって細くなる） -->
+      <path d="M -4 22 L -3.5 38 Q 0 40 3.5 38 L 4 22 Z" fill="#b45309" stroke="#d97706" stroke-width="1.2"/>
+      <rect x="-2.5" y="36" width="5" height="4" rx="1.5" fill="#92400e"/>
     </g>`;
 }
 
@@ -115,7 +127,7 @@ function svgPose(kind) {
     drive: () => `
       ${ARROW_DEF}
       ${playerBase(70, 72, false)}
-      ${paddle(95, 88, -35, "ラケット")}
+      ${paddle(95, 88, -35)}
       ${ball(145, 95)}
       ${arrow(102, 82, 138, 92, false)}
       <text x="200" y="90" fill="#9aa3b5" font-size="8">前へ押す</text>
@@ -123,7 +135,7 @@ function svgPose(kind) {
     drive_speed: () => `
       ${ARROW_DEF}
       ${playerBase(65, 74, false)}
-      ${paddle(92, 86, -25, "ラケット")}
+      ${paddle(92, 86, -25)}
       ${ball(175, 98)}
       ${arrow(108, 80, 168, 94, false)}
       <text x="195" y="78" fill="#ff8c42" font-size="9" font-weight="bold">速い</text>
@@ -131,7 +143,7 @@ function svgPose(kind) {
     drive_loop: () => `
       ${ARROW_DEF}
       ${playerBase(68, 72, false)}
-      ${paddle(90, 95, -55, "ラケット")}
+      ${paddle(90, 95, -55)}
       ${ball(150, 88)}
       <path d="M 105 100 Q 125 70 145 86" fill="none" stroke="#ff8c42" stroke-width="2" marker-end="url(#arrowhead)"/>
       <text x="195" y="72" fill="#a78bfa" font-size="8">上へ回転</text>
@@ -139,7 +151,7 @@ function svgPose(kind) {
     drive_curve: () => `
       ${ARROW_DEF}
       ${playerBase(60, 74, false)}
-      ${paddle(88, 90, -15, "ラケット")}
+      ${paddle(88, 90, -15)}
       ${ball(195, 102)}
       <path d="M 110 88 Q 150 75 188 98" fill="none" stroke="#ff8c42" stroke-width="2" marker-end="url(#arrowhead)"/>
       <text x="200" y="88" fill="#a78bfa" font-size="8">横に曲げる</text>
@@ -147,7 +159,7 @@ function svgPose(kind) {
     drive_shoot: () => `
       ${ARROW_DEF}
       ${playerBase(75, 78, false)}
-      ${paddle(100, 102, -10, "ラケット")}
+      ${paddle(100, 102, -10)}
       ${ball(185, 108)}
       ${arrow(115, 98, 178, 106, false)}
       <text x="200" y="100" fill="#9aa3b5" font-size="8">低く直進</text>
@@ -155,7 +167,7 @@ function svgPose(kind) {
     backhand_drive: () => `
       ${ARROW_DEF}
       ${playerBase(175, 72, true)}
-      ${paddle(148, 88, 35, "ラケット")}
+      ${paddle(148, 88, 35)}
       ${ball(55, 95)}
       ${arrow(142, 82, 62, 92, false)}
       <text x="45" y="78" fill="#9aa3b5" font-size="8">バック</text>
@@ -163,7 +175,7 @@ function svgPose(kind) {
     serve: () => `
       ${ARROW_DEF}
       ${playerBase(130, 70, false)}
-      ${paddle(155, 95, -70, "ラケット")}
+      ${paddle(155, 95, -70)}
       ${ball(175, 55)}
       <circle cx="175" cy="55" r="12" fill="none" stroke="#ff8c42" stroke-width="1" stroke-dasharray="3 2"/>
       ${arrow(168, 62, 160, 88, true)}
@@ -173,7 +185,7 @@ function svgPose(kind) {
     smash: () => `
       ${ARROW_DEF}
       ${playerBase(100, 65, false)}
-      ${paddle(118, 75, -110, "ラケット")}
+      ${paddle(118, 75, -110)}
       ${ball(140, 45)}
       ${arrow(125, 72, 138, 52, false)}
       <text x="195" y="48" fill="#ff8c42" font-size="9" font-weight="bold">上から</text>
@@ -181,7 +193,7 @@ function svgPose(kind) {
     block_game: () => `
       ${ARROW_DEF}
       ${playerBase(130, 72, false)}
-      ${paddle(108, 88, 0, "ラケット")}
+      ${paddle(108, 88, 0)}
       ${ball(75, 82)}
       ${arrow(68, 78, 100, 84, false)}
       <text x="50" y="70" fill="#9aa3b5" font-size="8">相手の球</text>
@@ -190,7 +202,7 @@ function svgPose(kind) {
     footwork: () => `
       ${ARROW_DEF}
       ${playerBase(100, 72, false)}
-      ${paddle(125, 90, -30, "ラケット")}
+      ${paddle(125, 90, -30)}
       ${ball(180, 100)}
       <circle cx="100" cy="115" r="18" fill="none" stroke="#6ee7ff" stroke-width="1.5" stroke-dasharray="4 3"/>
       <text x="100" y="118" text-anchor="middle" fill="#6ee7ff" font-size="8">戻る</text>
