@@ -146,7 +146,7 @@
     // —— Generic fallbacks by strong name only ——
     C("gen_tenergy", "Tenergy", "tensor_euro", "tenergy|テナジー", null),
     C("gen_dignics", "Dignics", "tensor_euro", "dignics|ディグニクス", null),
-    C("gen_vega", "Vega", "tensor_euro", "ヴェガ|vega", null),
+    C("gen_vega", "Vega（XIOM）", "tensor_euro", "ヴェガ|vega", "xiom|エクシオム"),
     C("gen_markv", "Mark V", "high_friction", "マーク[ⅴＶv]", null),
     C("gen_glayzer", "Glayzer", "tacky_hybrid", "グレイザー|glayzer", null),
     C("gen_rigan", "Rigan", "tensor_euro", "ライガン|rigan", null),
