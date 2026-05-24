@@ -682,7 +682,13 @@ const ISSUE_CATALOG = {
   },
 };
 
-const INVERTED_RUBBERS = new Set(["high_friction", "tacky_chinese", "tensor_euro", "anti"]);
+const INVERTED_RUBBERS = new Set([
+  "high_friction",
+  "tacky_chinese",
+  "tacky_hybrid",
+  "tensor_euro",
+  "anti",
+]);
 
 const DRIVE_ISSUE_IDS = ["drive_speed", "drive_loop", "drive_knuckle", "drive_curve", "drive_shoot"];
 
@@ -703,9 +709,27 @@ const LEGACY_PRESET_TO_SURFACE = {
   long_pips: "pips",
   high_friction: "inverted",
   tacky_chinese: "inverted",
+  tacky_hybrid: "inverted",
   tensor_euro: "inverted",
   anti: "inverted",
 };
+
+/** 商品名は増やしすぎず、系統（カテゴリ）へ寄せる。ここは代表的な読み取り用キーワードのみ */
+const RUBBER_PRODUCT_NOTES = [
+  {
+    re: /グレイザー|glayzer|d09c|d09\b|dignics\s*0?9/i,
+    note:
+      "グレイザー／D09c系: 粘着トップ＋スプリング型。テンション同様に『弾ませる』より、食い込ませてから前へ送る練習が合います。",
+  },
+  {
+    re: /ライガン|rigan/i,
+    note: "ライガン系: 反発と球持ちのバランス型。引きと加速のタイミングを分けて、芯で押し切る練習が効きます。",
+  },
+  {
+    re: /天極|狂飙|紅双喜|729/i,
+    note: "中国粘着系: 摩擦時間が長い。薄く当てず、引き足と最後の押し込みをセットで反復してください。",
+  },
+];
 
 const LEGACY_HARDNESS_LABELS = { soft: "柔らかめ", medium: "標準", hard: "硬め" };
 
@@ -784,6 +808,50 @@ const RUBBER_TYPES = {
     },
     serveInvertedExtra:
       "粘着裏のサーブは軌道とボールへの圧が変わると回転表現が大きく変わります。巻き込み・しゃがみフォームでも『最後の一瞬の加速』が散らばらないよう、Spinsight でブレ幅を見てください。",
+  },
+  tacky_hybrid: {
+    label: "裏／粘着トップシート（ハイブリッド粘着）",
+    short: "裏・粘着ハイブリッド",
+    global: [
+      "粘着トップ＋スプリング（グレイザー09c、D09c系など）は、弾みだけに頼ると回転が伸びません。食い込ませてから前へ送る「擦り込み→押し切り」が核心です。",
+      "バック面が粘着のときは振りを大きくしすぎるとネットに寄りやすいので、コンパクトに終端まで加速する練習を週に入れてください。",
+      "テンション系と違い、『薄く速く当てる』より『少し厚めに捉えて摩擦時間を確保する』日を意識すると粘着の利点が出ます。",
+    ],
+    byIssue: {
+      drive: "ドライブは引き足でしっかり引き、最後に前へ送る。薄い当たりは回転だけで球が伸びにくい。",
+      drive_loop: "ループは終端加速まで意識。粘着トップは途中で面を離さないイメージで擦り込む。",
+      drive_speed: "スピードドライブは振りを小さく、食い込み位置を一定に。粘着は打点ズレで球速が落ちやすい。",
+      backhand_drive: "BH粘着は替え完了後に短く加速。肘で叩くより、前腕で『送る』。多球でミート位置を固定。",
+      topspin_rally: "ラリーは終端まで加速を統一。打点の前後より、面をボールに乗せ続ける長さを意識。",
+      underspin_receive: "下回転は寝かせすぎ注意。粘着は食い込みが深いので、戻しは短め・厚めから試す。",
+      flick_short: "短い球は大きく振らず、横〜斜め横への摩擦。粘着は振り過ぎでネットに寄りやすい。",
+      cut_defense: "削りはリズムとボール下の通過長さ。刃より、粘着面をボールに乗せる時間。",
+      serve: "サーブは圧と摩擦時間で回転差。入り率の日と、強い回転を狙う日を分ける。",
+      block_game: "ブロックは面を動かしすぎない。速い球は少し奥で、粘着の粘性で長さを合わせる。",
+      counter_attack: "カウンターは短い擦り込みから。弾み任せにせず、打点を手前に取りすぎない。",
+      spin_reading: "粘着は手元に回転差が出やすい。読み→足→短い加速の順で固定。",
+      third_ball: "第三球は引き不足で回転が落ちやすい。引き足の日と通常日を Spinsight で比較。",
+      pace_adapt: "遅い球は厚く当てすぎ、速い球は薄く当てすぎに注意。速度帯ごとに『厚め／薄め』を決める。",
+      footwork: "足が遅れると粘着ほどミートが落ちる。替えは最小ステップで。",
+      mental: "数値が落ちた日は、テンション用の振り（弾み任せ）になっていないか確認。",
+      smash: "厚めに捉える日を週に入れる。薄い当たりは粘着でも伸びにくい。",
+      push_attack: "プッシュも面の倒し方を一定に。粘着は戻しが長くなりやすい。",
+      lobbing: "弧はリズムと面。粘着でも高さより摩擦時間を優先。",
+    },
+    drillNote: {
+      drive: "引き→送り。薄く当てない。",
+      drive_loop: "終端まで擦り込む。",
+      backhand_drive: "BHは短く加速。多球で位置固定。",
+      topspin_rally: "面を乗せ続ける長さを統一。",
+      underspin_receive: "厚めから。寝かせすぎない。",
+      flick_short: "小さく横摩擦。",
+      serve: "圧と摩擦。引き足セット。",
+      counter_attack: "短い擦り込み。",
+      block_game: "面シンプル。奥で待つ。",
+      third_ball: "引き足を先に。",
+    },
+    serveInvertedExtra:
+      "粘着トップのサーブは、テンションより『ボールへの乗せ方』の差が出やすいです。同じ振りでもリリース点がズレると回転が落ちるので、Spinsight では回転のブレ幅を優先して見てください。",
   },
   tensor_euro: {
     label: "裏／テンション系（ヨーロッパ系）",
@@ -1109,10 +1177,12 @@ function resolveRubberByIssue(R, issueId) {
   return R.byIssue[issueId] || null;
 }
 
+/** 上から順に最初にマッチした系統を採用（全商品は登録せず系統へ集約） */
 const RUBBER_TEXT_TO_PRESET = [
-  [/粘着|中国|紅双喜|天極|天玻|729.*粘/i, "tacky_chinese"],
+  [/粘着.*中国|中国.*粘|紅双喜|天極|天玻|729|狂飙|省狂|haifun|海夫/i, "tacky_chinese"],
+  [/グレイザー|glayzer|d09c|d09\b|dignics\s*0?9|09c\b|張本|粘着トップ|sticky/i, "tacky_hybrid"],
   [
-    /テンション|欧州|ヨーロッパ|ヴェガ|vega|タンバー|フォーナス|拡張|dignics|ディグニクス|victas.*vega/i,
+    /テンション|欧州|ヨーロッパ|ヴェガ|vega|タンバー|フォーナス|拡張|dignics\s*0?5|d05|tenergy|テナジー|ライガン|rigan|victas.*vega/i,
     "tensor_euro",
   ],
   [/アンチ|anti|ソフトバン/i, "anti"],
@@ -1121,6 +1191,14 @@ const RUBBER_TEXT_TO_PRESET = [
   [/ロング|長粒|一粒|388/i, "long_pips"],
   [/高摩擦|裏ソフト|ラバ|ラザフォ|フォレスト|マーク[ⅴＶv]|マークファイブ|mark\s*v|ヤサカ/i, "high_friction"],
 ];
+
+function productNoteFromText(text) {
+  const t = String(text || "");
+  for (const { re, note } of RUBBER_PRODUCT_NOTES) {
+    if (re.test(t)) return note;
+  }
+  return "";
+}
 
 function inferPresetFromText(text) {
   const t = String(text || "").trim();
@@ -1139,6 +1217,7 @@ function normalizeRubberSide(formData, key) {
       name: String(side.name || "").trim(),
       hardness: String(side.hardness || "").trim(),
       surface: String(side.surface || "").trim(),
+      categoryOverride: String(side.categoryOverride || "auto").trim() || "auto",
     };
   }
   const textKey = `${key}Text`;
@@ -1147,7 +1226,7 @@ function normalizeRubberSide(formData, key) {
   const legacyHardKey = key === "rubberFh" ? "rubberFhHardness" : "rubberBhHardness";
   const legacyHard = formData[legacyHardKey];
   if (!legacyText && !legacyPreset && !legacyHard) {
-    return { brand: "", name: "", hardness: "", surface: "" };
+    return { brand: "", name: "", hardness: "", surface: "", categoryOverride: "auto" };
   }
   let hardness = "";
   if (legacyHard && legacyHard !== "unknown") {
@@ -1158,6 +1237,7 @@ function normalizeRubberSide(formData, key) {
     name: legacyText,
     hardness,
     surface: LEGACY_PRESET_TO_SURFACE[legacyPreset] || "",
+    categoryOverride: legacyPreset || "auto",
   };
 }
 
@@ -1181,6 +1261,9 @@ function combinedRubberSearchText(side) {
 }
 
 function effectivePresetForSide(side) {
+  const override = side.categoryOverride;
+  if (override && override !== "auto" && RUBBER_TYPES[override]) return override;
+
   const text = combinedRubberSearchText(side);
   const fromText = inferPresetFromText(text);
   if (fromText) return fromText;
@@ -1222,22 +1305,29 @@ function hintsFromRubberSide(side) {
   if (side.surface === "pips" || /粒|ピップ|pips|長粒|ロング|中粒|ショート/i.test(t)) {
     hints.push("粒ラバーは他人の裏ソフトの数値と直接比べず、自分用の基準でログを残すとよいです。");
   }
-  if (/粘着|中国/i.test(t)) hints.push("粘着系は軌道とボールへの圧で回転差を作る練習が効きます。");
+  if (/粘着|中国|グレイザー|glayzer|d09c/i.test(t)) {
+    hints.push("粘着系は軌道とボールへの圧で回転差を作る練習が効きます。");
+  }
+  if (/グレイザー|glayzer|d09c|d09\b/i.test(t)) {
+    hints.push("粘着トップ＋スプリング型は、弾み任せより擦り込み→押し切りの日を増やすと特性が出ます。");
+  }
   if (
-    /テンション|欧州|ヨーロッパ|ヴェガ|vega/i.test(t) &&
+    /テンション|欧州|ヨーロッパ|ヴェガ|vega|ライガン|rigan/i.test(t) &&
     side.surface !== "pips" &&
     side.surface !== "table"
   ) {
-    hints.push("テンション系（ヴェガヨーロッパ等）は加速のタイミングが数値に出やすいです。");
+    hints.push("テンション系は加速のタイミングが数値に出やすいです。");
   }
-  return hints.slice(0, 2);
+  return hints.slice(0, 3);
 }
 
 function buildSideRubberBlock(sideLabel, side, issueIds) {
   if (!rubberSideHasInput(side)) return null;
 
   const display = formatRubberLine(side);
+  const text = combinedRubberSearchText(side);
   const effective = effectivePresetForSide(side);
+  const inferred = inferPresetFromText(text);
 
   const bullets = [];
   const seen = new Set();
@@ -1248,6 +1338,18 @@ function buildSideRubberBlock(sideLabel, side, issueIds) {
   };
 
   if (display) add(`あなたのラバー: ${display}`);
+  if (effective && RUBBER_TYPES[effective]) {
+    const via =
+      side.categoryOverride && side.categoryOverride !== "auto"
+        ? "指定した系統"
+        : inferred
+          ? "商品名から推定"
+          : side.surface
+            ? "種類（裏・表・粒）から推定"
+            : "入力から推定";
+    add(`練習の考え方: ${RUBBER_TYPES[effective].label}（${via}）`);
+  }
+  add(productNoteFromText(text));
   for (const h of hardnessHintsFromText(sideLabel, side.hardness, side, effective)) add(h);
   for (const h of hintsFromRubberSide(side)) add(h);
 
@@ -1273,7 +1375,7 @@ function collectRubberAdvice(formData, issueIds) {
 
 /** サーブ課題選択時：裏／表／粒高それぞれのサーブ専用アドバイス */
 function collectServeRubberExtras(formData) {
-  const inverted = new Set(["high_friction", "tacky_chinese", "tensor_euro", "anti"]);
+  const inverted = new Set(["high_friction", "tacky_chinese", "tacky_hybrid", "tensor_euro", "anti"]);
   const lines = [];
   for (const [sideLabel, side] of [
     ["フォア面", normalizeRubberSide(formData, "rubberFh")],
@@ -1628,6 +1730,7 @@ function readRubberSideFromDom(prefix) {
     name: document.getElementById(`${prefix}Name`)?.value.trim() || "",
     hardness: document.getElementById(`${prefix}Hardness`)?.value.trim() || "",
     surface: surfaceEl?.value || "",
+    categoryOverride: document.getElementById(`${prefix}Category`)?.value || "auto",
   };
 }
 
@@ -1665,6 +1768,8 @@ function restoreRubberSideToDom(prefix, formData, key) {
   set(`${prefix}Brand`, side.brand);
   set(`${prefix}Name`, side.name);
   set(`${prefix}Hardness`, side.hardness);
+  const catEl = document.getElementById(`${prefix}Category`);
+  if (catEl) catEl.value = side.categoryOverride || "auto";
   document.querySelectorAll(`input[name="${prefix}Surface"]`).forEach((el) => {
     el.checked = el.value === side.surface;
   });

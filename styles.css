@@ -622,6 +622,16 @@ body {
   color: var(--muted);
 }
 
+.rubber-category-details {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.rubber-category-details summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
 select.hardness-inactive {
   opacity: 0.45;
   cursor: not-allowed;

@@ -204,7 +204,7 @@
           <fieldset class="fieldset">
             <legend>ラバー（任意）</legend>
             <p class="hint muted">
-              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。<strong>硬さは任意</strong>で、わからなければ空欄のままで問題ありません。すべて空欄でもプランは作れます。
+              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。商品名から<strong>粘着・テンションなどの系統</strong>を推定し、その系統向けの練習ヒントを足します（全商品は登録しません）。<strong>硬さは任意</strong>です。
             </p>
 
             <div class="rubber-side-block">
@@ -285,6 +285,42 @@
               <p class="hint muted">
                 欧州系は「42.5度」などショアA（°）、国内のバタフライ等は「硬め」「MAX」など表記が異なることがあります。パッケージの表記をそのまま書けます。サイトでは基準の変換はしません。
               </p>
+            </details>
+            <details class="rubber-category-details">
+              <summary>ラバーの系統を自分で指定する（任意・自動判別と違うとき）</summary>
+              <p class="hint muted">
+                通常はメーカー・ラバー名から自動判別します。グレイザー09cがテンション扱いになるなど合わないときだけ、フォア・バックそれぞれ選んでください。
+              </p>
+              <div class="row-2">
+                <label class="field">
+                  <span class="field-label">フォア面の系統</span>
+                  <select id="rubberFhCategory" name="rubberFhCategory">
+                    <option value="auto">自動（商品名から推定）</option>
+                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
+                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
+                    <option value="tensor_euro">テンション（欧州系）</option>
+                    <option value="high_friction">高摩擦裏（バランス型）</option>
+                    <option value="short_pips">表（ショート）</option>
+                    <option value="medium_pips">粒高（ミディアム）</option>
+                    <option value="long_pips">粒高（ロング）</option>
+                    <option value="anti">アンチ系</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span class="field-label">バック面の系統</span>
+                  <select id="rubberBhCategory" name="rubberBhCategory">
+                    <option value="auto">自動（商品名から推定）</option>
+                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
+                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
+                    <option value="tensor_euro">テンション（欧州系）</option>
+                    <option value="high_friction">高摩擦裏（バランス型）</option>
+                    <option value="short_pips">表（ショート）</option>
+                    <option value="medium_pips">粒高（ミディアム）</option>
+                    <option value="long_pips">粒高（ロング）</option>
+                    <option value="anti">アンチ系</option>
+                  </select>
+                </label>
+              </div>
             </details>
           </fieldset>
 
