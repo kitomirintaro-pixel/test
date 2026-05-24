@@ -1103,58 +1103,124 @@ function resolveRubberByIssue(R, issueId) {
   return R.byIssue[issueId] || null;
 }
 
-function hardnessBullets(rubberId, hardness) {
-  if (!rubberId || !INVERTED_RUBBERS.has(rubberId) || !hardness || hardness === "unknown") return [];
-  const tip = HARDNESS_TIPS[hardness];
-  if (!tip) return [];
-  return [`裏の硬さ（${HARDNESS_LABELS[hardness]}）: ${tip}`];
+const RUBBER_TEXT_TO_PRESET = [
+  [/粘着|中国|紅双喜|天極|天玻|729.*粘/i, "tacky_chinese"],
+  [/テンション|欧州|タンバー|フォーナス|拡張|dignics|ディグニクス/i, "tensor_euro"],
+  [/アンチ|anti|ソフトバン/i, "anti"],
+  [/ショート|表ソフト|ブラスト|党滅|vo[0-9]/i, "short_pips"],
+  [/ミディアム|中粒/i, "medium_pips"],
+  [/ロング|長粒|一粒|388/i, "long_pips"],
+  [/高摩擦|裏ソフト|ラバ|ラザフォ|フォレスト/i, "high_friction"],
+];
+
+function inferPresetFromText(text) {
+  const t = String(text || "").trim();
+  if (!t) return "";
+  for (const [re, id] of RUBBER_TEXT_TO_PRESET) {
+    if (re.test(t)) return id;
+  }
+  return "";
 }
 
-function collectRubberAdvice(fh, bh, fhHardness, bhHardness, issueIds) {
-  const blocks = [];
-  const seenText = new Set();
+function effectiveRubberPreset(presetId, text) {
+  return presetId || inferPresetFromText(text) || "";
+}
 
-  const addBlock = (sideLabel, rubberId, hardness) => {
-    if (!rubberId) return;
-    const R = RUBBER_TYPES[rubberId];
-    if (!R) return;
-    const title = `${sideLabel}（${R.label}）`;
-    const bullets = [];
-    for (const h of hardnessBullets(rubberId, hardness)) {
-      if (!seenText.has(h)) {
-        seenText.add(h);
-        bullets.push(h);
-      }
-    }
-    for (const line of R.global || []) {
-      if (!seenText.has(line)) {
-        seenText.add(line);
-        bullets.push(line);
-      }
-    }
-    for (const issueId of issueIds) {
-      const t = resolveRubberByIssue(R, issueId);
-      if (t && !seenText.has(t)) {
-        seenText.add(t);
-        bullets.push(t);
-      }
-    }
-    if (bullets.length) blocks.push({ title, bullets });
+function isInvertedRubber(presetId, text) {
+  if (presetId && INVERTED_RUBBERS.has(presetId)) return true;
+  const t = String(text || "");
+  if (!t.trim()) return false;
+  if (/粒|ピップ|pips|ショート|ロング|長粒|中粒|一枚/i.test(t)) return false;
+  return /裏|インバ|粘着|テンション|高摩擦|ラバ|d0[0-9]|tenergy|ファーマ|ゲッツ|dignics/i.test(t);
+}
+
+function hardnessBulletsForSide(sideLabel, presetId, text, hardness) {
+  if (!isInvertedRubber(presetId, text) || !hardness || hardness === "unknown") return [];
+  const tip = HARDNESS_TIPS[hardness];
+  if (!tip) return [];
+  return [`${sideLabel}・硬さ（${HARDNESS_LABELS[hardness]}）: ${tip}`];
+}
+
+function hintsFromCustomRubberText(text) {
+  const t = String(text || "");
+  if (!t.trim()) return [];
+  const hints = [];
+  if (/硬|hard/i.test(t)) hints.push("硬めと書かれているので、面よりタイミングと芯で球速を出す意識が合いやすいです。");
+  if (/柔|soft/i.test(t)) hints.push("柔らかめは食い込みやすい。薄く当てすぎるとネットやオーバーになりやすいです。");
+  if (/粒|ピップ|pips|長粒|ロング|中粒|ショート/i.test(t)) {
+    hints.push("粒ラバーは他人の裏ソフトの数値と直接比べず、自分用の基準でログを残すとよいです。");
+  }
+  if (/粘着|中国/i.test(t)) hints.push("粘着系は軌道とボールへの圧で回転差を作る練習が効きます。");
+  if (/テンション|欧州/i.test(t)) hints.push("テンション系は加速のタイミングが数値に出やすいです。");
+  return hints.slice(0, 2);
+}
+
+function buildSideRubberBlock(sideLabel, text, presetId, hardness, issueIds) {
+  const custom = String(text || "").trim();
+  const preset = presetId && RUBBER_TYPES[presetId] ? presetId : "";
+  const inferred = inferPresetFromText(custom);
+  const effective = preset || inferred;
+
+  if (!custom && !effective) return null;
+
+  const bullets = [];
+  const seen = new Set();
+  const add = (line) => {
+    if (!line || seen.has(line)) return;
+    seen.add(line);
+    bullets.push(line);
   };
 
-  addBlock("フォア面", fh, fhHardness);
-  addBlock("バック面", bh, bhHardness);
+  if (custom) add(`あなたのラバー: ${custom}`);
+  for (const h of hardnessBulletsForSide(sideLabel, effective || presetId, custom, hardness)) add(h);
+  for (const h of hintsFromCustomRubberText(custom)) add(h);
+
+  if (effective && RUBBER_TYPES[effective]) {
+    const R = RUBBER_TYPES[effective];
+    if (preset && inferred && preset !== inferred) {
+      add("入力とテンプレートの両方からヒントを足しています。");
+    }
+    for (const line of R.global || []) add(line);
+    for (const issueId of issueIds) add(resolveRubberByIssue(R, issueId));
+  }
+
+  const title = custom
+    ? `${sideLabel}（${custom}）`
+    : `${sideLabel}（${RUBBER_TYPES[effective].label}）`;
+
+  return bullets.length ? { title, bullets } : null;
+}
+
+function collectRubberAdvice(formData, issueIds) {
+  const blocks = [];
+  const fh = buildSideRubberBlock(
+    "フォア面",
+    formData.rubberFhText,
+    formData.rubberFh,
+    formData.rubberFhHardness,
+    issueIds
+  );
+  const bh = buildSideRubberBlock(
+    "バック面",
+    formData.rubberBhText,
+    formData.rubberBh,
+    formData.rubberBhHardness,
+    issueIds
+  );
+  if (fh) blocks.push(fh);
+  if (bh) blocks.push(bh);
   return blocks;
 }
 
 /** サーブ課題選択時：裏／表／粒高それぞれのサーブ専用アドバイス */
-function collectServeRubberExtras(fh, bh) {
+function collectServeRubberExtras(formData) {
   const inverted = new Set(["high_friction", "tacky_chinese", "tensor_euro", "anti"]);
   const lines = [];
-  for (const [side, rid] of [
-    ["フォア面", fh],
-    ["バック面", bh],
+  for (const [side, text, preset] of [
+    ["フォア面", formData.rubberFhText, formData.rubberFh],
+    ["バック面", formData.rubberBhText, formData.rubberBh],
   ]) {
+    const rid = effectiveRubberPreset(preset, text);
     if (!rid) continue;
     const R = RUBBER_TYPES[rid];
     if (!R) continue;
@@ -1171,15 +1237,22 @@ function collectServeRubberExtras(fh, bh) {
   return lines;
 }
 
-function rubberDrillSuffix(issueId, fh, bh) {
+function rubberDrillSuffix(issueId, formData) {
   let drillKey = issueId;
   if (issueId.startsWith("serve_")) drillKey = "serve";
   else if (issueId === "drive" || issueId.startsWith("drive_")) drillKey = "drive";
   const parts = [];
-  for (const [side, rid] of [
-    ["フォア", fh],
-    ["バック", bh],
+  for (const [side, text, preset] of [
+    ["フォア", formData.rubberFhText, formData.rubberFh],
+    ["バック", formData.rubberBhText, formData.rubberBh],
   ]) {
+    const custom = String(text || "").trim();
+    const rid = effectiveRubberPreset(preset, custom);
+    if (custom) {
+      const short = custom.length > 22 ? `${custom.slice(0, 22)}…` : custom;
+      parts.push(`${side}: ${short}`);
+      continue;
+    }
     if (!rid) continue;
     const R = RUBBER_TYPES[rid];
     const note = R?.drillNote?.[issueId] || R?.drillNote?.[drillKey];
@@ -1187,6 +1260,15 @@ function rubberDrillSuffix(issueId, fh, bh) {
   }
   if (parts.length === 0) return "";
   return ` — ${parts.join(" / ")}`;
+}
+
+function hasRubberInput(formData) {
+  return Boolean(
+    String(formData.rubberFhText || "").trim() ||
+      String(formData.rubberBhText || "").trim() ||
+      formData.rubberFh ||
+      formData.rubberBh
+  );
 }
 
 function buildWeeklyPlan(issueIds) {
@@ -1236,21 +1318,15 @@ function generatePlan(formData) {
     if (!cat) continue;
     improvements.push(...cat.improvements.map((t) => ({ id, text: t })));
     for (const d of cat.drills) {
-      const suffix = rubberDrillSuffix(id, formData.rubberFh, formData.rubberBh);
+      const suffix = rubberDrillSuffix(id, formData);
       drills.push({ ...d, issueId: id, detail: d.detail + suffix });
     }
     spinsightHints.push(cat.spinsight);
   }
 
-  const rubberAdvice = collectRubberAdvice(
-    formData.rubberFh,
-    formData.rubberBh,
-    formData.rubberFhHardness,
-    formData.rubberBhHardness,
-    issueIds
-  );
+  const rubberAdvice = collectRubberAdvice(formData, issueIds);
   const hasServeIssue = issueIds.some((id) => id.startsWith("serve_") || id === "serve");
-  const serveRubberExtras = hasServeIssue ? collectServeRubberExtras(formData.rubberFh, formData.rubberBh) : [];
+  const serveRubberExtras = hasServeIssue ? collectServeRubberExtras(formData) : [];
 
   const topImprovements = uniqueByKey(improvements, (x) => x.text).slice(0, 12);
   const topDrills = uniqueByKey(drills, (d) => `${d.name}-${d.detail}`).slice(0, 12);
@@ -1258,10 +1334,7 @@ function generatePlan(formData) {
   const spinsightExtra = spinsightContextNotes(formData);
 
   const summaryParts = issueIds.map((id) => ISSUE_CATALOG[id]?.label).filter(Boolean);
-  const rubberSummary =
-    [formData.rubberFh, formData.rubberBh].filter(Boolean).length === 0
-      ? ""
-      : " 選んだラバーに合わせてヒントを足しています。";
+  const rubberSummary = hasRubberInput(formData) ? " 入力したラバーに合わせてヒントを足しています。" : "";
 
   const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${rubberSummary}下に改善ポイントと練習メニューがあります。`;
 
@@ -1497,12 +1570,12 @@ function collectForm() {
   const rpsRange = document.getElementById("rpsRange").value;
   const stability = document.getElementById("stability").value;
   const freeform = document.getElementById("spinsightNotes").value;
-  const rubberFh = document.getElementById("rubberFh").value;
-  const rubberBh = document.getElementById("rubberBh").value;
-  let rubberFhHardness = document.getElementById("rubberFhHardness")?.value || "unknown";
-  let rubberBhHardness = document.getElementById("rubberBhHardness")?.value || "unknown";
-  if (!INVERTED_RUBBERS.has(rubberFh)) rubberFhHardness = "unknown";
-  if (!INVERTED_RUBBERS.has(rubberBh)) rubberBhHardness = "unknown";
+  const rubberFhText = document.getElementById("rubberFhText")?.value || "";
+  const rubberBhText = document.getElementById("rubberBhText")?.value || "";
+  const rubberFh = document.getElementById("rubberFh")?.value || "";
+  const rubberBh = document.getElementById("rubberBh")?.value || "";
+  const rubberFhHardness = document.getElementById("rubberFhHardness")?.value || "unknown";
+  const rubberBhHardness = document.getElementById("rubberBhHardness")?.value || "unknown";
   const playerName = document.getElementById("playerName")?.value || "";
   const strokeType = document.getElementById("strokeType").value;
   const spinRps = parseOptionalNumber("spinRps");
@@ -1514,6 +1587,8 @@ function collectForm() {
     stability,
     freeform,
     playerName,
+    rubberFhText,
+    rubberBhText,
     rubberFh,
     rubberBh,
     rubberFhHardness,
@@ -1524,30 +1599,44 @@ function collectForm() {
   };
 }
 
-function syncHardnessSelects() {
-  const pairs = [
-    ["rubberFh", "rubberFhHardness"],
-    ["rubberBh", "rubberBhHardness"],
-  ];
-  for (const [rubberId, hardId] of pairs) {
-    const rubber = document.getElementById(rubberId);
-    const hard = document.getElementById(hardId);
-    if (!rubber || !hard) continue;
-    const active = INVERTED_RUBBERS.has(rubber.value);
-    hard.disabled = false;
-    hard.classList.toggle("hardness-active", active);
-    hard.classList.toggle("hardness-inactive", !active);
-    hard.setAttribute("aria-disabled", active ? "false" : "true");
-    if (!active) hard.value = "unknown";
-  }
+function restoreFormFromRecord(formData) {
+  if (!formData) return;
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val ?? "";
+  };
+  set("playerName", formData.playerName);
+  set("goals", formData.goals);
+  set("rubberFhText", formData.rubberFhText);
+  set("rubberBhText", formData.rubberBhText);
+  set("rubberFh", formData.rubberFh);
+  set("rubberBh", formData.rubberBh);
+  set("rubberFhHardness", formData.rubberFhHardness || "unknown");
+  set("rubberBhHardness", formData.rubberBhHardness || "unknown");
+  set("rpsRange", formData.rpsRange);
+  set("stability", formData.stability);
+  set("spinsightNotes", formData.freeform);
+  set("strokeType", formData.strokeType);
+  set("spinRps", formData.spinRps != null ? formData.spinRps : "");
+  set("ballSpeed", formData.ballSpeed != null ? formData.ballSpeed : "");
+  document.querySelectorAll('input[name="issue"]').forEach((el) => {
+    el.checked = formData.issues?.includes(el.value) ?? false;
+  });
 }
 
 function recordSummaryText(record) {
+  const rubber = [record.formData?.rubberFhText, record.formData?.rubberBhText]
+    .map((s) => String(s || "").trim())
+    .filter(Boolean)
+    .join("／");
   const labels = record.plan?.issueLabels;
+  const parts = [];
+  if (rubber) parts.push(rubber);
   if (labels?.length) {
-    const short = labels.slice(0, 3).join("、");
-    return labels.length > 3 ? `${short}…` : short;
+    const short = labels.slice(0, 2).join("、");
+    parts.push(labels.length > 2 ? `${short}…` : short);
   }
+  if (parts.length) return parts.join(" ・ ");
   return "練習プラン";
 }
 
@@ -1598,7 +1687,7 @@ function refreshRecordList() {
     openBtn.className = "btn btn-ghost btn-small";
     openBtn.textContent = "表示";
     openBtn.addEventListener("click", () => {
-      document.getElementById("playerName").value = r.playerName;
+      restoreFormFromRecord(r.formData);
       const out = document.getElementById("plan-output");
       renderPlan(r.plan, out);
       out.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1634,14 +1723,6 @@ function init() {
   const out = document.getElementById("plan-output");
   const err = document.getElementById("plan-error");
 
-  const rubberFh = document.getElementById("rubberFh");
-  const rubberBh = document.getElementById("rubberBh");
-  for (const el of [rubberFh, rubberBh]) {
-    if (!el) continue;
-    el.addEventListener("change", syncHardnessSelects);
-    el.addEventListener("input", syncHardnessSelects);
-  }
-  syncHardnessSelects();
   refreshRecordList();
 
   document.getElementById("btn-clear-all-records")?.addEventListener("click", () => {

@@ -202,70 +202,95 @@
           </fieldset>
 
           <fieldset class="fieldset">
-            <legend>ラバー（練習メニューのヒントに反映）</legend>
+            <legend>ラバー（自由入力・任意）</legend>
             <div class="row-2">
               <label class="field">
-                <span class="field-label">フォア面</span>
-                <select id="rubberFh" name="rubberFh">
-                  <option value="">未指定（ラバー別ヒントなし）</option>
-                  <optgroup label="裏（裏ソフト）">
-                    <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
-                    <option value="tacky_chinese">中国式（粘着系）</option>
-                    <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
-                    <option value="anti">アンチ・ソフトバンなど</option>
-                  </optgroup>
-                  <optgroup label="表（表ソフト・ショート）">
-                    <option value="short_pips">ショートピップス</option>
-                  </optgroup>
-                  <optgroup label="粒高（ミディアム／ロング等）">
-                    <option value="medium_pips">ミディアムピップス</option>
-                    <option value="long_pips">ロングピップス／一枚ラバー</option>
-                  </optgroup>
-                </select>
+                <span class="field-label">フォア面のラバー</span>
+                <input
+                  type="text"
+                  id="rubberFhText"
+                  name="rubberFhText"
+                  maxlength="120"
+                  placeholder="例: D09c 硬め / ショート粒 党滅 / 高摩擦裏ソフト"
+                />
               </label>
               <label class="field">
-                <span class="field-label">バック面</span>
-                <select id="rubberBh" name="rubberBh">
-                  <option value="">未指定（ラバー別ヒントなし）</option>
-                  <optgroup label="裏（裏ソフト）">
-                    <option value="high_friction">高摩擦裏ソフト（バランス型）</option>
-                    <option value="tacky_chinese">中国式（粘着系）</option>
-                    <option value="tensor_euro">テンション系（ヨーロッパ系）</option>
-                    <option value="anti">アンチ・ソフトバンなど</option>
-                  </optgroup>
-                  <optgroup label="表（表ソフト・ショート）">
-                    <option value="short_pips">ショートピップス</option>
-                  </optgroup>
-                  <optgroup label="粒高（ミディアム／ロング等）">
-                    <option value="medium_pips">ミディアムピップス</option>
-                    <option value="long_pips">ロングピップス／一枚ラバー</option>
-                  </optgroup>
-                </select>
-              </label>
-            </div>
-            <div class="row-2">
-              <label class="field">
-                <span class="field-label">フォア・裏の硬さ</span>
-                <select id="rubberFhHardness" name="rubberFhHardness" class="hardness-inactive">
-                  <option value="unknown">指定なし</option>
-                  <option value="soft">柔らかめ</option>
-                  <option value="medium">標準</option>
-                  <option value="hard">硬め</option>
-                </select>
-              </label>
-              <label class="field">
-                <span class="field-label">バック・裏の硬さ</span>
-                <select id="rubberBhHardness" name="rubberBhHardness" class="hardness-inactive">
-                  <option value="unknown">指定なし</option>
-                  <option value="soft">柔らかめ</option>
-                  <option value="medium">標準</option>
-                  <option value="hard">硬め</option>
-                </select>
+                <span class="field-label">バック面のラバー</span>
+                <input
+                  type="text"
+                  id="rubberBhText"
+                  name="rubberBhText"
+                  maxlength="120"
+                  placeholder="例: 長粒 388d-1 / テンション05 / 中国式"
+                />
               </label>
             </div>
             <p class="hint muted">
-              <strong>未指定</strong>＝ラバー別ヒントなし。<strong>裏</strong>を選ぶと、その下の「硬さ」が選べます（柔らかめ／標準／硬め）。<strong>表</strong>はショート、<strong>粒高</strong>はミディアム／ロング想定です。
+              メーカー名・種類・硬さ・粒/裏など、使っているラバーをそのまま書いてください。空欄でも利用できます。
             </p>
+            <details class="rubber-details">
+              <summary>テンプレートを追加する（任意・入力と併用可）</summary>
+              <div class="row-2 rubber-details-inner">
+                <label class="field">
+                  <span class="field-label">フォア・テンプレート</span>
+                  <select id="rubberFh" name="rubberFh">
+                    <option value="">なし</option>
+                    <optgroup label="裏（裏ソフト）">
+                      <option value="high_friction">高摩擦裏ソフト</option>
+                      <option value="tacky_chinese">中国式（粘着）</option>
+                      <option value="tensor_euro">テンション系</option>
+                      <option value="anti">アンチ系</option>
+                    </optgroup>
+                    <optgroup label="表">
+                      <option value="short_pips">ショートピップス</option>
+                    </optgroup>
+                    <optgroup label="粒高">
+                      <option value="medium_pips">ミディアム</option>
+                      <option value="long_pips">ロング／一枚</option>
+                    </optgroup>
+                  </select>
+                </label>
+                <label class="field">
+                  <span class="field-label">バック・テンプレート</span>
+                  <select id="rubberBh" name="rubberBh">
+                    <option value="">なし</option>
+                    <optgroup label="裏（裏ソフト）">
+                      <option value="high_friction">高摩擦裏ソフト</option>
+                      <option value="tacky_chinese">中国式（粘着）</option>
+                      <option value="tensor_euro">テンション系</option>
+                      <option value="anti">アンチ系</option>
+                    </optgroup>
+                    <optgroup label="表">
+                      <option value="short_pips">ショートピップス</option>
+                    </optgroup>
+                    <optgroup label="粒高">
+                      <option value="medium_pips">ミディアム</option>
+                      <option value="long_pips">ロング／一枚</option>
+                    </optgroup>
+                  </select>
+                </label>
+              </div>
+            </details>
+            <div class="row-2">
+              <label class="field">
+                <span class="field-label">フォア・硬さ（裏ソフトのとき・任意）</span>
+                <select id="rubberFhHardness" name="rubberFhHardness">
+                  <option value="unknown">指定なし</option>
+                  <option value="soft">柔らかめ</option>
+                  <option value="medium">標準</option>
+                  <option value="hard">硬め</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">バック・硬さ（裏ソフトのとき・任意）</span>
+                <select id="rubberBhHardness" name="rubberBhHardness">
+                  <option value="unknown">指定なし</option>
+                  <option value="soft">柔らかめ</option>
+                  <option value="medium">標準</option>
+                  <option value="hard">硬め</option>
+                </select>
+              </label>
+            </div>
           </fieldset>
 
           <label class="field">
