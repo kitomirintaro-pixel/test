@@ -1,8 +1,10 @@
 /** 練習ポーズの簡易イラスト（SVG） */
 const POSE_LABELS = {
-  forehand_drive: "フォアドライブ",
-  curve_drive: "カーブドライブ",
-  straight_drive: "ストレートドライブ",
+  drive: "ドライブ",
+  drive_speed: "スピードドライブ",
+  drive_loop: "ループドライブ",
+  drive_curve: "カーブドライブ",
+  drive_shoot: "シュートドライブ",
   backhand_drive: "バックドライブ",
   serve: "サーブ",
   smash: "スマッシュ",
@@ -11,13 +13,15 @@ const POSE_LABELS = {
 };
 
 const ISSUE_TO_POSE = {
-  forehand_drive: "forehand_drive",
-  straight_drive: "straight_drive",
-  curve_drive: "curve_drive",
-  fast_drive: "forehand_drive",
+  drive: "drive",
+  drive_speed: "drive_speed",
+  drive_loop: "drive_loop",
+  drive_knuckle: "drive",
+  drive_curve: "drive_curve",
+  drive_shoot: "drive_shoot",
   backhand_drive: "backhand_drive",
-  topspin_rally: "forehand_drive",
-  counter_attack: "forehand_drive",
+  topspin_rally: "drive_loop",
+  counter_attack: "drive_speed",
   smash: "smash",
   block_game: "block_game",
   serve: "serve",
@@ -39,25 +43,36 @@ function svgPose(kind) {
   const ball = `<circle cx="120" cy="88" r="6" fill="#ff8c42"/>`;
 
   const bodies = {
-    forehand_drive: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
+    drive: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
       <circle cx="70" cy="35" r="10"/>
       <line x1="70" y1="45" x2="75" y2="70"/>
       <line x1="75" y1="70" x2="95" y2="85"/>
       <line x1="75" y1="55" x2="110" y2="75"/>
       <line x1="110" y1="75" x2="130" y2="82"/>
     </g>`,
-    curve_drive: `<g stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round">
+    drive_speed: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
+      <circle cx="75" cy="36" r="10"/>
+      <line x1="75" y1="46" x2="80" y2="68"/>
+      <line x1="80" y1="68" x2="100" y2="86"/>
+      <line x1="80" y1="52" x2="135" y2="78"/>
+    </g>`,
+    drive_loop: `<g stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round">
+      <circle cx="72" cy="34" r="10"/>
+      <line x1="72" y1="44" x2="78" y2="68"/>
+      <path d="M 85 72 Q 105 58 125 82" />
+      <line x1="78" y1="58" x2="115" y2="76"/>
+    </g>`,
+    drive_curve: `<g stroke="#a78bfa" stroke-width="3" fill="none" stroke-linecap="round">
       <circle cx="65" cy="38" r="10"/>
       <line x1="65" y1="48" x2="72" y2="72"/>
-      <line x1="72" y1="72" x2="88" y2="88"/>
       <path d="M 95 80 Q 115 70 125 85" stroke="#ff8c42" stroke-width="2" fill="none"/>
       <line x1="72" y1="58" x2="100" y2="78"/>
     </g>`,
-    straight_drive: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
-      <circle cx="80" cy="36" r="10"/>
-      <line x1="80" y1="46" x2="85" y2="72"/>
-      <line x1="85" y1="72" x2="100" y2="88"/>
-      <line x1="85" y1="55" x2="125" y2="80"/>
+    drive_shoot: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
+      <circle cx="85" cy="42" r="10"/>
+      <line x1="85" y1="52" x2="90" y2="72"/>
+      <line x1="90" y1="72" x2="108" y2="88"/>
+      <line x1="90" y1="60" x2="128" y2="82"/>
     </g>`,
     backhand_drive: `<g stroke="#6ee7ff" stroke-width="3" fill="none" stroke-linecap="round">
       <circle cx="120" cy="36" r="10"/>
@@ -92,7 +107,7 @@ function svgPose(kind) {
     </g>`,
   };
 
-  const body = bodies[kind] || bodies.forehand_drive;
+  const body = bodies[kind] || bodies.drive;
   return `<svg class="pose-svg" ${common}>${table}${ball}${body}</svg>`;
 }
 

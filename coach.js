@@ -4,90 +4,131 @@
  */
 
 const ISSUE_CATALOG = {
-  forehand_drive: {
-    label: "フォアドライブ（威力・前後の出し入れ）",
+  drive: {
+    label: "ドライブ（全般）",
     improvements: [
-      "打点が高すぎると回転が抜けやすい。ボールの「少し手前」で芯を捉える意識から始める",
-      "スイングは腰の回転→腕の加速の順。いきなり腕だけで叩かない",
-      "相手の上回転が強いほど、面を少し閉じ気味に保ち、前への送りを短くする",
+      "打点はボールの少し手前。高すぎると回転が抜けやすい",
+      "腰→腕の順で振る。腕だけで叩かない",
+      "ミスしたら「打点／面／タイミング」のどれか一つだけ直す",
     ],
     drills: [
       {
-        name: "フォア一本ドライブ（定点クロス）",
+        name: "ドライブ定点20本",
         time: "12分",
-        detail: "相手の上回転を固定コースへ。20本連続でネット・ラインを記録。ミス時は打点か面のどちらか一方だけ修正。",
+        detail: "同じコースに連続で打つ。ネットとラインの数だけ記録。",
       },
       {
-        name: "前後コントロールドライブ",
-        time: "15分",
-        detail: "同じスイングイメージで深い球／浅い球を意図的に出し分け。Spinsight で球速と回転のトレードオフを確認。",
+        name: "深さの出し分け",
+        time: "12分",
+        detail: "深い球と浅い球を意図的に変える。同じフォームを保つ。",
       },
     ],
-    spinsight:
-      "フォアドライブはストローク練で同じ打点帯を繰り返し測り、回転・速度のブレ幅を週で比較すると伸びます。",
+    spinsight: "同じコースで計測すると、球速と回転の伸びがわかりやすいです。",
   },
-  straight_drive: {
-    label: "ストレートドライブ（まっすぐ速い）",
+  drive_speed: {
+    label: "スピードドライブ",
     improvements: [
-      "ラケット面は開きすぎない。ボールの真ん中を狙う",
-      "体は目標コースの方へ向ける。腕だけで横に振らない",
-      "最初は力を7割くらいにして入る率を上げる",
+      "振りは小さく、最後だけ速く出す",
+      "待ちすぎない。ボールが上がったらすぐ当てる",
+      "最初は入る率優先。速さは後から足す",
     ],
     drills: [
       {
-        name: "ストレート20本",
+        name: "スピードドライブ20本",
         time: "10分",
-        detail: "相手の上回転をストレートに返す。ネットとラインだけ記録。",
+        detail: "ストレートまたは決めコースに連続。球速だけ週で比較。",
       },
       {
-        name: "速い球へのストレート",
+        name: "初動一本",
         time: "12分",
-        detail: "多球で速い球を入れてもらい、ストレート一本だけ返す。",
+        detail: "相手の第3球に対し、速いドライブだけ可。",
       },
     ],
-    spinsight: "同じコースで計測すると、球速の伸びがわかりやすいです。",
+    spinsight: "球速のピークを同じ条件で記録してください。",
   },
-  curve_drive: {
-    label: "カーブドライブ（横に曲げる）",
+  drive_loop: {
+    label: "ループドライブ",
+    improvements: [
+      "小さく当ててから押し込む。いきなり大きく振らない",
+      "面は少し閉じ気味。上回転をかけすぎない",
+      "相手の下回転には足を入れてから振る",
+    ],
+    drills: [
+      {
+        name: "ループドライブ連続",
+        time: "14分",
+        detail: "上回転ラリーでループドライブだけ使う。20本の入り数。",
+      },
+      {
+        name: "押し込み一本",
+        time: "12分",
+        detail: "多球の上回転に対し、ループドライブで深く返す。",
+      },
+    ],
+    spinsight: "回転と球速のバランスをセットで見ると伸びます。",
+  },
+  drive_knuckle: {
+    label: "ナックルドライブ",
+    improvements: [
+      "回転をかけすぎない。面はほぼ垂直に近く",
+      "スイングはコンパクトに。ブレを減らす",
+      "相手の読みをずらすなら、振りは似せて最後だけ変える",
+    ],
+    drills: [
+      {
+        name: "ナックル定点",
+        time: "12分",
+        detail: "ノースピン寄りのドライブを同じコースに。飛び出しとネットを記録。",
+      },
+      {
+        name: "見せかけループ→ナックル",
+        time: "14分",
+        detail: "振りは似せて、回転だけ変える練習。",
+      },
+    ],
+    spinsight: "回転が少ない球は数値のブレが出やすい。同じフォームで何本か測る。",
+  },
+  drive_curve: {
+    label: "カーブドライブ",
     improvements: [
       "ボールの横を少し擦る。面は少し開く",
-      "足は曲がる方向へ一歩。腰も同じ方向へ",
-      "最初は曲がりだけ。速さは後から足す",
+      "足は曲がる方向へ一歩入れる",
+      "最初は曲がりだけ狙う。速さは後から",
     ],
     drills: [
       {
         name: "カーブ定点",
         time: "12分",
-        detail: "フォアからバックサイドへ曲げる。10本連続で入り数を記録。",
+        detail: "横に曲げるコースを固定。10本連続で入り数。",
       },
       {
-        name: "見せかけストレート→カーブ",
+        name: "ストレート見せかけ→カーブ",
         time: "14分",
-        detail: "振りは似せて、最後だけ面を変えて曲げる。",
+        detail: "振りは似せて、最後だけ面を変える。",
       },
     ],
-    spinsight: "曲げた球は回転の向きがポイント。同じ条件で数値を残すと上達が早いです。",
+    spinsight: "曲げた球は回転の向きがポイント。同じ条件で記録。",
   },
-  fast_drive: {
-    label: "速いドライブ（初動・速攻）",
+  drive_shoot: {
+    label: "シュートドライブ",
     improvements: [
-      "待ちすぎない。ボールが上がったらすぐ当てる",
-      "振りは小さく、最後だけ速く出す",
-      "ミスしたら「早すぎた／遅かった」を一言でメモ",
+      "低い打点で前に押し出す。ラケット面は開きすぎない",
+      "体は低いまま。膝を使ってボールの下を通す",
+      "コースはまっすぐ。腕だけで横に振らない",
     ],
     drills: [
       {
-        name: "初動ドライブ",
-        time: "10分",
-        detail: "相手の第3球に対し、一本だけ速いドライブ可。",
+        name: "シュート20本",
+        time: "12分",
+        detail: "低めの球をまっすぐ速く返す。ネットとラインを記録。",
       },
       {
-        name: "速球ラリー3球目だけ速攻",
-        time: "12分",
-        detail: "3球目だけフルスイング。計測アプリで球速のピークを見る。",
+        name: "台上シュート",
+        time: "10分",
+        detail: "短い球に対し、シュートドライブだけで処理。",
       },
     ],
-    spinsight: "球速のピークと打点をセットで記録してください。",
+    spinsight: "低い打点では球速と入り率をセットで見るとよいです。",
   },
   backhand_drive: {
     label: "バックドライブ・バックループ",
@@ -643,6 +684,17 @@ const ISSUE_CATALOG = {
 
 const INVERTED_RUBBERS = new Set(["high_friction", "tacky_chinese", "tensor_euro", "anti"]);
 
+const DRIVE_ISSUE_IDS = ["drive_speed", "drive_loop", "drive_knuckle", "drive_curve", "drive_shoot"];
+
+function expandDriveIssues(issueIds) {
+  const set = new Set(issueIds);
+  const hasChild = DRIVE_ISSUE_IDS.some((id) => set.has(id));
+  if (set.has("drive") || hasChild) {
+    if (hasChild && !set.has("drive")) set.add("drive");
+  }
+  return [...set];
+}
+
 const HARDNESS_LABELS = { soft: "柔らかめ", medium: "標準", hard: "硬め" };
 
 const HARDNESS_TIPS = {
@@ -684,6 +736,7 @@ const RUBBER_TYPES = {
       counter_attack: "短く当てて前へ。振り幅よりタイミング。",
       flick_short: "腰をテーブルへ近づけ、振りは小さく。",
       serve: "回転系統ごとにタメとリリース点を固定。",
+      drive: "打点をそろえる。",
       smash: "打点は最高点上付近。振り過ぎない。",
       push_attack: "面と打点で長さ。薄く当てすぎない。",
       lobbing: "高さと深さを先に。端を狙いすぎない。",
@@ -918,9 +971,11 @@ const STROKE_LABELS = {
 };
 
 const KEYWORD_MAP = [
-  [/カーブドライブ|カーブ.*ドライブ/, "curve_drive"],
-  [/ストレートドライブ|ストレート.*ドライブ/, "straight_drive"],
-  [/速いドライブ|速攻ドライブ|初動ドライブ/, "fast_drive"],
+  [/スピードドライブ|スピード.*ドライブ/, "drive_speed"],
+  [/ループドライブ|ループ.*ドライブ/, "drive_loop"],
+  [/ナックルドライブ|ノックスピン.*ドライブ/, "drive_knuckle"],
+  [/カーブドライブ|カーブ.*ドライブ/, "drive_curve"],
+  [/シュートドライブ|シュート.*ドライブ/, "drive_shoot"],
   [/スマッシュ/, "smash"],
   [/ロビ(ング)?|高球.*守備|浮き球/, "lobbing"],
   [/攻めプッシュ/, "push_attack"],
@@ -936,8 +991,7 @@ const KEYWORD_MAP = [
   [/プッシュ/, "push_attack"],
   [/カット|チョップ|削り/, "cut_defense"],
   [/バックハンド.*ドライブ|バック.*ドライブ|ＢＨ.*ドライブ|bh.*drive/i, "backhand_drive"],
-  [/フォア.*ドライブ|ＦＨ.*ドライブ|fh.*drive/i, "forehand_drive"],
-  [/ドライブ/, "forehand_drive"],
+  [/ドライブ/, "drive"],
   [/カウンター|弾み|速攻/, "counter_attack"],
   [/ブロック/, "block_game"],
   [/チキータ|フリック/, "flick_short"],
@@ -1043,6 +1097,9 @@ function resolveRubberByIssue(R, issueId) {
   if (issueId.startsWith("serve_")) {
     return R.byIssue[issueId] || R.byIssue.serve || null;
   }
+  if (issueId === "drive" || issueId.startsWith("drive_")) {
+    return R.byIssue[issueId] || R.byIssue.drive || R.byIssue.forehand_drive || null;
+  }
   return R.byIssue[issueId] || null;
 }
 
@@ -1115,7 +1172,9 @@ function collectServeRubberExtras(fh, bh) {
 }
 
 function rubberDrillSuffix(issueId, fh, bh) {
-  const drillKey = issueId.startsWith("serve_") ? "serve" : issueId;
+  let drillKey = issueId;
+  if (issueId.startsWith("serve_")) drillKey = "serve";
+  else if (issueId === "drive" || issueId.startsWith("drive_")) drillKey = "drive";
   const parts = [];
   for (const [side, rid] of [
     ["フォア", fh],
@@ -1159,7 +1218,7 @@ function buildWeeklyPlan(issueIds) {
 function generatePlan(formData) {
   const selected = [...formData.issues];
   const inferred = inferIssuesFromText(`${formData.goals} ${formData.freeform}`);
-  const issueIds = uniqueByKey([...selected, ...inferred], (id) => id);
+  const issueIds = expandDriveIssues(uniqueByKey([...selected, ...inferred], (id) => id));
 
   if (issueIds.length === 0) {
     return {
@@ -1432,8 +1491,10 @@ function collectForm() {
   const freeform = document.getElementById("spinsightNotes").value;
   const rubberFh = document.getElementById("rubberFh").value;
   const rubberBh = document.getElementById("rubberBh").value;
-  const rubberFhHardness = document.getElementById("rubberFhHardness")?.value || "unknown";
-  const rubberBhHardness = document.getElementById("rubberBhHardness")?.value || "unknown";
+  let rubberFhHardness = document.getElementById("rubberFhHardness")?.value || "unknown";
+  let rubberBhHardness = document.getElementById("rubberBhHardness")?.value || "unknown";
+  if (!INVERTED_RUBBERS.has(rubberFh)) rubberFhHardness = "unknown";
+  if (!INVERTED_RUBBERS.has(rubberBh)) rubberBhHardness = "unknown";
   const playerName = document.getElementById("playerName")?.value || "";
   const strokeType = document.getElementById("strokeType").value;
   const spinRps = parseOptionalNumber("spinRps");
@@ -1456,15 +1517,21 @@ function collectForm() {
 }
 
 function syncHardnessSelects() {
-  const fh = document.getElementById("rubberFh");
-  const bh = document.getElementById("rubberBh");
-  const fhH = document.getElementById("rubberFhHardness");
-  const bhH = document.getElementById("rubberBhHardness");
-  if (!fhH || !bhH) return;
-  const enFh = fh && INVERTED_RUBBERS.has(fh.value);
-  const enBh = bh && INVERTED_RUBBERS.has(bh.value);
-  fhH.disabled = !enFh;
-  bhH.disabled = !enBh;
+  const pairs = [
+    ["rubberFh", "rubberFhHardness"],
+    ["rubberBh", "rubberBhHardness"],
+  ];
+  for (const [rubberId, hardId] of pairs) {
+    const rubber = document.getElementById(rubberId);
+    const hard = document.getElementById(hardId);
+    if (!rubber || !hard) continue;
+    const active = INVERTED_RUBBERS.has(rubber.value);
+    hard.disabled = false;
+    hard.classList.toggle("hardness-active", active);
+    hard.classList.toggle("hardness-inactive", !active);
+    hard.setAttribute("aria-disabled", active ? "false" : "true");
+    if (!active) hard.value = "unknown";
+  }
 }
 
 function refreshRecordList() {
@@ -1517,8 +1584,13 @@ function init() {
   const out = document.getElementById("plan-output");
   const err = document.getElementById("plan-error");
 
-  document.getElementById("rubberFh")?.addEventListener("change", syncHardnessSelects);
-  document.getElementById("rubberBh")?.addEventListener("change", syncHardnessSelects);
+  const rubberFh = document.getElementById("rubberFh");
+  const rubberBh = document.getElementById("rubberBh");
+  for (const el of [rubberFh, rubberBh]) {
+    if (!el) continue;
+    el.addEventListener("change", syncHardnessSelects);
+    el.addEventListener("input", syncHardnessSelects);
+  }
   syncHardnessSelects();
   refreshRecordList();
 

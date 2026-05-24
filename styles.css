@@ -509,6 +509,46 @@ body {
   outline-offset: 2px;
 }
 
+.drive-block {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(110, 231, 255, 0.04);
+}
+
+.drive-block-hint {
+  margin: 0.35rem 0 0.75rem 2rem;
+  font-size: 0.85rem;
+}
+
+.drive-children {
+  margin-left: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid rgba(110, 231, 255, 0.35);
+}
+
+.check-parent {
+  font-weight: 600;
+}
+
+.check-child span {
+  font-size: 0.94rem;
+}
+
+select.hardness-inactive {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+select.hardness-active {
+  opacity: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
 .plan-toolbar {
   display: flex;
   flex-wrap: wrap;

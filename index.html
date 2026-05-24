@@ -53,23 +53,36 @@
             <div class="issue-groups">
               <div>
                 <p class="fieldset-sublegend">攻め・ドライブ・ラリー</p>
+                <div class="drive-block">
+                  <label class="check check-parent">
+                    <input type="checkbox" name="issue" value="drive" />
+                    <span>ドライブ</span>
+                  </label>
+                  <p class="drive-block-hint muted">種類を選ぶと、そのドライブ向けの内容が足されます（未選択ならドライブ全般）。</p>
+                  <div class="drive-children checkbox-grid">
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="drive_speed" />
+                      <span>スピードドライブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="drive_loop" />
+                      <span>ループドライブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="drive_knuckle" />
+                      <span>ナックルドライブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="drive_curve" />
+                      <span>カーブドライブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="drive_shoot" />
+                      <span>シュートドライブ</span>
+                    </label>
+                  </div>
+                </div>
                 <div class="checkbox-grid">
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="forehand_drive" />
-                    <span>フォアドライブ（一般）</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="straight_drive" />
-                    <span>ストレートドライブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="curve_drive" />
-                    <span>カーブドライブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="fast_drive" />
-                    <span>速いドライブ・初動</span>
-                  </label>
                   <label class="check">
                     <input type="checkbox" name="issue" value="backhand_drive" />
                     <span>バックドライブ・バックループ</span>
@@ -232,8 +245,8 @@
             </div>
             <div class="row-2">
               <label class="field">
-                <span class="field-label">フォア・裏の硬さ（裏を選んだとき）</span>
-                <select id="rubberFhHardness" name="rubberFhHardness" disabled>
+                <span class="field-label">フォア・裏の硬さ</span>
+                <select id="rubberFhHardness" name="rubberFhHardness" class="hardness-inactive">
                   <option value="unknown">指定なし</option>
                   <option value="soft">柔らかめ</option>
                   <option value="medium">標準</option>
@@ -241,8 +254,8 @@
                 </select>
               </label>
               <label class="field">
-                <span class="field-label">バック・裏の硬さ（裏を選んだとき）</span>
-                <select id="rubberBhHardness" name="rubberBhHardness" disabled>
+                <span class="field-label">バック・裏の硬さ</span>
+                <select id="rubberBhHardness" name="rubberBhHardness" class="hardness-inactive">
                   <option value="unknown">指定なし</option>
                   <option value="soft">柔らかめ</option>
                   <option value="medium">標準</option>
@@ -251,7 +264,7 @@
               </label>
             </div>
             <p class="hint muted">
-              <strong>未指定</strong>＝ラバー別ヒントなし（裏を意味しません）。<strong>裏</strong>は裏ソフト、<strong>表</strong>はショート、<strong>粒高</strong>はミディアム／ロング想定です。
+              <strong>未指定</strong>＝ラバー別ヒントなし。<strong>裏</strong>を選ぶと、その下の「硬さ」が選べます（柔らかめ／標準／硬め）。<strong>表</strong>はショート、<strong>粒高</strong>はミディアム／ロング想定です。
             </p>
           </fieldset>
 
