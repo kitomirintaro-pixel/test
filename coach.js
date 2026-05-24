@@ -1105,9 +1105,12 @@ function resolveRubberByIssue(R, issueId) {
 
 const RUBBER_TEXT_TO_PRESET = [
   [/粘着|中国|紅双喜|天極|天玻|729.*粘/i, "tacky_chinese"],
-  [/テンション|欧州|タンバー|フォーナス|拡張|dignics|ディグニクス/i, "tensor_euro"],
+  [
+    /テンション|欧州|ヨーロッパ|ヴェガ|vega|タンバー|フォーナス|拡張|dignics|ディグニクス|victas.*vega/i,
+    "tensor_euro",
+  ],
   [/アンチ|anti|ソフトバン/i, "anti"],
-  [/ショート|表ソフト|ブラスト|党滅|vo[0-9]/i, "short_pips"],
+  [/ショート|表ソフト|スペクタル|spectral|ブラスト|党滅|vo[0-9]/i, "short_pips"],
   [/ミディアム|中粒/i, "medium_pips"],
   [/ロング|長粒|一粒|388/i, "long_pips"],
   [/高摩擦|裏ソフト|ラバ|ラザフォ|フォレスト/i, "high_friction"],
@@ -1131,7 +1134,9 @@ function isInvertedRubber(presetId, text) {
   const t = String(text || "");
   if (!t.trim()) return false;
   if (/粒|ピップ|pips|ショート|ロング|長粒|中粒|一枚/i.test(t)) return false;
-  return /裏|インバ|粘着|テンション|高摩擦|ラバ|d0[0-9]|tenergy|ファーマ|ゲッツ|dignics/i.test(t);
+  return /裏|インバ|粘着|テンション|高摩擦|ラバ|d0[0-9]|tenergy|ファーマ|ゲッツ|dignics|ヴェガ|vega/i.test(
+    t
+  );
 }
 
 function hardnessBulletsForSide(sideLabel, presetId, text, hardness) {
@@ -1151,7 +1156,9 @@ function hintsFromCustomRubberText(text) {
     hints.push("粒ラバーは他人の裏ソフトの数値と直接比べず、自分用の基準でログを残すとよいです。");
   }
   if (/粘着|中国/i.test(t)) hints.push("粘着系は軌道とボールへの圧で回転差を作る練習が効きます。");
-  if (/テンション|欧州/i.test(t)) hints.push("テンション系は加速のタイミングが数値に出やすいです。");
+  if (/テンション|欧州|ヨーロッパ|ヴェガ|vega/i.test(t) && !/粒|ピップ|pips|ショート|ロング|長粒|中粒/i.test(t)) {
+    hints.push("テンション系（ヴェガヨーロッパ等）は加速のタイミングが数値に出やすいです。");
+  }
   return hints.slice(0, 2);
 }
 
