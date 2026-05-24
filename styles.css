@@ -598,6 +598,30 @@ body {
   gap: 0.35rem;
 }
 
+.surface-picker-full {
+  grid-column: 1 / -1;
+}
+
+.field-optional {
+  margin-top: 0.65rem;
+}
+
+.optional-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.rubber-hardness-details {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.rubber-hardness-details summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+
 select.hardness-inactive {
   opacity: 0.45;
   cursor: not-allowed;

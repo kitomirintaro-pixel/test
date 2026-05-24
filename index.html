@@ -203,10 +203,8 @@
 
           <fieldset class="fieldset">
             <legend>ラバー（任意）</legend>
-            <p class="hint muted">フォア面・バック面それぞれ、メーカー・ラバー名・硬さを入力し、裏／表／粒高を選んでください。空欄でも利用できます。</p>
-            <p class="hint muted rubber-hardness-hint">
-              <strong>硬さの表記:</strong>
-              欧州系はスポンジ硬度を「42.5度」など<strong>ショアA（°）</strong>で示すことが多く、国内のバタフライ等は「硬め」「MAX」など<strong>メーカー独自表記</strong>のこともあります。どちらの基準でも構いません。パッケージの表記をそのまま書いてください（サイトでは基準の変換はしません）。
+            <p class="hint muted">
+              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。<strong>硬さは任意</strong>で、わからなければ空欄のままで問題ありません。すべて空欄でもプランは作れます。
             </p>
 
             <div class="rubber-side-block">
@@ -222,11 +220,7 @@
                 </label>
               </div>
               <div class="row-2 rubber-side-bottom">
-                <label class="field">
-                  <span class="field-label">硬さ</span>
-                  <input type="text" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="例: 硬め、MAX" autocomplete="off" />
-                </label>
-                <fieldset class="surface-picker">
+                <fieldset class="surface-picker surface-picker-full">
                   <legend class="field-label">種類</legend>
                   <div class="surface-options">
                     <label class="check check-inline">
@@ -244,6 +238,10 @@
                   </div>
                 </fieldset>
               </div>
+              <label class="field field-optional">
+                <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
+                <input type="text" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="わからなければ空欄でOK（例: 硬め、42.5度）" autocomplete="off" />
+              </label>
             </div>
 
             <div class="rubber-side-block">
@@ -259,11 +257,7 @@
                 </label>
               </div>
               <div class="row-2 rubber-side-bottom">
-                <label class="field">
-                  <span class="field-label">硬さ</span>
-                  <input type="text" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" placeholder="例: 45度" autocomplete="off" />
-                </label>
-                <fieldset class="surface-picker">
+                <fieldset class="surface-picker surface-picker-full">
                   <legend class="field-label">種類</legend>
                   <div class="surface-options">
                     <label class="check check-inline">
@@ -281,7 +275,17 @@
                   </div>
                 </fieldset>
               </div>
+              <label class="field field-optional">
+                <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
+                <input type="text" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" placeholder="わからなければ空欄でOK（例: 45度）" autocomplete="off" />
+              </label>
             </div>
+            <details class="rubber-hardness-details">
+              <summary>硬さの書き方（知っている人向け）</summary>
+              <p class="hint muted">
+                欧州系は「42.5度」などショアA（°）、国内のバタフライ等は「硬め」「MAX」など表記が異なることがあります。パッケージの表記をそのまま書けます。サイトでは基準の変換はしません。
+              </p>
+            </details>
           </fieldset>
 
           <label class="field">
