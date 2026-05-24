@@ -1260,9 +1260,16 @@ function combinedRubberSearchText(side) {
     .join(" ");
 }
 
+function lookupRubberCatalog(side) {
+  return typeof findRubberInCatalog === "function" ? findRubberInCatalog(side) : null;
+}
+
 function effectivePresetForSide(side) {
   const override = side.categoryOverride;
   if (override && override !== "auto" && RUBBER_TYPES[override]) return override;
+
+  const catalogHit = lookupRubberCatalog(side);
+  if (catalogHit?.category) return catalogHit.category;
 
   const text = combinedRubberSearchText(side);
   const fromText = inferPresetFromText(text);
@@ -1326,6 +1333,7 @@ function buildSideRubberBlock(sideLabel, side, issueIds) {
 
   const display = formatRubberLine(side);
   const text = combinedRubberSearchText(side);
+  const catalogHit = lookupRubberCatalog(side);
   const effective = effectivePresetForSide(side);
   const inferred = inferPresetFromText(text);
 
@@ -1338,18 +1346,32 @@ function buildSideRubberBlock(sideLabel, side, issueIds) {
   };
 
   if (display) add(`あなたのラバー: ${display}`);
+  if (catalogHit) {
+    add(`登録ラバー: ${catalogHit.display}（カタログ一致）`);
+  }
   if (effective && RUBBER_TYPES[effective]) {
     const via =
       side.categoryOverride && side.categoryOverride !== "auto"
         ? "指定した系統"
-        : inferred
-          ? "商品名から推定"
-          : side.surface
-            ? "種類（裏・表・粒）から推定"
-            : "入力から推定";
+        : catalogHit
+          ? "カタログ登録"
+          : inferred
+            ? "商品名から推定"
+            : side.surface
+              ? "種類（裏・表・粒）から推定"
+              : "入力から推定";
     add(`練習の考え方: ${RUBBER_TYPES[effective].label}（${via}）`);
   }
-  add(productNoteFromText(text));
+  if (catalogHit?.note) add(catalogHit.note);
+  else add(productNoteFromText(text));
+  if (
+    !catalogHit &&
+    (side.brand || side.name) &&
+    !inferPresetFromText(text) &&
+    (!side.categoryOverride || side.categoryOverride === "auto")
+  ) {
+    add("この組み合わせはカタログ未登録です。下の「系統を自分で指定」で補えます。要望があれば商品名を教えてください（追加します）。");
+  }
   for (const h of hardnessHintsFromText(sideLabel, side.hardness, side, effective)) add(h);
   for (const h of hintsFromRubberSide(side)) add(h);
 

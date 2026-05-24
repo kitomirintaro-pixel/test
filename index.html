@@ -204,7 +204,8 @@
           <fieldset class="fieldset">
             <legend>ラバー（任意）</legend>
             <p class="hint muted">
-              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。商品名から<strong>粘着・テンションなどの系統</strong>を推定し、その系統向けの練習ヒントを足します（全商品は登録しません）。<strong>硬さは任意</strong>です。
+              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。主要ラバーは<strong>カタログ登録済み</strong>（現在
+              <span id="rubber-catalog-count">—</span>件・随時追加）で個別ヒントを出します。未登録でも<strong>系統推定</strong>で練習ヒントを足します。<strong>硬さは任意</strong>です。
             </p>
 
             <div class="rubber-side-block">
@@ -456,9 +457,14 @@
     <script src="storage.js"></script>
     <script src="poses.js"></script>
     <script src="print-plan.js"></script>
+    <script src="rubber-catalog.js"></script>
     <script src="coach.js"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
+      const catalogCount = document.getElementById("rubber-catalog-count");
+      if (catalogCount && typeof window.RUBBER_CATALOG_COUNT === "number") {
+        catalogCount.textContent = String(window.RUBBER_CATALOG_COUNT);
+      }
     </script>
   </body>
 </html>
