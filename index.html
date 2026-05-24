@@ -363,18 +363,7 @@
             </label>
           </fieldset>
 
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">プランを生成する</button>
-          </div>
-        </form>
-
-        <div class="coach-output-wrap">
-          <p id="plan-error" class="plan-error" hidden role="alert"></p>
-          <section id="plan-output" class="plan-output" hidden aria-live="polite"></section>
-        </div>
-
-        <section class="container record-section no-print" aria-labelledby="record-section-title">
-          <fieldset class="fieldset">
+          <fieldset class="fieldset record-section no-print" aria-labelledby="record-section-title">
             <legend id="record-section-title">保存した記録</legend>
             <p class="hint muted">この端末のブラウザにだけ保存されます。不要な記録は削除できます。</p>
             <div class="record-toolbar">
@@ -386,7 +375,16 @@
               <p class="muted">まだ保存された記録はありません。</p>
             </div>
           </fieldset>
-        </section>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">プランを生成する</button>
+          </div>
+        </form>
+
+        <div class="coach-output-wrap">
+          <p id="plan-error" class="plan-error" hidden role="alert"></p>
+          <section id="plan-output" class="plan-output" hidden aria-live="polite"></section>
+        </div>
       </div>
     </main>
 

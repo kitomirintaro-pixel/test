@@ -564,36 +564,47 @@ select.hardness-active {
 .pose-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   margin-bottom: 1.5rem;
 }
 
 .pose-figure {
   margin: 0;
-  padding: 0.75rem;
+  padding: 0;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   text-align: center;
+  overflow: hidden;
 }
 
 .pose-figure figcaption {
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
+  margin: 0;
+  padding: 0.5rem 0.65rem 0.65rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
+  line-height: 1.4;
+  border-top: 1px solid var(--border);
+}
+
+.pose-figure figcaption strong {
+  display: block;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
 }
 
 .pose-svg {
   width: 100%;
-  max-width: 200px;
+  max-width: 260px;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
 .record-section {
-  margin-top: 2rem;
-  padding-bottom: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .record-toolbar {

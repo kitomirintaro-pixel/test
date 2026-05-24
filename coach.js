@@ -1336,7 +1336,7 @@ function renderPlan(plan, container) {
     const poses = getPosesForIssues(plan.issueIds);
     if (poses.length) {
       const ph = document.createElement("h2");
-      ph.textContent = "フォームのイメージ";
+      ph.textContent = "フォームのイメージ（ラケット・ボールの動き）";
       container.appendChild(ph);
       const grid = document.createElement("div");
       grid.className = "pose-grid";
@@ -1345,7 +1345,12 @@ function renderPlan(plan, container) {
         fig.className = "pose-figure";
         fig.innerHTML = p.svg;
         const cap = document.createElement("figcaption");
-        cap.textContent = p.label;
+        const strong = document.createElement("strong");
+        strong.textContent = p.label;
+        cap.appendChild(strong);
+        if (p.hint) {
+          cap.append(document.createTextNode(p.hint));
+        }
         fig.appendChild(cap);
         grid.appendChild(fig);
       }
