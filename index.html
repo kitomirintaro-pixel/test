@@ -268,13 +268,6 @@
             </p>
           </fieldset>
 
-          <fieldset class="fieldset no-print">
-            <legend>保存した記録</legend>
-            <div id="record-list" class="record-list">
-              <p class="muted">まだ保存された記録はありません。</p>
-            </div>
-          </fieldset>
-
           <label class="field">
             <span class="field-label">やりたいこと・具体的な目標</span>
             <textarea
@@ -379,6 +372,21 @@
           <p id="plan-error" class="plan-error" hidden role="alert"></p>
           <section id="plan-output" class="plan-output" hidden aria-live="polite"></section>
         </div>
+
+        <section class="container record-section no-print" aria-labelledby="record-section-title">
+          <fieldset class="fieldset">
+            <legend id="record-section-title">保存した記録</legend>
+            <p class="hint muted">この端末のブラウザにだけ保存されます。不要な記録は削除できます。</p>
+            <div class="record-toolbar">
+              <button type="button" id="btn-clear-all-records" class="btn btn-ghost btn-danger-outline" hidden>
+                すべて削除
+              </button>
+            </div>
+            <div id="record-list" class="record-list">
+              <p class="muted">まだ保存された記録はありません。</p>
+            </div>
+          </fieldset>
+        </section>
       </div>
     </main>
 

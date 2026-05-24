@@ -1317,7 +1317,10 @@ function renderPlan(plan, container) {
       msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
       msg.hidden = false;
     }
-    if (res.ok && typeof refreshRecordList === "function") refreshRecordList();
+    if (res.ok && typeof refreshRecordList === "function") {
+      refreshRecordList();
+      document.getElementById("record-section-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   });
 
   toolbar.append(btnPrint, btnSave);
@@ -1534,46 +1537,88 @@ function syncHardnessSelects() {
   }
 }
 
+function recordSummaryText(record) {
+  const labels = record.plan?.issueLabels;
+  if (labels?.length) {
+    const short = labels.slice(0, 3).join("、");
+    return labels.length > 3 ? `${short}…` : short;
+  }
+  return "練習プラン";
+}
+
 function refreshRecordList() {
   const listEl = document.getElementById("record-list");
+  const clearAllBtn = document.getElementById("btn-clear-all-records");
   if (!listEl || typeof RecordStore === "undefined") return;
   const records = RecordStore.list();
   listEl.innerHTML = "";
+
+  if (clearAllBtn) {
+    clearAllBtn.hidden = records.length === 0;
+  }
+
   if (records.length === 0) {
     listEl.innerHTML = "<p class=\"muted\">まだ保存された記録はありません。</p>";
     return;
   }
+
   const ul = document.createElement("ul");
   ul.className = "record-items";
   for (const r of records) {
     const li = document.createElement("li");
+    li.className = "record-item";
+
     const when = new Date(r.savedAt).toLocaleString("ja-JP", {
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-    const label = document.createElement("span");
-    label.textContent = `${r.playerName}（${when}）`;
+
+    const main = document.createElement("div");
+    main.className = "record-item-main";
+    const nameEl = document.createElement("strong");
+    nameEl.className = "record-item-name";
+    nameEl.textContent = r.playerName;
+    const meta = document.createElement("span");
+    meta.className = "record-item-meta muted";
+    meta.textContent = `${when} ・ ${recordSummaryText(r)}`;
+    main.append(nameEl, meta);
+
+    const actions = document.createElement("div");
+    actions.className = "record-item-actions";
+
     const openBtn = document.createElement("button");
     openBtn.type = "button";
-    openBtn.className = "btn-link";
+    openBtn.className = "btn btn-ghost btn-small";
     openBtn.textContent = "表示";
     openBtn.addEventListener("click", () => {
       document.getElementById("playerName").value = r.playerName;
       const out = document.getElementById("plan-output");
       renderPlan(r.plan, out);
-      out.scrollIntoView({ behavior: "smooth" });
+      out.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+
     const delBtn = document.createElement("button");
     delBtn.type = "button";
-    delBtn.className = "btn-link btn-link-danger";
+    delBtn.className = "btn btn-ghost btn-small btn-danger-outline";
     delBtn.textContent = "削除";
     delBtn.addEventListener("click", () => {
+      const ok = window.confirm(
+        `「${r.playerName}」さんの記録（${when}）を削除しますか？\nこの操作は元に戻せません。`
+      );
+      if (!ok) return;
       RecordStore.remove(r.id);
       refreshRecordList();
+      const msg = document.getElementById("save-message");
+      if (msg) {
+        msg.textContent = "記録を削除しました。";
+        msg.hidden = false;
+      }
     });
-    li.append(label, openBtn, delBtn);
+
+    actions.append(openBtn, delBtn);
+    li.append(main, actions);
     ul.appendChild(li);
   }
   listEl.appendChild(ul);
@@ -1593,6 +1638,20 @@ function init() {
   }
   syncHardnessSelects();
   refreshRecordList();
+
+  document.getElementById("btn-clear-all-records")?.addEventListener("click", () => {
+    const n = RecordStore.list().length;
+    if (n === 0) return;
+    const ok = window.confirm(`保存した記録をすべて削除しますか？（${n}件）\nこの操作は元に戻せません。`);
+    if (!ok) return;
+    RecordStore.clearAll();
+    refreshRecordList();
+    const msg = document.getElementById("save-message");
+    if (msg) {
+      msg.textContent = "すべての記録を削除しました。";
+      msg.hidden = false;
+    }
+  });
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

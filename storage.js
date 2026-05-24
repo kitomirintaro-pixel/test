@@ -46,4 +46,8 @@ const RecordStore = {
   remove(id) {
     this._write(this._read().filter((r) => r.id !== id));
   },
+
+  clearAll() {
+    this._write([]);
+  },
 };
