@@ -51,11 +51,7 @@
     C("bf_feint_l", "Feint Long II", "long_pips", "フェイント.*ロング|feint.*long", "バタフライ|butterfly"),
     C("bf_impartial", "Impartial", "short_pips", "インパーシャル|impartial", "バタフライ|butterfly"),
 
-    // —— VICTAS ——
-    C("vi_vega_eu", "Vega Europe", "tensor_euro", "ヴェガ.*ヨーロッパ|vega.*europe", "victas|ヴィクタス"),
-    C("vi_vega_jp", "Vega Japan", "tensor_euro", "ヴェガ.*ジャパン|vega.*japan", "victas|ヴィクタス"),
-    C("vi_vega_pro", "Vega Pro", "tensor_euro", "ヴェガ.*プロ|vega.*pro", "victas|ヴィクタス"),
-    C("vi_vega_intro", "Vega Intro", "tensor_euro", "ヴェガ.*イントロ|vega.*intro", "victas|ヴィクタス"),
+    // —— VICTAS（ヴェガ系は XIOM。VICTAS 欄から移動済み）——
     C(
       "vi_rigan",
       "Rigan",
@@ -90,8 +86,20 @@
     C("do_baracuda", "Baracuda", "tensor_euro", "バラクーダ|baracuda", "ドニック|donic"),
     C("do_spike", "Spike P1/P2", "short_pips", "スパイク|spike", "ドニック|donic"),
 
-    // —— XIOM ——
-    C("xi_vega", "Vega Asia/Europe/Japan", "tensor_euro", "ヴェガ|vega", "xiom|エクシオム"),
+    // —— XIOM（ヴェガ系はすべてこちら）——
+    C("xi_vega_asia", "Vega Asia", "tensor_euro", "ヴェガ.*アジア|vega.*asia", "xiom|エクシオム"),
+    C("xi_vega_eu", "Vega Europe", "tensor_euro", "ヴェガ.*ヨーロッパ|vega.*europe", "xiom|エクシオム"),
+    C("xi_vega_jp", "Vega Japan", "tensor_euro", "ヴェガ.*ジャパン|vega.*japan", "xiom|エクシオム"),
+    C("xi_vega_pro", "Vega Pro", "tensor_euro", "ヴェガ.*プロ|vega.*pro", "xiom|エクシオム"),
+    C("xi_vega_intro", "Vega Intro", "tensor_euro", "ヴェガ.*イントロ|vega.*intro", "xiom|エクシオム"),
+    C(
+      "xi_vega",
+      "Vega（XIOM）",
+      "tensor_euro",
+      "ヴェガ|vega",
+      "xiom|エクシオム",
+      "XIOM ヴェガ系: 加速タイミングが数値に出やすい。同じ振りでも打点で回転が変わるので、週次で条件を固定してログ。"
+    ),
     C("xi_jekyll", "Jekyll & Hyde", "tacky_hybrid", "jekyll|hyde|ジキル|ハイド", "xiom|エクシオム"),
     C("xi_omega", "Omega", "tensor_euro", "オメガ|omega", "xiom|エクシオム"),
 

@@ -1182,7 +1182,7 @@ const RUBBER_TEXT_TO_PRESET = [
   [/粘着.*中国|中国.*粘|紅双喜|天極|天玻|729|狂飙|省狂|haifun|海夫/i, "tacky_chinese"],
   [/グレイザー|glayzer|d09c|d09\b|dignics\s*0?9|09c\b|張本|粘着トップ|sticky/i, "tacky_hybrid"],
   [
-    /テンション|欧州|ヨーロッパ|ヴェガ|vega|タンバー|フォーナス|拡張|dignics\s*0?5|d05|tenergy|テナジー|ライガン|rigan|victas.*vega/i,
+    /テンション|欧州|ヨーロッパ|ヴェガ|vega|タンバー|フォーナス|拡張|dignics\s*0?5|d05|tenergy|テナジー|ライガン|rigan|xiom.*vega|エクシオム.*ヴェガ/i,
     "tensor_euro",
   ],
   [/アンチ|anti|ソフトバン/i, "anti"],
