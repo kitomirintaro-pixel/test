@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260524" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -72,14 +72,6 @@
       </section>
 
       <div id="view-menu" class="app-view" role="tabpanel" aria-labelledby="tab-menu">
-      <div class="container coach-hero">
-        <p class="eyebrow">Table tennis · practice planner</p>
-        <h1>課題と目標を入力すると、<span class="gradient-text">改善案と練習メニュー</span>を提案します</h1>
-        <p class="lead coach-lead">
-          課題を選ぶと、<strong>短い改善案</strong>と練習メニューが出ます。名前を入れて<strong>記録を保存</strong>したり、<strong>PDF・印刷</strong>もできます（この端末のブラウザに保存・非公式）。
-        </p>
-      </div>
-
       <div class="container coach-layout">
         <form id="coach-form" class="coach-form" novalidate>
           <label class="field">
@@ -663,19 +655,6 @@
           </div>
         </form>
 
-        <dialog id="simple-picker-sheet" class="simple-picker-sheet">
-          <div class="simple-sheet-inner">
-            <header class="simple-sheet-header">
-              <h2 id="simple-sheet-title" class="simple-sheet-title">選択</h2>
-              <button type="button" id="simple-sheet-close" class="btn btn-ghost btn-small" aria-label="閉じる">閉じる</button>
-            </header>
-            <div id="simple-sheet-body" class="simple-sheet-body"></div>
-            <footer class="simple-sheet-footer">
-              <button type="button" id="simple-sheet-done" class="btn btn-primary">決定</button>
-            </footer>
-          </div>
-        </dialog>
-
         <div class="coach-output-wrap">
           <p id="plan-error" class="plan-error" hidden role="alert"></p>
           <section id="plan-output" class="plan-output" hidden aria-live="polite"></section>
@@ -771,6 +750,19 @@
         </div>
       </div>
     </main>
+
+    <dialog id="simple-picker-sheet" class="simple-picker-sheet">
+      <div class="simple-sheet-inner">
+        <header class="simple-sheet-header">
+          <h2 id="simple-sheet-title" class="simple-sheet-title">選択</h2>
+          <button type="button" id="simple-sheet-close" class="btn btn-ghost btn-small" aria-label="閉じる">閉じる</button>
+        </header>
+        <div id="simple-sheet-body" class="simple-sheet-body"></div>
+        <footer class="simple-sheet-footer">
+          <button type="button" id="simple-sheet-done" class="btn btn-primary">決定</button>
+        </footer>
+      </div>
+    </dialog>
 
     <div id="print-root" class="print-root" aria-hidden="true"></div>
 
