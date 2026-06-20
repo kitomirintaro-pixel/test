@@ -171,13 +171,13 @@ body {
 .input-mode-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(0.85rem, 3vw, 1.25rem);
-  margin: 0.75rem 0 1.5rem;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  margin: 1rem 0 1.75rem;
 }
 
 .input-mode-bar-large {
-  gap: clamp(1rem, 3.5vw, 1.5rem);
-  margin: 1rem 0 1.75rem;
+  gap: clamp(1.1rem, 3.5vw, 1.75rem);
+  margin: 1.15rem 0 2rem;
 }
 
 .input-mode-btn {
@@ -185,12 +185,12 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.35rem, 1.5vw, 0.55rem);
-  min-height: clamp(5.5rem, 22vw, 7.5rem);
-  padding: clamp(1.25rem, 4vw, 1.75rem) clamp(1rem, 3vw, 1.5rem);
-  border-radius: calc(var(--radius) + 4px);
-  border: 2px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  gap: clamp(0.45rem, 2vw, 0.75rem);
+  min-height: clamp(7rem, 24vw, 9rem);
+  padding: clamp(1.5rem, 4.5vw, 2.25rem) clamp(1.25rem, 3.5vw, 2rem);
+  border-radius: calc(var(--radius) + 6px);
+  border: 3px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-muted);
   font-family: var(--font-jp);
   text-align: center;
@@ -204,23 +204,24 @@ body {
 }
 
 .input-mode-title {
-  font-size: clamp(1.15rem, 3.8vw, 1.45rem);
+  font-size: clamp(1.35rem, 5vw, 1.65rem);
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .input-mode-desc {
-  font-size: clamp(0.88rem, 2.6vw, 1rem);
+  font-size: clamp(0.95rem, 3.2vw, 1.15rem);
   font-weight: 500;
   line-height: 1.45;
   color: var(--text-muted);
+  max-width: 16rem;
 }
 
 .input-mode-btn:hover {
-  border-color: rgba(110, 231, 255, 0.45);
-  background: rgba(110, 231, 255, 0.08);
-  transform: translateY(-2px);
+  border-color: rgba(110, 231, 255, 0.55);
+  background: rgba(110, 231, 255, 0.1);
+  transform: translateY(-3px);
 }
 
 .input-mode-btn:hover .input-mode-desc {
@@ -229,14 +230,51 @@ body {
 
 .input-mode-btn.is-active {
   border-color: var(--accent);
-  border-width: 3px;
-  background: rgba(110, 231, 255, 0.12);
+  border-width: 4px;
+  background: rgba(110, 231, 255, 0.15);
   color: var(--text);
-  box-shadow: 0 10px 32px rgba(110, 231, 255, 0.18);
+  box-shadow: 0 14px 40px rgba(110, 231, 255, 0.22);
 }
 
 .input-mode-btn.is-active .input-mode-desc {
   color: var(--text);
+}
+
+@media (min-width: 720px) {
+  .input-mode-bar-large {
+    gap: 1.75rem;
+    margin: 1.35rem 0 2.25rem;
+  }
+
+  .input-mode-btn {
+    min-height: 10.5rem;
+    padding: 2.25rem 2rem;
+    gap: 0.75rem;
+  }
+
+  .input-mode-title {
+    font-size: 1.85rem;
+  }
+
+  .input-mode-desc {
+    font-size: 1.15rem;
+    max-width: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .input-mode-btn {
+    min-height: 12rem;
+    padding: 2.5rem 2.25rem;
+  }
+
+  .input-mode-title {
+    font-size: 2rem;
+  }
+
+  .input-mode-desc {
+    font-size: 1.25rem;
+  }
 }
 
 .simple-form-lead {
