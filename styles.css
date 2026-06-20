@@ -61,6 +61,142 @@ body {
   max-width: 640px;
 }
 
+.coach-main {
+  padding-bottom: 3rem;
+}
+
+.app-mode-section {
+  padding: clamp(1.25rem, 4vw, 2rem) 0 0.5rem;
+}
+
+.app-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.app-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  padding: clamp(1.25rem, 4vw, 1.75rem) clamp(1rem, 3vw, 1.5rem);
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-family: var(--font-jp);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.app-mode-card:hover {
+  border-color: rgba(110, 231, 255, 0.35);
+  background: rgba(110, 231, 255, 0.06);
+}
+
+.app-mode-card.is-active {
+  border-color: var(--accent);
+  background: rgba(110, 231, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(110, 231, 255, 0.12);
+}
+
+.app-mode-title {
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.app-mode-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.app-view[hidden] {
+  display: none !important;
+}
+
+.diary-layout {
+  padding-bottom: 3rem;
+}
+
+.diary-hero {
+  margin-bottom: 1.5rem;
+}
+
+.diary-hero h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 0.5rem;
+}
+
+.diary-form {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.diary-form-actions {
+  margin-top: 0.5rem;
+}
+
+.diary-list-section {
+  margin-top: 0;
+}
+
+.diary-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.diary-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.diary-item-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.diary-item-date {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.diary-item-preview {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.diary-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 520px) {
+  .app-mode-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -149,9 +285,6 @@ body {
 }
 
 /* —— SpinCoach —— */
-.coach-main {
-  padding-bottom: 3rem;
-}
 
 .header-inner {
   flex-wrap: wrap;
@@ -632,6 +765,71 @@ body {
   color: var(--muted);
 }
 
+.practice-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.practice-week-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.practice-day-field {
+  margin: 0;
+}
+
+.week-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.week-cell {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(110, 231, 255, 0.04);
+}
+
+.week-cell-rest {
+  background: rgba(255, 255, 255, 0.02);
+  opacity: 0.85;
+}
+
+.week-mode {
+  margin: 0.25rem 0 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.week-focus {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.week-extra {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+}
+
+.week-blocks {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.week-blocks li {
+  margin-bottom: 0.25rem;
+}
+
 select.hardness-inactive {
   opacity: 0.45;
   cursor: not-allowed;
@@ -793,7 +991,9 @@ select.hardness-active {
   body.is-printing .coach-form,
   body.is-printing .site-footer,
   body.is-printing .no-print,
-  body.is-printing .plan-toolbar {
+  body.is-printing .plan-toolbar,
+  body.is-printing .app-mode-section,
+  body.is-printing #view-diary {
     display: none !important;
   }
 

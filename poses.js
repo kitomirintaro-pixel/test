@@ -47,6 +47,7 @@ const ISSUE_TO_POSE = {
   serve_squat: "serve",
   serve_forehand: "serve",
   serve_backhand: "serve",
+  serve_long: "serve",
   footwork: "footwork",
 };
 

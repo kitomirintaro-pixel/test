@@ -47,6 +47,10 @@ function simplifyPlan(plan) {
       ...w,
       focus: toSimple(w.focus),
       extra: toSimple(w.extra),
+      blocks: (w.blocks || []).map((b) => ({
+        ...b,
+        hint: toSimple(b.hint),
+      })),
     })),
   };
 }

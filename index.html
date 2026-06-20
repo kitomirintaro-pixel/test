@@ -26,6 +26,36 @@
     </header>
 
     <main id="main" class="coach-main">
+      <div class="container app-mode-section">
+        <div class="app-mode-grid" role="tablist" aria-label="メイン機能">
+          <button
+            type="button"
+            id="tab-menu"
+            class="app-mode-card is-active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="view-menu"
+            data-app-mode="menu"
+          >
+            <span class="app-mode-title">練習メニュー作成</span>
+            <span class="app-mode-desc">課題と目標からプランを生成</span>
+          </button>
+          <button
+            type="button"
+            id="tab-diary"
+            class="app-mode-card"
+            role="tab"
+            aria-selected="false"
+            aria-controls="view-diary"
+            data-app-mode="diary"
+          >
+            <span class="app-mode-title">練習日記</span>
+            <span class="app-mode-desc">日々の練習を記録・振り返り</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="view-menu" class="app-view" role="tabpanel" aria-labelledby="tab-menu">
       <div class="container coach-hero">
         <p class="eyebrow">Table tennis · practice planner</p>
         <h1>課題と目標を入力すると、<span class="gradient-text">改善案と練習メニュー</span>を提案します</h1>
@@ -129,6 +159,10 @@
                   <label class="check">
                     <input type="checkbox" name="issue" value="serve_under" />
                     <span>下回転系サーブ</span>
+                  </label>
+                  <label class="check">
+                    <input type="checkbox" name="issue" value="serve_long" />
+                    <span>ロングサーブ</span>
                   </label>
                   <label class="check">
                     <input type="checkbox" name="issue" value="serve_side_top" />
@@ -420,6 +454,84 @@
             </label>
           </fieldset>
 
+          <fieldset class="fieldset">
+            <legend>練習時間（曜日ごと）</legend>
+            <p class="hint muted">
+              各曜日に<strong>15分／30分／1時間</strong>の練習モードを設定できます。「休み」にするとその日は回復・振り返り中心の案内になります。
+            </p>
+            <div class="practice-preset-row no-print">
+              <span class="field-label">まとめて設定:</span>
+              <button type="button" class="btn btn-ghost btn-small" data-practice-preset="all-30">毎日30分</button>
+              <button type="button" class="btn btn-ghost btn-small" data-practice-preset="weekday-30-weekend-60">平日30分・土日60分</button>
+              <button type="button" class="btn btn-ghost btn-small" data-practice-preset="all-15">毎日15分</button>
+            </div>
+            <div class="practice-week-grid">
+              <label class="field practice-day-field">
+                <span class="field-label">月曜</span>
+                <select id="practiceMon" name="practiceMon">
+                  <option value="0">休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30" selected>30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">火曜</span>
+                <select id="practiceTue" name="practiceTue">
+                  <option value="0">休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30" selected>30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">水曜</span>
+                <select id="practiceWed" name="practiceWed">
+                  <option value="0" selected>休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30">30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">木曜</span>
+                <select id="practiceThu" name="practiceThu">
+                  <option value="0">休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30" selected>30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">金曜</span>
+                <select id="practiceFri" name="practiceFri">
+                  <option value="0">休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30" selected>30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">土曜</span>
+                <select id="practiceSat" name="practiceSat">
+                  <option value="0">休み</option>
+                  <option value="15">15分練習モード</option>
+                  <option value="30">30分練習モード</option>
+                  <option value="60" selected>1時間練習モード</option>
+                </select>
+              </label>
+              <label class="field practice-day-field">
+                <span class="field-label">日曜</span>
+                <select id="practiceSun" name="practiceSun">
+                  <option value="0">休み</option>
+                  <option value="15" selected>15分練習モード</option>
+                  <option value="30">30分練習モード</option>
+                  <option value="60">1時間練習モード</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
           <fieldset class="fieldset record-section no-print" aria-labelledby="record-section-title">
             <legend id="record-section-title">保存した記録</legend>
             <p class="hint muted">この端末のブラウザにだけ保存されます。不要な記録は削除できます。</p>
@@ -443,6 +555,71 @@
           <section id="plan-output" class="plan-output" hidden aria-live="polite"></section>
         </div>
       </div>
+      </div>
+
+      <div id="view-diary" class="app-view" role="tabpanel" aria-labelledby="tab-diary" hidden>
+        <div class="container diary-layout">
+          <div class="diary-hero">
+            <h1>練習日記</h1>
+            <p class="lead">その日の練習内容・良かったところ・反省を残せます。この端末のブラウザにだけ保存されます。</p>
+          </div>
+
+          <form id="diary-form" class="diary-form" novalidate>
+            <input type="hidden" id="diaryEditId" value="" />
+            <label class="field">
+              <span class="field-label">日付</span>
+              <input type="date" id="diaryDate" name="diaryDate" required />
+            </label>
+            <label class="field">
+              <span class="field-label">練習内容</span>
+              <textarea
+                id="diaryContent"
+                name="diaryContent"
+                rows="4"
+                maxlength="2000"
+                placeholder="例: 30分練習。フォアドライブ定点、サーブ20本、多球ラリー"
+              ></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">良かったところ</span>
+              <textarea
+                id="diaryGood"
+                name="diaryGood"
+                rows="3"
+                maxlength="1200"
+                placeholder="例: バックの替えが早くなった。ロングサーブの深さが安定"
+              ></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">反省・気づき</span>
+              <textarea
+                id="diaryReflection"
+                name="diaryReflection"
+                rows="3"
+                maxlength="1200"
+                placeholder="例: 第三球で振りが大きくなりすぎた。次回はコンパクトに"
+              ></textarea>
+            </label>
+            <div class="form-actions diary-form-actions">
+              <button type="submit" class="btn btn-primary" id="btn-diary-save">日記を保存</button>
+              <button type="button" class="btn btn-ghost" id="btn-diary-cancel" hidden>編集をやめる</button>
+            </div>
+            <p id="diary-message" class="save-message muted" hidden></p>
+          </form>
+
+          <fieldset class="fieldset diary-list-section">
+            <legend>これまでの日記</legend>
+            <div class="record-toolbar">
+              <button type="button" id="btn-clear-all-diaries" class="btn btn-ghost btn-danger-outline" hidden>
+                すべて削除
+              </button>
+            </div>
+            <div id="diary-list" class="diary-list">
+              <p class="muted">まだ日記はありません。</p>
+            </div>
+          </fieldset>
+        </div>
+      </div>
     </main>
 
     <div id="print-root" class="print-root" aria-hidden="true"></div>
@@ -459,6 +636,7 @@
     <script src="print-plan.js"></script>
     <script src="rubber-catalog.js"></script>
     <script src="coach.js"></script>
+    <script src="diary.js"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");

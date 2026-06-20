@@ -328,6 +328,28 @@ const ISSUE_CATALOG = {
     spinsight:
       "下系は回転の絶対値と第二跳の伸びの関係が分かりやすいです。同じタオ投げ高さで測るなど条件を固定してください。",
   },
+  serve_long: {
+    label: "サーブ・ロングサーブ",
+    improvements: [
+      "ロングは打点とリリースの一貫性が命。毎球同じタオ高さ・同じ足の位置から出す",
+      "回転を掛けすぎると長さが伸びない。長さ優先の日と回転優先の日を分ける",
+      "端に飛ぶ日は体の向きか肘の軌道がズレていることが多い。ミドル深くを先に安定させる",
+    ],
+    drills: [
+      {
+        name: "ロング深さ固定20本",
+        time: "12分",
+        detail: "相手のバックエンド深くを狙い連続サーブ。入り数と第二跳の伸びをメモ。",
+      },
+      {
+        name: "ロング＋ショート出し分け",
+        time: "14分",
+        detail: "5球ロング・5球ショートを交互。振りの見せかけを近づけて出し分けを練習。",
+      },
+    ],
+    spinsight:
+      "ロングサーブは球速と着台位置の再現性が指標になりやすいです。同じ条件で深さのブレだけを週次比較してください。",
+  },
   serve_side_top: {
     label: "サーブ・横回転（上回転寄り・サイドトップ系）",
     improvements: [
@@ -1061,6 +1083,7 @@ const KEYWORD_MAP = [
   [/横回転.*下|横下|サイドアンダ/i, "serve_side_under"],
   [/横回転.*上|横上|サイドトップ/i, "serve_side_top"],
   [/下回転.*サーブ|下回転系.*サーブ|バックスピン.*サーブ/i, "serve_under"],
+  [/ロングサーブ|ロング.*サーブ|long.*serve/i, "serve_long"],
   [/上回転.*サーブ|上回転系.*サーブ|トップサーブ/i, "serve_top"],
   [/プッシュ/, "push_attack"],
   [/カット|チョップ|削り/, "cut_defense"],
@@ -1452,30 +1475,180 @@ function hasRubberInput(formData) {
     rubberSideHasInput(normalizeRubberSide(formData, "rubberBh"));
 }
 
-function buildWeeklyPlan(issueIds) {
-  const days = [
-    { day: "月", focus: "基礎リズム", extra: "ウォームアップ多め、フォーム確認" },
-    { day: "火", focus: "弱点ドリルA", extra: "計測セット ×2（前後半で同条件）" },
-    { day: "水", focus: "休息 or 軽い素振り", extra: "肩・手首のケア、動画レビュー" },
-    { day: "木", focus: "弱点ドリルB", extra: "ゲーム形式でプレッシャーを付与" },
-    { day: "金", focus: "実戦近似", extra: "OpenPlay／試合モードでログ比較" },
-    { day: "土", focus: "メンテナンス", extra: "得意技の再現性チェックのみ短時間" },
-    { day: "日", focus: "振り返り", extra: "メモを1行だけ残し、来週の一項目を決める" },
-  ];
+const WEEK_DAY_DEFS = [
+  { key: "mon", label: "月", index: 0 },
+  { key: "tue", label: "火", index: 1 },
+  { key: "wed", label: "水", index: 2 },
+  { key: "thu", label: "木", index: 3 },
+  { key: "fri", label: "金", index: 4 },
+  { key: "sat", label: "土", index: 5 },
+  { key: "sun", label: "日", index: 6 },
+];
 
+const DEFAULT_WEEK_SCHEDULE = {
+  mon: 30,
+  tue: 30,
+  wed: 0,
+  thu: 30,
+  fri: 30,
+  sat: 60,
+  sun: 15,
+};
+
+const PRACTICE_MODE_LABELS = {
+  0: "休み",
+  15: "15分練習モード",
+  30: "30分練習モード",
+  60: "1時間練習モード",
+};
+
+const SESSION_BLOCK_TEMPLATES = {
+  15: [
+    { label: "ウォームアップ", ratio: 0.2, hint: "素振りと軽いラリーで体を入れる" },
+    { label: "メインドリル", ratio: 0.65, hint: "main" },
+    { label: "まとめ", ratio: 0.15, hint: "ミス原因を1つだけメモ" },
+  ],
+  30: [
+    { label: "ウォームアップ", ratio: 0.17, hint: "フォーム確認＋軽いラリー" },
+    { label: "メインドリル", ratio: 0.58, hint: "main" },
+    { label: "計測 or 振り返り", ratio: 0.25, hint: "同じ条件で1セット計測、またはメモ" },
+  ],
+  60: [
+    { label: "ウォームアップ", ratio: 0.15, hint: "フォームと足の入りを確認" },
+    { label: "メインドリル", ratio: 0.45, hint: "main" },
+    { label: "応用・ゲーム形式", ratio: 0.3, hint: "プレッシャーのあるラリー or 試合形式" },
+    { label: "振り返り", ratio: 0.1, hint: "良かった点と直す点を1行ずつ" },
+  ],
+};
+
+function normalizeWeekSchedule(raw) {
+  const out = { ...DEFAULT_WEEK_SCHEDULE };
+  if (!raw || typeof raw !== "object") return out;
+  for (const { key } of WEEK_DAY_DEFS) {
+    const v = parseInt(raw[key], 10);
+    if ([0, 15, 30, 60].includes(v)) out[key] = v;
+  }
+  return out;
+}
+
+function parseDrillMinutes(timeStr) {
+  const m = String(timeStr || "").match(/(\d+)/);
+  return m ? parseInt(m[1], 10) : 10;
+}
+
+function scaleDrillTimeString(timeStr, sessionMinutes) {
+  const base = 30;
+  const factor = sessionMinutes / base;
+  const scaled = Math.max(5, Math.round(parseDrillMinutes(timeStr) * factor));
+  return `${scaled}分`;
+}
+
+function pickDrillForDay(issueIds, dayIndex) {
+  const primary = issueIds[0] ? ISSUE_CATALOG[issueIds[0]] : null;
+  const secondary = issueIds[1] ? ISSUE_CATALOG[issueIds[1]] : null;
+  if (dayIndex === 1 && primary?.drills?.[0]) return { issue: primary, drill: primary.drills[0] };
+  if (dayIndex === 3 && secondary?.drills?.[0]) return { issue: secondary, drill: secondary.drills[0] };
+  if (primary?.drills?.length) {
+    const idx = dayIndex % primary.drills.length;
+    return { issue: primary, drill: primary.drills[idx] };
+  }
+  return null;
+}
+
+function allocateSessionBlocks(totalMin, template, mainHint) {
+  const blocks = [];
+  let used = 0;
+  for (let i = 0; i < template.length; i++) {
+    const t = template[i];
+    let min =
+      i === template.length - 1
+        ? totalMin - used
+        : Math.max(2, Math.round(totalMin * t.ratio));
+    used += min;
+    blocks.push({
+      label: t.label,
+      min,
+      hint: t.hint === "main" ? mainHint : t.hint,
+    });
+  }
+  return blocks;
+}
+
+function restDayRow(def) {
+  const defaults = {
+    mon: { focus: "基礎リズム", extra: "短時間なら素振りとフォーム確認のみ" },
+    tue: { focus: "弱点ドリルA", extra: "練習日に変更するとメインドリル中心" },
+    wed: { focus: "休息 or 軽い素振り", extra: "肩・手首のケア、動画レビュー" },
+    thu: { focus: "弱点ドリルB", extra: "練習日に変更すると応用ドリル" },
+    fri: { focus: "実戦近似", extra: "練習日に変更すると計測・試合形式" },
+    sat: { focus: "メンテナンス", extra: "得意技の再現性チェックのみ短時間" },
+    sun: { focus: "振り返り", extra: "メモを1行だけ残し、来週の一項目を決める" },
+  };
+  const d = defaults[def.key] || { focus: "休養", extra: "体を休める" };
+  return {
+    day: def.label,
+    dayKey: def.key,
+    minutes: 0,
+    modeLabel: PRACTICE_MODE_LABELS[0],
+    focus: d.focus,
+    extra: d.extra,
+    blocks: [],
+    isRest: true,
+  };
+}
+
+function buildWeeklyPlan(issueIds, formData) {
+  const schedule = normalizeWeekSchedule(formData?.weekSchedule);
   const primary = issueIds[0] ? ISSUE_CATALOG[issueIds[0]] : null;
   const secondary = issueIds[1] ? ISSUE_CATALOG[issueIds[1]] : null;
 
-  if (primary) {
-    days[1].focus = `${primary.label}（定点）`;
-    days[1].extra = primary.drills[0] ? `${primary.drills[0].name} を中心に` : days[1].extra;
-  }
-  if (secondary) {
-    days[3].focus = `${secondary.label}（応用）`;
-    days[3].extra = secondary.drills[0] ? `${secondary.drills[0].name} をゲーム化` : days[3].extra;
-  }
+  return WEEK_DAY_DEFS.map((def) => {
+    const minutes = schedule[def.key];
+    if (!minutes) return restDayRow(def);
 
-  return days;
+    const picked = pickDrillForDay(issueIds, def.index);
+    const mainHint = picked
+      ? `${picked.drill.name}（${picked.issue.label}）`
+      : primary?.drills?.[0]?.name || "課題ドリル";
+
+    let focus = "総合練習";
+    if (def.index === 1 && primary) focus = `${primary.label}（定点）`;
+    else if (def.index === 3 && secondary) focus = `${secondary.label}（応用）`;
+    else if (def.index === 4) focus = "実戦近似・計測";
+    else if (def.index === 5) focus = "得意技の再現性";
+    else if (def.index === 6) focus = "振り返り＋軽い練習";
+
+    const template = SESSION_BLOCK_TEMPLATES[minutes];
+    const blocks = allocateSessionBlocks(minutes, template, mainHint);
+    const blockSummary = blocks.map((b) => `${b.label}${b.min}分`).join(" → ");
+
+    return {
+      day: def.label,
+      dayKey: def.key,
+      minutes,
+      modeLabel: PRACTICE_MODE_LABELS[minutes],
+      focus,
+      extra: blockSummary,
+      blocks,
+      isRest: false,
+    };
+  });
+}
+
+function maxPracticeMinutes(schedule) {
+  const vals = Object.values(normalizeWeekSchedule(schedule)).filter((m) => m > 0);
+  return vals.length ? Math.max(...vals) : 30;
+}
+
+function practiceWeekSummary(schedule) {
+  const s = normalizeWeekSchedule(schedule);
+  const active = WEEK_DAY_DEFS.filter((d) => s[d.key] > 0);
+  const totalMin = active.reduce((sum, d) => sum + s[d.key], 0);
+  if (active.length === 0) return "";
+  const hours = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  const timeStr = hours > 0 ? `${hours}時間${mins > 0 ? `${mins}分` : ""}` : `${totalMin}分`;
+  return ` 週${active.length}日・合計約${timeStr}の練習時間で組んでいます。`;
 }
 
 function generatePlan(formData) {
@@ -1510,14 +1683,18 @@ function generatePlan(formData) {
   const serveRubberExtras = hasServeIssue ? collectServeRubberExtras(formData) : [];
 
   const topImprovements = uniqueByKey(improvements, (x) => x.text).slice(0, 12);
-  const topDrills = uniqueByKey(drills, (d) => `${d.name}-${d.detail}`).slice(0, 12);
+  const sessionMin = maxPracticeMinutes(formData.weekSchedule);
+  const topDrills = uniqueByKey(drills, (d) => `${d.name}-${d.detail}`)
+    .slice(0, 12)
+    .map((d) => ({ ...d, time: scaleDrillTimeString(d.time, sessionMin) }));
   const topHints = [...new Set(spinsightHints)].slice(0, 7);
   const spinsightExtra = spinsightContextNotes(formData);
 
   const summaryParts = issueIds.map((id) => ISSUE_CATALOG[id]?.label).filter(Boolean);
   const rubberSummary = hasRubberInput(formData) ? " 入力したラバーに合わせてヒントを足しています。" : "";
+  const timeSummary = practiceWeekSummary(formData.weekSchedule);
 
-  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${rubberSummary}下に改善ポイントと練習メニューがあります。`;
+  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${rubberSummary}${timeSummary}下に改善ポイントと練習メニューがあります。`;
 
   const rawPlan = {
     ok: true,
@@ -1529,7 +1706,8 @@ function generatePlan(formData) {
     drills: topDrills,
     spinsightHints: topHints,
     spinsightExtra,
-    week: buildWeeklyPlan(issueIds),
+    week: buildWeeklyPlan(issueIds, formData),
+    weekSchedule: normalizeWeekSchedule(formData.weekSchedule),
     issueLabels: summaryParts,
     issueIds,
   };
@@ -1690,23 +1868,36 @@ function renderPlan(plan, container) {
   container.appendChild(drillUl);
 
   const weekH = document.createElement("h2");
-  weekH.textContent = "1週間の進め方（目安）";
+  weekH.textContent = "1週間の進め方（練習時間別）";
   container.appendChild(weekH);
 
   const weekTable = document.createElement("div");
   weekTable.className = "week-grid";
   for (const row of plan.week) {
     const cell = document.createElement("div");
-    cell.className = "week-cell";
+    cell.className = `week-cell${row.isRest ? " week-cell-rest" : ""}`;
     const d = document.createElement("strong");
     d.textContent = `${row.day}曜`;
+    const mode = document.createElement("p");
+    mode.className = "week-mode";
+    mode.textContent = row.modeLabel || "";
     const f = document.createElement("p");
     f.className = "week-focus";
     f.textContent = row.focus;
     const e = document.createElement("p");
     e.className = "week-extra muted";
     e.textContent = row.extra;
-    cell.append(d, f, e);
+    cell.append(d, mode, f, e);
+    if (row.blocks?.length) {
+      const bl = document.createElement("ul");
+      bl.className = "week-blocks";
+      for (const b of row.blocks) {
+        const bli = document.createElement("li");
+        bli.textContent = `${b.label}（${b.min}分）: ${b.hint}`;
+        bl.appendChild(bli);
+      }
+      cell.appendChild(bl);
+    }
     weekTable.appendChild(cell);
   }
   container.appendChild(weekTable);
@@ -1756,6 +1947,34 @@ function readRubberSideFromDom(prefix) {
   };
 }
 
+function readWeekScheduleFromDom() {
+  const schedule = {};
+  for (const { key } of WEEK_DAY_DEFS) {
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    const el = document.getElementById(`practice${cap}`);
+    schedule[key] = parseInt(el?.value ?? String(DEFAULT_WEEK_SCHEDULE[key]), 10);
+  }
+  return normalizeWeekSchedule(schedule);
+}
+
+function restoreWeekScheduleToDom(schedule) {
+  const s = normalizeWeekSchedule(schedule);
+  for (const { key } of WEEK_DAY_DEFS) {
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    const el = document.getElementById(`practice${cap}`);
+    if (el) el.value = String(s[key]);
+  }
+}
+
+function applyPracticePreset(preset) {
+  const sets = {
+    "all-30": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 30, sun: 30 },
+    "all-15": { mon: 15, tue: 15, wed: 15, thu: 15, fri: 15, sat: 15, sun: 15 },
+    "weekday-30-weekend-60": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 60, sun: 60 },
+  };
+  if (sets[preset]) restoreWeekScheduleToDom(sets[preset]);
+}
+
 function collectForm() {
   const issues = [...document.querySelectorAll('input[name="issue"]:checked')].map((el) => el.value);
   const goals = document.getElementById("goals").value;
@@ -1775,6 +1994,7 @@ function collectForm() {
     playerName,
     rubberFh: readRubberSideFromDom("rubberFh"),
     rubberBh: readRubberSideFromDom("rubberBh"),
+    weekSchedule: readWeekScheduleFromDom(),
     strokeType,
     spinRps,
     ballSpeed,
@@ -1807,6 +2027,7 @@ function restoreFormFromRecord(formData) {
   set("goals", formData.goals);
   restoreRubberSideToDom("rubberFh", formData, "rubberFh");
   restoreRubberSideToDom("rubberBh", formData, "rubberBh");
+  restoreWeekScheduleToDom(formData.weekSchedule);
   set("rpsRange", formData.rpsRange);
   set("stability", formData.stability);
   set("spinsightNotes", formData.freeform);
@@ -1918,6 +2139,7 @@ function init() {
   const err = document.getElementById("plan-error");
 
   refreshRecordList();
+  initPracticeTimePresets();
 
   document.getElementById("btn-clear-all-records")?.addEventListener("click", () => {
     const n = RecordStore.list().length;
@@ -1948,6 +2170,14 @@ function init() {
     }
     renderPlan(plan, out);
     out.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function initPracticeTimePresets() {
+  document.querySelectorAll("[data-practice-preset]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      applyPracticePreset(btn.getAttribute("data-practice-preset"));
+    });
   });
 }
 

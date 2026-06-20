@@ -28,7 +28,16 @@ function printPlan(plan, playerName) {
   if (plan.week?.length) {
     html += `<h2>1週間の目安</h2><ul>`;
     for (const w of plan.week) {
-      html += `<li>${escapeHtml(w.day)}: ${escapeHtml(w.focus)} — ${escapeHtml(w.extra)}</li>`;
+      const mode = w.modeLabel ? `【${escapeHtml(w.modeLabel)}】` : "";
+      html += `<li>${escapeHtml(w.day)}: ${mode} ${escapeHtml(w.focus)} — ${escapeHtml(w.extra)}`;
+      if (w.blocks?.length) {
+        html += `<ul>`;
+        for (const b of w.blocks) {
+          html += `<li>${escapeHtml(b.label)}（${b.min}分）: ${escapeHtml(b.hint)}</li>`;
+        }
+        html += `</ul>`;
+      }
+      html += `</li>`;
     }
     html += `</ul>`;
   }
