@@ -115,7 +115,7 @@ body {
 
 .app-mode-hero-inner {
   text-align: center;
-  width: min(980px, 96vw);
+  width: min(1100px, 96vw);
   margin-inline: auto;
 }
 
@@ -675,10 +675,6 @@ body {
 
 .diary-form {
   margin-bottom: 2rem;
-  padding: 1.25rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
 }
 
 .diary-form-actions {
@@ -740,39 +736,6 @@ body {
 @media (max-width: 899px) {
   .coach-layout {
     gap: 1rem;
-  }
-
-  .coach-form,
-  .diary-form {
-    padding: 0.85rem 0;
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
-    box-shadow: none;
-    background: transparent;
-  }
-
-  .coach-output-wrap,
-  .plan-output {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .input-mode-bar,
-  .form-accordion,
-  .simple-picker-grid,
-  .field,
-  .form-actions {
-    width: 100%;
-  }
-
-  .form-accordion-summary {
-    min-width: 0;
-  }
-
-  .form-accordion-hint {
-    white-space: normal;
-    text-align: right;
   }
 }
 
@@ -1011,23 +974,42 @@ body {
   gap: 2rem;
   align-items: start;
   width: 100%;
+  grid-template-columns: 1fr;
 }
 
-.coach-form {
+.coach-form,
+.diary-form {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  padding: 0.85rem 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
-@media (min-width: 900px) {
-  .coach-layout {
-    grid-template-columns: 1fr 1fr;
-  }
+.coach-output-wrap,
+.plan-output {
+  width: 100%;
+  min-width: 0;
+}
+
+.input-mode-bar,
+.form-accordion,
+.simple-picker-grid,
+.field,
+.form-actions {
+  width: 100%;
+}
+
+.form-accordion-summary {
+  min-width: 0;
+}
+
+.form-accordion-hint {
+  white-space: normal;
+  text-align: right;
 }
 
 .fieldset {
