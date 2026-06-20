@@ -26,34 +26,39 @@
     </header>
 
     <main id="main" class="coach-main">
-      <div class="container app-mode-section">
-        <div class="app-mode-grid" role="tablist" aria-label="メイン機能">
-          <button
-            type="button"
-            id="tab-menu"
-            class="app-mode-card is-active"
-            role="tab"
-            aria-selected="true"
-            aria-controls="view-menu"
-            data-app-mode="menu"
-          >
-            <span class="app-mode-title">練習メニュー作成</span>
-            <span class="app-mode-desc">課題と目標からプランを生成</span>
-          </button>
-          <button
-            type="button"
-            id="tab-diary"
-            class="app-mode-card"
-            role="tab"
-            aria-selected="false"
-            aria-controls="view-diary"
-            data-app-mode="diary"
-          >
-            <span class="app-mode-title">練習日記</span>
-            <span class="app-mode-desc">日々の練習を記録・振り返り</span>
-          </button>
+      <section class="app-mode-hero" aria-label="機能の選択">
+        <div class="container app-mode-hero-inner">
+          <p class="app-mode-eyebrow">SpinCoach</p>
+          <h1 class="app-mode-hero-title">まず、使う機能を選んでください</h1>
+          <p class="app-mode-hero-lead">練習メニューを作るか、日々の練習を日記に残すかを選べます。</p>
+          <div class="app-mode-grid app-mode-grid-large" role="tablist" aria-label="メイン機能">
+            <button
+              type="button"
+              id="tab-menu"
+              class="app-mode-card is-active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="view-menu"
+              data-app-mode="menu"
+            >
+              <span class="app-mode-title">練習メニュー作成</span>
+              <span class="app-mode-desc">課題と目標からプランを生成</span>
+            </button>
+            <button
+              type="button"
+              id="tab-diary"
+              class="app-mode-card"
+              role="tab"
+              aria-selected="false"
+              aria-controls="view-diary"
+              data-app-mode="diary"
+            >
+              <span class="app-mode-title">練習日記</span>
+              <span class="app-mode-desc">日々の練習を記録・振り返り</span>
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
 
       <div id="view-menu" class="app-view" role="tabpanel" aria-labelledby="tab-menu">
       <div class="container coach-hero">
@@ -561,7 +566,7 @@
         <div class="container diary-layout">
           <div class="diary-hero">
             <h1>練習日記</h1>
-            <p class="lead">その日の練習内容・良かったところ・反省を残せます。この端末のブラウザにだけ保存されます。</p>
+            <p class="lead">その日の課題・練習内容・良かったところ・反省を残せます。この端末のブラウザにだけ保存されます。</p>
           </div>
 
           <form id="diary-form" class="diary-form" novalidate>
@@ -569,6 +574,16 @@
             <label class="field">
               <span class="field-label">日付</span>
               <input type="date" id="diaryDate" name="diaryDate" required />
+            </label>
+            <label class="field">
+              <span class="field-label">課題</span>
+              <textarea
+                id="diaryIssues"
+                name="diaryIssues"
+                rows="2"
+                maxlength="800"
+                placeholder="例: ロングサーブの深さ、バックドライブの安定、第三球の入り"
+              ></textarea>
             </label>
             <label class="field">
               <span class="field-label">練習内容</span>

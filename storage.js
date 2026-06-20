@@ -78,20 +78,21 @@ const DiaryStore = {
     });
   },
 
-  save({ date, content, good, reflection, playerName, id }) {
+  save({ date, content, good, reflection, issues, playerName, id }) {
     const d = String(date || "").trim();
     if (!d) return { ok: false, message: "日付を選んでください。" };
     const entry = {
       id: id || crypto.randomUUID?.() || `d-${Date.now()}`,
       date: d,
+      issues: String(issues || "").trim(),
       content: String(content || "").trim(),
       good: String(good || "").trim(),
       reflection: String(reflection || "").trim(),
       playerName: String(playerName || "").trim(),
       savedAt: new Date().toISOString(),
     };
-    if (!entry.content && !entry.good && !entry.reflection) {
-      return { ok: false, message: "練習内容・良かったところ・反省のいずれかを書いてください。" };
+    if (!entry.issues && !entry.content && !entry.good && !entry.reflection) {
+      return { ok: false, message: "課題・練習内容・良かったところ・反省のいずれかを書いてください。" };
     }
     const list = this._read();
     const idx = list.findIndex((e) => e.id === entry.id);

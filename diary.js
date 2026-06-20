@@ -61,12 +61,14 @@ function resetDiaryForm() {
   const editId = document.getElementById("diaryEditId");
   const dateEl = document.getElementById("diaryDate");
   const content = document.getElementById("diaryContent");
+  const issues = document.getElementById("diaryIssues");
   const good = document.getElementById("diaryGood");
   const reflection = document.getElementById("diaryReflection");
   const cancelBtn = document.getElementById("btn-diary-cancel");
   const saveBtn = document.getElementById("btn-diary-save");
   if (editId) editId.value = "";
   if (dateEl) dateEl.value = todayDateString();
+  if (issues) issues.value = "";
   if (content) content.value = "";
   if (good) good.value = "";
   if (reflection) reflection.value = "";
@@ -78,12 +80,14 @@ function loadDiaryToForm(entry) {
   const editId = document.getElementById("diaryEditId");
   const dateEl = document.getElementById("diaryDate");
   const content = document.getElementById("diaryContent");
+  const issues = document.getElementById("diaryIssues");
   const good = document.getElementById("diaryGood");
   const reflection = document.getElementById("diaryReflection");
   const cancelBtn = document.getElementById("btn-diary-cancel");
   const saveBtn = document.getElementById("btn-diary-save");
   if (editId) editId.value = entry.id;
   if (dateEl) dateEl.value = entry.date;
+  if (issues) issues.value = entry.issues || "";
   if (content) content.value = entry.content || "";
   if (good) good.value = entry.good || "";
   if (reflection) reflection.value = entry.reflection || "";
@@ -118,6 +122,13 @@ function refreshDiaryList() {
     const dateStrong = document.createElement("strong");
     dateStrong.className = "diary-item-date";
     dateStrong.textContent = formatDiaryDate(e.date);
+
+    if (e.issues) {
+      const issueP = document.createElement("p");
+      issueP.className = "diary-item-issues";
+      issueP.textContent = `課題: ${e.issues.length > 60 ? `${e.issues.slice(0, 60)}…` : e.issues}`;
+      main.appendChild(issueP);
+    }
 
     const preview = document.createElement("p");
     preview.className = "diary-item-preview muted";
@@ -191,6 +202,7 @@ function initDiary() {
     const res = DiaryStore.save({
       id: document.getElementById("diaryEditId")?.value || "",
       date: document.getElementById("diaryDate")?.value,
+      issues: document.getElementById("diaryIssues")?.value,
       content: document.getElementById("diaryContent")?.value,
       good: document.getElementById("diaryGood")?.value,
       reflection: document.getElementById("diaryReflection")?.value,
