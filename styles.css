@@ -1527,39 +1527,47 @@ details.issue-section {
 }
 
 .rubber-side-block {
-  margin-bottom: 1rem;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(110, 231, 255, 0.03);
+  margin-bottom: 1.15rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: 16px;
+  border: 2px solid rgba(110, 231, 255, 0.22);
+  background: rgba(110, 231, 255, 0.06);
 }
 
 .rubber-side-title {
-  margin: 0 0 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rubber-fields-row {
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+.rubber-field {
+  margin-bottom: 0.85rem;
+}
+
+.rubber-field:last-child {
+  margin-bottom: 0;
 }
 
 .rubber-side-bottom {
-  align-items: end;
+  margin-top: 0.25rem;
 }
 
-.surface-picker {
-  margin: 0;
-  padding: 0;
-  border: none;
-  min-inline-size: 0;
-}
-
-.surface-picker legend {
-  margin-bottom: 0.35rem;
-  padding: 0;
+.surface-picker-legend {
+  margin-bottom: 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .surface-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .surface-toggle {
@@ -1567,21 +1575,22 @@ details.issue-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.25rem;
-  padding: 0.75rem 0.45rem;
-  border-radius: 12px;
-  border: 2px solid var(--border);
-  background: rgba(0, 0, 0, 0.35);
+  min-height: 4.25rem;
+  padding: 0.85rem 0.5rem;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.42);
   cursor: pointer;
   text-align: center;
   transition:
     border-color 0.15s ease,
     background 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
 }
 
 .surface-toggle-label {
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.2;
   color: var(--text);
@@ -1589,12 +1598,19 @@ details.issue-section {
 
 .surface-toggle:has(input:checked) {
   border-color: var(--accent);
-  background: rgba(110, 231, 255, 0.16);
-  box-shadow: 0 0 0 1px rgba(110, 231, 255, 0.35);
+  background: rgba(110, 231, 255, 0.2);
+  box-shadow:
+    0 0 0 2px rgba(110, 231, 255, 0.35),
+    0 10px 28px rgba(110, 231, 255, 0.18);
+  transform: translateY(-1px);
 }
 
 .surface-toggle:has(input:checked) .surface-toggle-label {
   color: var(--accent);
+}
+
+.surface-toggle:active {
+  transform: scale(0.98);
 }
 
 .surface-toggle:has(:focus-visible) {
@@ -1612,18 +1628,50 @@ details.issue-section {
 }
 
 .rubber-side-block .field input[type="text"],
-.rubber-category-details select {
-  min-height: 3rem;
-  font-size: 1rem;
-  padding: 0.75rem 0.85rem;
-  background: rgba(0, 0, 0, 0.35);
+.rubber-side-block .input-prominent,
+.rubber-category-details select,
+.rubber-category-details .select-prominent {
+  min-height: 3.5rem;
+  font-size: 1.05rem;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.42);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
   -webkit-appearance: none;
   appearance: none;
+  width: 100%;
 }
 
 .rubber-side-block .field-label,
 .surface-picker legend {
-  font-size: 1rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.select-prominent {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.42);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+}
+
+.rubber-hardness-details,
+.rubber-category-details {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.rubber-hardness-details summary,
+.rubber-category-details summary {
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.35rem 0;
+  user-select: none;
 }
 
 .surface-picker-full {
@@ -1634,29 +1682,20 @@ details.issue-section {
   margin-top: 0.65rem;
 }
 
+.surface-picker {
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-inline-size: 0;
+}
+
+.surface-picker legend {
+  padding: 0;
+}
+
 .optional-tag {
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--muted);
-}
-
-.rubber-hardness-details {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.rubber-hardness-details summary {
-  cursor: pointer;
-  color: var(--muted);
-}
-
-.rubber-category-details {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.rubber-category-details summary {
-  cursor: pointer;
   color: var(--muted);
 }
 
