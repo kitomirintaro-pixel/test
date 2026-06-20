@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260524b" />
+    <link rel="stylesheet" href="styles.css?v=20260524c" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -74,17 +74,21 @@
       <div id="view-menu" class="app-view" role="tabpanel" aria-labelledby="tab-menu">
       <div class="container coach-layout">
         <form id="coach-form" class="coach-form" novalidate>
-          <label class="field">
-            <span class="field-label">お名前（記録の保存に使います）</span>
-            <input
-              type="text"
-              id="playerName"
-              name="playerName"
-              maxlength="40"
-              placeholder="例: 山田 太郎"
-              autocomplete="name"
-            />
-          </label>
+          <div class="name-field-card">
+            <label class="field field-name">
+              <span class="field-label field-label-prominent">お名前</span>
+              <span class="field-hint-inline">記録の保存に使います（任意）</span>
+              <input
+                type="text"
+                id="playerName"
+                name="playerName"
+                class="input-prominent"
+                maxlength="40"
+                placeholder="例: 山田 太郎"
+                autocomplete="name"
+              />
+            </label>
+          </div>
 
           <details class="form-accordion">
             <summary class="form-accordion-summary">プレイヤー設定<span class="form-accordion-hint">試合形式・利き手</span></summary>
@@ -650,8 +654,8 @@
             </div>
           </details>
 
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">プランを生成する</button>
+          <div class="form-actions form-actions-main">
+            <button type="submit" class="btn btn-primary btn-submit-main">プランを生成する</button>
           </div>
         </form>
 
@@ -727,8 +731,8 @@
                 placeholder="例: 第三球で振りが大きくなりすぎた。次回はコンパクトに"
               ></textarea>
             </label>
-            <div class="form-actions diary-form-actions">
-              <button type="submit" class="btn btn-primary" id="btn-diary-save">日記を保存</button>
+            <div class="form-actions form-actions-main diary-form-actions">
+              <button type="submit" class="btn btn-primary btn-submit-main" id="btn-diary-save">日記を保存</button>
               <button type="button" class="btn btn-ghost" id="btn-diary-cancel" hidden>編集をやめる</button>
             </div>
             <p id="diary-message" class="save-message muted" hidden></p>
