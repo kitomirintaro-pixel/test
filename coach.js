@@ -1631,6 +1631,7 @@ function practiceModeLabel(minutes) {
 
 function normalizePracticeMinutes(value) {
   const v = parseInt(value, 10);
+  if (Number.isNaN(v)) return 0;
   if (!VALID_PRACTICE_MINUTES.includes(v)) {
     const numeric = VALID_PRACTICE_MINUTES.filter((m) => m > 0);
     let closest = numeric[0];
@@ -2236,7 +2237,9 @@ function readWeekScheduleFromDom() {
   for (const { key } of WEEK_DAY_DEFS) {
     const cap = key.charAt(0).toUpperCase() + key.slice(1);
     const el = document.getElementById(`practice${cap}`);
-    schedule[key] = parseInt(el?.value ?? String(DEFAULT_WEEK_SCHEDULE[key]), 10);
+    const raw = el?.value;
+    schedule[key] =
+      raw === "" || raw == null ? DEFAULT_WEEK_SCHEDULE[key] : parseInt(raw, 10);
   }
   return normalizeWeekSchedule(schedule);
 }

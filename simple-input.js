@@ -171,13 +171,6 @@ const QUICK_RECOMMENDATIONS = [
   },
 ];
 
-const DIARY_EXAMPLES = {
-  issues: "ロングサーブの深さ、バックドライブの安定、第3球の入り",
-  content: "30分練習。フォアドライブ定点20本、サーブ各種20本、多球ラリー15分。",
-  good: "バックの替えが早くなった。ロングサーブの深さが安定してきた。",
-  reflection: "第3球で振りが大きくなりすぎた。次回はコンパクトに当てる。",
-};
-
 const SIMPLE_STRENGTH_OPTIONS = [
   { id: "lateral", label: "左右ステップ" },
   { id: "stamina", label: "体力・持久力" },
@@ -185,6 +178,33 @@ const SIMPLE_STRENGTH_OPTIONS = [
   { id: "core", label: "体幹" },
   { id: "none", label: "今は不要" },
 ];
+
+const SIMPLE_PRACTICE_MINUTES = [0, 10, 15, 20, 30, 45, 60, 90, 120];
+
+function simplePracticeModeLabel(minutes) {
+  if (!minutes) return "休み";
+  if (minutes === 60) return "1時間練習モード";
+  if (minutes === 120) return "2時間練習モード";
+  if (minutes === 90) return "1時間30分練習モード";
+  return `${minutes}分練習モード`;
+}
+
+function fillPracticeMinuteSelect(selectEl, selectedValue) {
+  if (!selectEl) return;
+  if (typeof populatePracticeMinuteSelect === "function") {
+    populatePracticeMinuteSelect(selectEl, selectedValue);
+    return;
+  }
+  const current = SIMPLE_PRACTICE_MINUTES.includes(selectedValue) ? selectedValue : 0;
+  selectEl.innerHTML = "";
+  for (const min of SIMPLE_PRACTICE_MINUTES) {
+    const opt = document.createElement("option");
+    opt.value = String(min);
+    opt.textContent = simplePracticeModeLabel(min);
+    if (min === current) opt.selected = true;
+    selectEl.appendChild(opt);
+  }
+}
 
 const SimpleInput = {
   mode: "simple",
@@ -246,7 +266,13 @@ const SimpleInput = {
     });
 
     if (persist) localStorage.setItem("spinCoachInputMode", mode);
-    if (mode === "simple") this.syncToDetailedForm();
+    if (mode === "simple") {
+      this.syncToDetailedForm();
+    } else if (typeof restoreWeekScheduleToDom === "function") {
+      restoreWeekScheduleToDom(this.getActiveSchedule());
+    } else if (typeof initPracticeMinuteSelects === "function") {
+      initPracticeMinuteSelects();
+    }
   },
 
   openPicker(key) {
@@ -374,9 +400,7 @@ const SimpleInput = {
         span.textContent = `${day.label}曜`;
         const sel = document.createElement("select");
         sel.className = "simple-day-select";
-        if (typeof populatePracticeMinuteSelect === "function") {
-          populatePracticeMinuteSelect(sel, this._draftSchedule?.[day.key] ?? 0);
-        }
+        fillPracticeMinuteSelect(sel, this._draftSchedule?.[day.key] ?? 0);
         sel.addEventListener("change", () => {
           this._draftSchedule = this._draftSchedule || {};
           this._draftSchedule[day.key] = parseInt(sel.value, 10);

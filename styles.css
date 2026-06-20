@@ -1,6 +1,7 @@
 :root {
   --bg: #0c0f14;
   --bg-elevated: #121722;
+  --surface: #161b26;
   --text: #e8ecf4;
   --text-muted: #9aa3b5;
   --accent: #6ee7ff;
@@ -277,6 +278,13 @@ body {
   }
 }
 
+.simple-form {
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
 .simple-form-lead {
   margin: 0 0 1rem;
 }
@@ -376,7 +384,7 @@ body {
   padding: 1rem 1.1rem;
   border-radius: 14px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
   cursor: pointer;
   transition:
     border-color 0.15s ease,
@@ -415,21 +423,23 @@ body {
   width: min(560px, calc(100vw - 1.5rem));
   max-height: min(85vh, 720px);
   padding: 0;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   background: var(--surface);
   color: var(--text);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.65);
 }
 
 .simple-picker-sheet::backdrop {
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.72);
 }
 
 .simple-sheet-inner {
   display: flex;
   flex-direction: column;
   max-height: min(85vh, 720px);
+  background: var(--surface);
+  border-radius: 16px;
 }
 
 .simple-sheet-header {
@@ -439,6 +449,7 @@ body {
   gap: 1rem;
   padding: 1rem 1.1rem;
   border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .simple-sheet-title {
@@ -455,6 +466,7 @@ body {
 .simple-sheet-footer {
   padding: 0.85rem 1.1rem 1.1rem;
   border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .simple-chip-area {
@@ -486,7 +498,7 @@ body {
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.35);
   color: var(--text);
   cursor: pointer;
   transition:

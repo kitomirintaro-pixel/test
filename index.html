@@ -159,19 +159,6 @@
             </div>
           </div>
 
-          <dialog id="simple-picker-sheet" class="simple-picker-sheet">
-            <div class="simple-sheet-inner">
-              <header class="simple-sheet-header">
-                <h2 id="simple-sheet-title" class="simple-sheet-title">選択</h2>
-                <button type="button" id="simple-sheet-close" class="btn btn-ghost btn-small" aria-label="閉じる">閉じる</button>
-              </header>
-              <div id="simple-sheet-body" class="simple-sheet-body"></div>
-              <footer class="simple-sheet-footer">
-                <button type="button" id="simple-sheet-done" class="btn btn-primary">決定</button>
-              </footer>
-            </div>
-          </dialog>
-
           <div id="form-detailed" class="form-detailed" hidden>
           <fieldset class="fieldset">
             <legend>いま足りないと感じること（複数選択可）</legend>
@@ -640,6 +627,19 @@
             <button type="submit" class="btn btn-primary">プランを生成する</button>
           </div>
         </form>
+
+        <dialog id="simple-picker-sheet" class="simple-picker-sheet">
+          <div class="simple-sheet-inner">
+            <header class="simple-sheet-header">
+              <h2 id="simple-sheet-title" class="simple-sheet-title">選択</h2>
+              <button type="button" id="simple-sheet-close" class="btn btn-ghost btn-small" aria-label="閉じる">閉じる</button>
+            </header>
+            <div id="simple-sheet-body" class="simple-sheet-body"></div>
+            <footer class="simple-sheet-footer">
+              <button type="button" id="simple-sheet-done" class="btn btn-primary">決定</button>
+            </footer>
+          </div>
+        </dialog>
 
         <div class="coach-output-wrap">
           <p id="plan-error" class="plan-error" hidden role="alert"></p>
