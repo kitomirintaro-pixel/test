@@ -599,9 +599,15 @@ body {
 }
 
 .simple-sheet-footer {
-  padding: 0.85rem 1.1rem 1.1rem;
+  padding: 1rem 1.1rem 1.15rem;
   border-top: 1px solid var(--border);
   background: rgba(0, 0, 0, 0.2);
+}
+
+.simple-sheet-footer .btn-action-large {
+  width: 100%;
+  min-height: 3.5rem;
+  font-size: 1.12rem;
 }
 
 .simple-chip-area {
@@ -1837,10 +1843,47 @@ select.hardness-active {
 }
 
 .plan-toolbar {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 0.65rem;
   margin-bottom: 1.25rem;
+}
+
+.plan-toolbar .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-action-large {
+  min-height: 3.35rem;
+  padding: 0.9rem 1.25rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 12px;
+}
+
+.btn-action-large.btn-primary {
+  background: linear-gradient(135deg, #a78bfa, var(--accent));
+  color: #041016;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 36px rgba(110, 231, 255, 0.28);
+}
+
+.btn-action-large.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 44px rgba(167, 139, 250, 0.4);
+}
+
+.btn.btn-ghost.btn-action-secondary {
+  border: 2px solid rgba(110, 231, 255, 0.35);
+  background: rgba(110, 231, 255, 0.12);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.btn.btn-ghost.btn-action-secondary:hover {
+  border-color: rgba(110, 231, 255, 0.55);
+  background: rgba(110, 231, 255, 0.18);
 }
 
 .save-message {

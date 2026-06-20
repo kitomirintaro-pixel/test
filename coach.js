@@ -1979,7 +1979,7 @@ function renderPlan(plan, container) {
 
   const btnPrint = document.createElement("button");
   btnPrint.type = "button";
-  btnPrint.className = "btn btn-primary";
+  btnPrint.className = "btn btn-primary btn-action-large";
   btnPrint.textContent = "PDFで保存";
   btnPrint.addEventListener("click", () => {
     if (typeof printPlan === "function") {
@@ -1989,7 +1989,7 @@ function renderPlan(plan, container) {
 
   const btnCopy = document.createElement("button");
   btnCopy.type = "button";
-  btnCopy.className = "btn btn-ghost";
+  btnCopy.className = "btn btn-ghost btn-action-large btn-action-secondary";
   btnCopy.textContent = "メニューをコピー";
   btnCopy.addEventListener("click", async () => {
     const res = await copyTextToClipboard(planToPlainText(plan));
@@ -2002,7 +2002,7 @@ function renderPlan(plan, container) {
 
   const btnSave = document.createElement("button");
   btnSave.type = "button";
-  btnSave.className = "btn btn-ghost";
+  btnSave.className = "btn btn-ghost btn-action-large btn-action-secondary";
   btnSave.textContent = "記録を保存";
   btnSave.addEventListener("click", () => {
     const name = document.getElementById("playerName")?.value;
