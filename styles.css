@@ -1116,10 +1116,13 @@ details.issue-section {
 .field input[type="number"] {
   font: inherit;
   color: var(--text);
+  caret-color: var(--text);
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.65rem 0.75rem;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .field input[type="number"]:focus-visible {
@@ -1216,6 +1219,42 @@ details.issue-section {
   font-size: 0.95rem;
 }
 
+.coach-form,
+.diary-form {
+  color-scheme: dark;
+}
+
+.coach-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.diary-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.coach-form .field textarea,
+.diary-form .field textarea,
+.coach-form .field select,
+.diary-form .field select,
+.coach-form .simple-day-select {
+  color: var(--text);
+  caret-color: var(--text);
+}
+
+.coach-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"])::placeholder,
+.diary-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"])::placeholder,
+.coach-form .field textarea::placeholder,
+.diary-form .field textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.coach-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill,
+.coach-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill:hover,
+.coach-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill:focus,
+.diary-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill,
+.diary-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill:hover,
+.diary-form .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.32) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
 .field textarea,
 .field select {
   font: inherit;
@@ -1309,9 +1348,11 @@ details.issue-section {
   font-size: 1.1rem;
   font-weight: 600;
   padding: 0.85rem 1rem;
+  color: var(--text);
   background: rgba(0, 0, 0, 0.38);
   border: 2px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
+  caret-color: var(--text);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -1487,14 +1528,32 @@ details.issue-section {
 .field input[type="text"] {
   font: inherit;
   color: var(--text);
+  caret-color: var(--text);
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.65rem 0.75rem;
   width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.field input[type="text"]:focus-visible {
+.field input[type="date"] {
+  font: inherit;
+  color: var(--text);
+  caret-color: var(--text);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
+  width: 100%;
+  color-scheme: dark;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field input[type="text"]:focus-visible,
+.field input[type="date"]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -1634,6 +1693,8 @@ details.issue-section {
   min-height: 3.5rem;
   font-size: 1.05rem;
   padding: 0.85rem 1rem;
+  color: var(--text);
+  caret-color: var(--text);
   background: rgba(0, 0, 0, 0.42);
   border: 2px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
