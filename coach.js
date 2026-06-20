@@ -1586,23 +1586,92 @@ const DEFAULT_WEEK_SCHEDULE = {
   sun: 15,
 };
 
-const PRACTICE_MODE_LABELS = {
-  0: "休み",
-  15: "15分練習モード",
-  30: "30分練習モード",
-  60: "1時間練習モード",
+const VALID_PRACTICE_MINUTES = [0, 10, 15, 20, 30, 45, 60, 90, 120];
+
+const MATCH_FORMAT_OPTIONS = {
+  singles: {
+    label: "シングルス",
+    note: "シングルス向けに、コースの出し分けと第3球の入りを意識したメニューです。",
+    drillHint: "試合形式は1対1のラリー・サーブ練習を中心に。",
+  },
+  doubles: {
+    label: "ダブルス",
+    note: "ダブルス向けに、レシーブ位置・順番・短いラリー処理を意識したメニューです。",
+    drillHint: "ペアで回転・順番を決めたラリー、短い球の処理を多めに。",
+  },
+  both: {
+    label: "シングルス・ダブルス両方",
+    note: "シングルスとダブルス両方を想定し、コース出しとペア連携のバランスを取っています。",
+    drillHint: "週の後半はペア練習、前半は個人技術を意識。",
+  },
 };
 
+const DOMINANT_HAND_OPTIONS = {
+  right: {
+    label: "右利き",
+    note: "右利きのフォア／バック切り替えを前提にしています。",
+  },
+  left: {
+    label: "左利き",
+    note: "左利きはフォア側のカバー範囲とサーブコースが異なります。逆サイドへの攻めを意識してください。",
+  },
+  unknown: {
+    label: "未設定",
+    note: "",
+  },
+};
+
+function practiceModeLabel(minutes) {
+  if (!minutes) return "休み";
+  if (minutes === 60) return "1時間練習モード";
+  if (minutes === 120) return "2時間練習モード";
+  if (minutes === 90) return "1時間30分練習モード";
+  return `${minutes}分練習モード`;
+}
+
+function normalizePracticeMinutes(value) {
+  const v = parseInt(value, 10);
+  if (!VALID_PRACTICE_MINUTES.includes(v)) {
+    const numeric = VALID_PRACTICE_MINUTES.filter((m) => m > 0);
+    let closest = numeric[0];
+    for (const m of numeric) {
+      if (Math.abs(m - v) < Math.abs(closest - v)) closest = m;
+    }
+    return closest;
+  }
+  return v;
+}
+
+const PRACTICE_MODE_LABELS = Object.fromEntries(
+  VALID_PRACTICE_MINUTES.map((m) => [m, practiceModeLabel(m)])
+);
+
 const SESSION_BLOCK_TEMPLATES = {
+  10: [
+    { label: "ウォームアップ", ratio: 0.25, hint: "素振りと軽いラリー" },
+    { label: "メインドリル", ratio: 0.6, hint: "main" },
+    { label: "まとめ", ratio: 0.15, hint: "1点だけメモ" },
+  ],
   15: [
     { label: "ウォームアップ", ratio: 0.2, hint: "素振りと軽いラリーで体を入れる" },
     { label: "メインドリル", ratio: 0.65, hint: "main" },
     { label: "まとめ", ratio: 0.15, hint: "ミス原因を1つだけメモ" },
   ],
+  20: [
+    { label: "ウォームアップ", ratio: 0.2, hint: "フォーム確認＋軽いラリー" },
+    { label: "メインドリル", ratio: 0.6, hint: "main" },
+    { label: "まとめ", ratio: 0.2, hint: "良かった点を1行メモ" },
+  ],
   30: [
     { label: "ウォームアップ", ratio: 0.17, hint: "フォーム確認＋軽いラリー" },
     { label: "メインドリル", ratio: 0.58, hint: "main" },
     { label: "計測 or 振り返り", ratio: 0.25, hint: "同じ条件で1セット計測、またはメモ" },
+  ],
+  45: [
+    { label: "ウォームアップ", ratio: 0.16, hint: "フォームと足の入りを確認" },
+    { label: "メインドリル", ratio: 0.52, hint: "main" },
+    { label: "応用", ratio: 0.22, hint: "試合形式 or コース出し" },
+    { label: "振り返り", ratio: 0.1, hint: "直す点を1つ決める" },
   ],
   60: [
     { label: "ウォームアップ", ratio: 0.15, hint: "フォームと足の入りを確認" },
@@ -1610,14 +1679,68 @@ const SESSION_BLOCK_TEMPLATES = {
     { label: "応用・ゲーム形式", ratio: 0.3, hint: "プレッシャーのあるラリー or 試合形式" },
     { label: "振り返り", ratio: 0.1, hint: "良かった点と直す点を1行ずつ" },
   ],
+  90: [
+    { label: "ウォームアップ", ratio: 0.12, hint: "フォーム・足・軽いラリー" },
+    { label: "メインドリル", ratio: 0.42, hint: "main" },
+    { label: "応用・ゲーム形式", ratio: 0.32, hint: "試合形式・計測" },
+    { label: "振り返り", ratio: 0.14, hint: "メモと次回の1項目" },
+  ],
+  120: [
+    { label: "ウォームアップ", ratio: 0.1, hint: "十分に体を入れる" },
+    { label: "メインドリル", ratio: 0.4, hint: "main" },
+    { label: "応用・試合形式", ratio: 0.35, hint: "ゲーム形式・プレッシャー練習" },
+    { label: "振り返り", ratio: 0.15, hint: "良かった点・直す点・次回重点" },
+  ],
 };
+
+function resolveSessionTemplate(minutes) {
+  if (SESSION_BLOCK_TEMPLATES[minutes]) return SESSION_BLOCK_TEMPLATES[minutes];
+  const keys = Object.keys(SESSION_BLOCK_TEMPLATES)
+    .map(Number)
+    .sort((a, b) => a - b);
+  let closest = keys[0];
+  for (const k of keys) {
+    if (k <= minutes) closest = k;
+    else break;
+  }
+  return SESSION_BLOCK_TEMPLATES[closest];
+}
+
+function matchFormatContext(matchFormat) {
+  const key = matchFormat && MATCH_FORMAT_OPTIONS[matchFormat] ? matchFormat : "singles";
+  return MATCH_FORMAT_OPTIONS[key];
+}
+
+function dominantHandContext(hand) {
+  const key = hand && DOMINANT_HAND_OPTIONS[hand] ? hand : "unknown";
+  return DOMINANT_HAND_OPTIONS[key];
+}
+
+function populatePracticeMinuteSelect(selectEl, selectedValue) {
+  if (!selectEl) return;
+  const current = normalizePracticeMinutes(selectedValue ?? selectEl.value ?? 0);
+  selectEl.innerHTML = "";
+  for (const min of VALID_PRACTICE_MINUTES) {
+    const opt = document.createElement("option");
+    opt.value = String(min);
+    opt.textContent = practiceModeLabel(min);
+    if (min === current) opt.selected = true;
+    selectEl.appendChild(opt);
+  }
+}
+
+function initPracticeMinuteSelects() {
+  for (const { key } of WEEK_DAY_DEFS) {
+    const cap = key.charAt(0).toUpperCase() + key.slice(1);
+    populatePracticeMinuteSelect(document.getElementById(`practice${cap}`), DEFAULT_WEEK_SCHEDULE[key]);
+  }
+}
 
 function normalizeWeekSchedule(raw) {
   const out = { ...DEFAULT_WEEK_SCHEDULE };
   if (!raw || typeof raw !== "object") return out;
   for (const { key } of WEEK_DAY_DEFS) {
-    const v = parseInt(raw[key], 10);
-    if ([0, 15, 30, 60].includes(v)) out[key] = v;
+    out[key] = normalizePracticeMinutes(raw[key]);
   }
   return out;
 }
@@ -1710,7 +1833,13 @@ function buildWeeklyPlan(issueIds, formData) {
     else if (def.index === 5) focus = "得意技の再現性";
     else if (def.index === 6) focus = "振り返り＋軽い練習";
 
-    const template = SESSION_BLOCK_TEMPLATES[minutes];
+    if (formData?.matchFormat === "doubles" && (def.index === 2 || def.index === 4)) {
+      focus = "ダブルス：レシーブ位置・順番";
+    } else if (formData?.matchFormat === "both" && def.index === 5) {
+      focus = "シングルス／ダブルス切替";
+    }
+
+    const template = resolveSessionTemplate(minutes);
     const blocks = allocateSessionBlocks(minutes, template, mainHint);
     const blockSummary = blocks.map((b) => `${b.label}${b.min}分`).join(" → ");
 
@@ -1798,7 +1927,12 @@ function generatePlan(formData) {
     .filter(Boolean);
   const strengthSummary = strengthLabels.length ? ` 筋トレ: ${strengthLabels.join("・")}を組み込みます。` : "";
 
-  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${historySummary}${strengthSummary}${rubberSummary}${timeSummary}${historyInfo?.note || ""} 下に改善ポイントと練習メニューがあります。`;
+  const matchInfo = matchFormatContext(formData.matchFormat);
+  const handInfo = dominantHandContext(formData.dominantHand);
+  const matchSummary = matchInfo ? ` ${matchInfo.label}向け。` : "";
+  const handSummary = handInfo?.note && formData.dominantHand !== "unknown" ? ` ${handInfo.label}設定。` : "";
+
+  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${historySummary}${matchSummary}${handSummary}${strengthSummary}${rubberSummary}${timeSummary}${historyInfo?.note || ""}${matchInfo?.note ? ` ${matchInfo.note}` : ""}${handInfo?.note && formData.dominantHand !== "unknown" ? ` ${handInfo.note}` : ""} 下に改善ポイントと練習メニューがあります。`;
 
   const rawPlan = {
     ok: true,
@@ -1819,6 +1953,12 @@ function generatePlan(formData) {
     strengthIds: formData.strengthIds || [],
     strengthDrills,
     strengthLabels,
+    matchFormat: formData.matchFormat || "singles",
+    matchFormatLabel: matchInfo?.label || "",
+    dominantHand: formData.dominantHand || "unknown",
+    dominantHandLabel: handInfo?.label || "",
+    matchFormatNote: matchInfo?.note || "",
+    dominantHandNote: handInfo?.note || "",
   };
 
   return typeof simplifyPlan === "function" ? simplifyPlan(rawPlan) : rawPlan;
@@ -1839,10 +1979,23 @@ function renderPlan(plan, container) {
   const btnPrint = document.createElement("button");
   btnPrint.type = "button";
   btnPrint.className = "btn btn-primary";
-  btnPrint.textContent = "PDF・印刷";
+  btnPrint.textContent = "PDFで保存";
   btnPrint.addEventListener("click", () => {
     if (typeof printPlan === "function") {
       printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
+    }
+  });
+
+  const btnCopy = document.createElement("button");
+  btnCopy.type = "button";
+  btnCopy.className = "btn btn-ghost";
+  btnCopy.textContent = "メニューをコピー";
+  btnCopy.addEventListener("click", async () => {
+    const res = await copyTextToClipboard(planToPlainText(plan));
+    const msg = document.getElementById("save-message");
+    if (msg) {
+      msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
+      msg.hidden = false;
     }
   });
 
@@ -1864,7 +2017,7 @@ function renderPlan(plan, container) {
     }
   });
 
-  toolbar.append(btnPrint, btnSave);
+  toolbar.append(btnPrint, btnCopy, btnSave);
   container.appendChild(toolbar);
 
   const saveMsg = document.createElement("p");
@@ -2092,8 +2245,7 @@ function restoreWeekScheduleToDom(schedule) {
   const s = normalizeWeekSchedule(schedule);
   for (const { key } of WEEK_DAY_DEFS) {
     const cap = key.charAt(0).toUpperCase() + key.slice(1);
-    const el = document.getElementById(`practice${cap}`);
-    if (el) el.value = String(s[key]);
+    populatePracticeMinuteSelect(document.getElementById(`practice${cap}`), s[key]);
   }
 }
 
@@ -2101,9 +2253,79 @@ function applyPracticePreset(preset) {
   const sets = {
     "all-30": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 30, sun: 30 },
     "all-15": { mon: 15, tue: 15, wed: 15, thu: 15, fri: 15, sat: 15, sun: 15 },
+    "all-20": { mon: 20, tue: 20, wed: 20, thu: 20, fri: 20, sat: 20, sun: 20 },
+    "all-45": { mon: 45, tue: 45, wed: 45, thu: 45, fri: 45, sat: 45, sun: 45 },
+    "all-60": { mon: 60, tue: 60, wed: 60, thu: 60, fri: 60, sat: 60, sun: 60 },
     "weekday-30-weekend-60": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 60, sun: 60 },
+    "weekday-30-weekend-90": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 90, sun: 90 },
+    "week3-30": { mon: 30, tue: 0, wed: 30, thu: 0, fri: 0, sat: 30, sun: 0 },
+    "week3-45": { mon: 45, tue: 0, wed: 45, thu: 0, fri: 0, sat: 45, sun: 0 },
+    weekend: { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 60, sun: 60 },
+    "weekend-long": { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 120, sun: 90 },
   };
   if (sets[preset]) restoreWeekScheduleToDom(sets[preset]);
+}
+
+function readPlayerProfileFromDom() {
+  return {
+    matchFormat: document.getElementById("matchFormat")?.value || "singles",
+    dominantHand: document.getElementById("dominantHand")?.value || "unknown",
+  };
+}
+
+function restorePlayerProfileToDom(formData) {
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val != null) el.value = val;
+  };
+  set("matchFormat", formData.matchFormat || "singles");
+  set("dominantHand", formData.dominantHand || "unknown");
+}
+
+function planToPlainText(plan) {
+  if (!plan?.ok) return "";
+  const lines = ["【SpinCoach 練習メニュー】"];
+  if (plan.playerName) lines.push(`名前: ${plan.playerName}`);
+  if (plan.matchFormatLabel) lines.push(`試合形式: ${plan.matchFormatLabel}`);
+  if (plan.dominantHandLabel && plan.dominantHand !== "unknown") lines.push(`利き手: ${plan.dominantHandLabel}`);
+  if (plan.ttHistoryLabel) lines.push(`卓球歴: ${plan.ttHistoryLabel}`);
+  lines.push("", plan.summary || "");
+
+  if (plan.improvements?.length) {
+    lines.push("", "■ 改善ポイント");
+    plan.improvements.forEach((item, i) => lines.push(`${i + 1}. ${item.text}`));
+  }
+
+  if (plan.drills?.length) {
+    lines.push("", "■ 練習メニュー");
+    for (const d of plan.drills) {
+      lines.push(`・${d.name}（${d.time}）`);
+      lines.push(`  ${d.detail}`);
+    }
+  }
+
+  if (plan.strengthDrills?.length) {
+    lines.push("", "■ 筋トレ");
+    for (const d of plan.strengthDrills) {
+      lines.push(`・${d.name}（${d.time}）`);
+      lines.push(`  ${d.detail}`);
+    }
+  }
+
+  if (plan.week?.length) {
+    lines.push("", "■ 1週間の目安");
+    for (const w of plan.week) {
+      lines.push(`${w.day}: ${w.modeLabel || ""} ${w.focus} — ${w.extra}`);
+    }
+  }
+
+  if (plan.spinsightHints?.length) {
+    lines.push("", "■ Spinsight ヒント");
+    plan.spinsightHints.forEach((h) => lines.push(`・${h}`));
+  }
+
+  lines.push("", "— SpinCoach（Spinsight 非公式）");
+  return lines.join("\n");
 }
 
 function collectForm() {
@@ -2120,6 +2342,7 @@ function collectForm() {
   const strokeType = document.getElementById("strokeType").value;
   const spinRps = parseOptionalNumber("spinRps");
   const ballSpeed = parseOptionalNumber("ballSpeed");
+  const profile = readPlayerProfileFromDom();
   return {
     issues,
     goals,
@@ -2136,6 +2359,8 @@ function collectForm() {
     ttHistory: "",
     strengthIds: [],
     inputMode: "detailed",
+    matchFormat: profile.matchFormat,
+    dominantHand: profile.dominantHand,
   };
 }
 
@@ -2163,6 +2388,7 @@ function restoreFormFromRecord(formData) {
   };
   set("playerName", formData.playerName);
   set("goals", formData.goals);
+  restorePlayerProfileToDom(formData);
   restoreRubberSideToDom("rubberFh", formData, "rubberFh");
   restoreRubberSideToDom("rubberBh", formData, "rubberBh");
   restoreWeekScheduleToDom(formData.weekSchedule);
@@ -2288,7 +2514,9 @@ function init() {
   const err = document.getElementById("plan-error");
 
   refreshRecordList();
+  initPracticeMinuteSelects();
   initPracticeTimePresets();
+  initGoalsExamples();
 
   document.getElementById("btn-clear-all-records")?.addEventListener("click", () => {
     const n = RecordStore.list().length;
@@ -2319,6 +2547,22 @@ function init() {
     }
     renderPlan(plan, out);
     out.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function initGoalsExamples() {
+  const map = {
+    match_win: "試合で勝てるようになりたい。緊張しても自分の技術を出したい。",
+    serve_strong: "サーブの精度と変化を上げ、第3球につなげたい。",
+    receive_better: "レシーブのミスを減らし、ラリーに持ち込みたい。",
+    fore_stable: "フォアドライブ・ループを安定させたい。",
+  };
+  document.querySelectorAll("[data-goals-example]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const el = document.getElementById("goals");
+      const text = map[btn.getAttribute("data-goals-example")];
+      if (el && text) el.value = text;
+    });
   });
 }
 

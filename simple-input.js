@@ -69,11 +69,114 @@ const SIMPLE_HISTORY_OPTIONS = [
 
 const SIMPLE_PRACTICE_OPTIONS = [
   { id: "all-30", label: "毎日30分", summary: "毎日30分" },
+  { id: "all-20", label: "毎日20分", summary: "毎日20分" },
+  { id: "all-45", label: "毎日45分", summary: "毎日45分" },
   { id: "all-15", label: "毎日15分", summary: "毎日15分" },
   { id: "weekday-30-weekend-60", label: "平日30分・土日60分", summary: "平日30分・土日60分" },
+  { id: "weekday-30-weekend-90", label: "平日30分・土日90分", summary: "平日30分・土日90分" },
   { id: "week3-30", label: "週3回・各30分", summary: "月・水・土 各30分" },
+  { id: "week3-45", label: "週3回・各45分", summary: "月・水・土 各45分" },
   { id: "weekend", label: "週末中心", summary: "土日60分・平日休み" },
+  { id: "weekend-long", label: "週末長め", summary: "土120分・日90分" },
 ];
+
+const WEEK_DAYS = [
+  { key: "mon", label: "月" },
+  { key: "tue", label: "火" },
+  { key: "wed", label: "水" },
+  { key: "thu", label: "木" },
+  { key: "fri", label: "金" },
+  { key: "sat", label: "土" },
+  { key: "sun", label: "日" },
+];
+
+const PRACTICE_PRESET_SCHEDULES = {
+  "all-30": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 30, sun: 30 },
+  "all-20": { mon: 20, tue: 20, wed: 20, thu: 20, fri: 20, sat: 20, sun: 20 },
+  "all-45": { mon: 45, tue: 45, wed: 45, thu: 45, fri: 45, sat: 45, sun: 45 },
+  "all-15": { mon: 15, tue: 15, wed: 15, thu: 15, fri: 15, sat: 15, sun: 15 },
+  "weekday-30-weekend-60": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 60, sun: 60 },
+  "weekday-30-weekend-90": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 90, sun: 90 },
+  "week3-30": { mon: 30, tue: 0, wed: 30, thu: 0, fri: 0, sat: 30, sun: 0 },
+  "week3-45": { mon: 45, tue: 0, wed: 45, thu: 0, fri: 0, sat: 45, sun: 0 },
+  weekend: { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 60, sun: 60 },
+  "weekend-long": { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 120, sun: 90 },
+};
+
+const QUICK_RECOMMENDATIONS = [
+  {
+    id: "beginner",
+    label: "初心者",
+    patch: {
+      issues: ["topspin_rally", "serve_under", "footwork"],
+      goalIds: ["fun_rally"],
+      ttHistory: "under1",
+      practicePreset: "week3-30",
+      strengthIds: ["none"],
+      matchFormat: "singles",
+      dominantHand: "unknown",
+    },
+  },
+  {
+    id: "match_prep",
+    label: "試合前",
+    patch: {
+      issues: ["serve", "third_ball", "mental"],
+      goalIds: ["match_win"],
+      ttHistory: "1to3",
+      practicePreset: "weekday-30-weekend-60",
+      strengthIds: ["stamina"],
+      matchFormat: "singles",
+      dominantHand: "unknown",
+    },
+  },
+  {
+    id: "serve_focus",
+    label: "サーブ強化",
+    patch: {
+      issues: ["serve", "serve_long", "serve_under", "third_ball"],
+      goalIds: ["serve_strong"],
+      ttHistory: "1to3",
+      practicePreset: "week3-45",
+      strengthIds: ["core"],
+      matchFormat: "singles",
+      dominantHand: "unknown",
+    },
+  },
+  {
+    id: "doubles",
+    label: "ダブルス",
+    patch: {
+      issues: ["underspin_receive", "flick_short", "footwork"],
+      goalIds: ["receive_better"],
+      ttHistory: "3to5",
+      practicePreset: "weekday-30-weekend-90",
+      strengthIds: ["lateral", "legs"],
+      matchFormat: "doubles",
+      dominantHand: "unknown",
+    },
+  },
+  {
+    id: "left_hand",
+    label: "左利き向け",
+    patch: {
+      issues: ["drive", "serve_forehand", "footwork"],
+      goalIds: ["fore_stable"],
+      ttHistory: "1to3",
+      practicePreset: "all-30",
+      strengthIds: ["lateral"],
+      matchFormat: "singles",
+      dominantHand: "left",
+    },
+  },
+];
+
+const DIARY_EXAMPLES = {
+  issues: "ロングサーブの深さ、バックドライブの安定、第3球の入り",
+  content: "30分練習。フォアドライブ定点20本、サーブ各種20本、多球ラリー15分。",
+  good: "バックの替えが早くなった。ロングサーブの深さが安定してきた。",
+  reflection: "第3球で振りが大きくなりすぎた。次回はコンパクトに当てる。",
+};
 
 const SIMPLE_STRENGTH_OPTIONS = [
   { id: "lateral", label: "左右ステップ" },
@@ -83,14 +186,6 @@ const SIMPLE_STRENGTH_OPTIONS = [
   { id: "none", label: "今は不要" },
 ];
 
-const PRACTICE_PRESET_SCHEDULES = {
-  "all-30": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 30, sun: 30 },
-  "all-15": { mon: 15, tue: 15, wed: 15, thu: 15, fri: 15, sat: 15, sun: 15 },
-  "weekday-30-weekend-60": { mon: 30, tue: 30, wed: 30, thu: 30, fri: 30, sat: 60, sun: 60 },
-  "week3-30": { mon: 30, tue: 0, wed: 30, thu: 0, fri: 0, sat: 30, sun: 0 },
-  "weekend": { mon: 0, tue: 0, wed: 0, thu: 0, fri: 0, sat: 60, sun: 60 },
-};
-
 const SimpleInput = {
   mode: "simple",
   state: {
@@ -98,15 +193,18 @@ const SimpleInput = {
     goalIds: [],
     ttHistory: "",
     practicePreset: "weekday-30-weekend-60",
+    customSchedule: null,
     strengthIds: [],
   },
   _draft: null,
+  _draftSchedule: null,
   _activePicker: null,
 
   init() {
     const saved = localStorage.getItem("spinCoachInputMode");
     if (saved === "detailed" || saved === "simple") this.mode = saved;
     this.applyMode(this.mode, false);
+    this.renderQuickRecommendations();
     this.updateAllSummaries();
 
     document.querySelectorAll("[data-input-mode]").forEach((btn) => {
@@ -154,6 +252,11 @@ const SimpleInput = {
   openPicker(key) {
     this._activePicker = key;
     this._draft = this.cloneDraft(key);
+    if (key === "practice") {
+      this._draftSchedule = { ...this.getActiveSchedule() };
+    } else {
+      this._draftSchedule = null;
+    }
     const dialog = document.getElementById("simple-picker-sheet");
     const title = document.getElementById("simple-sheet-title");
     const body = document.getElementById("simple-sheet-body");
@@ -176,15 +279,30 @@ const SimpleInput = {
     document.getElementById("simple-picker-sheet")?.close();
     this._activePicker = null;
     this._draft = null;
+    this._draftSchedule = null;
   },
 
   confirmPicker() {
-    if (!this._activePicker || !this._draft) return;
+    if (!this._activePicker) return;
     const key = this._activePicker;
+    if (key !== "practice" && (this._draft == null || this._draft === "")) return;
     if (key === "issues") this.state.issues = [...this._draft];
     else if (key === "goals") this.state.goalIds = [...this._draft];
     else if (key === "history") this.state.ttHistory = this._draft;
-    else if (key === "practice") this.state.practicePreset = this._draft;
+    else if (key === "practice") {
+      const presetSchedule = this._draft && this._draft !== "custom" ? PRACTICE_PRESET_SCHEDULES[this._draft] : null;
+      const scheduleChanged =
+        this._draftSchedule &&
+        presetSchedule &&
+        WEEK_DAYS.some((d) => this._draftSchedule[d.key] !== presetSchedule[d.key]);
+      if (this._draft === "custom" || scheduleChanged || !presetSchedule) {
+        this.state.practicePreset = "custom";
+        this.state.customSchedule = { ...(this._draftSchedule || this.getActiveSchedule()) };
+      } else {
+        this.state.practicePreset = this._draft;
+        this.state.customSchedule = null;
+      }
+    }
     else if (key === "strength") {
       const picked = [...this._draft];
       if (picked.includes("none") && picked.length > 1) {
@@ -202,7 +320,10 @@ const SimpleInput = {
     if (key === "issues") return [...this.state.issues];
     if (key === "goals") return [...this.state.goalIds];
     if (key === "history") return this.state.ttHistory || "";
-    if (key === "practice") return this.state.practicePreset || "weekday-30-weekend-60";
+    if (key === "practice") {
+      if (this.state.practicePreset === "custom") return "custom";
+      return this.state.practicePreset || "weekday-30-weekend-60";
+    }
     if (key === "strength") return this.state.strengthIds.length ? [...this.state.strengthIds] : ["none"];
     return null;
   },
@@ -233,7 +354,38 @@ const SimpleInput = {
     }
 
     if (key === "practice") {
-      wrap.appendChild(this.buildChipGrid(SIMPLE_PRACTICE_OPTIONS, this._draft, false, "id", "label"));
+      const presetTitle = document.createElement("p");
+      presetTitle.className = "simple-chip-group-title";
+      presetTitle.textContent = "パターンから選ぶ";
+      wrap.appendChild(presetTitle);
+      wrap.appendChild(this.buildChipGrid(SIMPLE_PRACTICE_OPTIONS, this._draft === "custom" ? "" : this._draft, false, "id", "label"));
+
+      const customTitle = document.createElement("p");
+      customTitle.className = "simple-chip-group-title";
+      customTitle.textContent = "曜日ごとに細かく（10分刻み）";
+      wrap.appendChild(customTitle);
+
+      const dayGrid = document.createElement("div");
+      dayGrid.className = "simple-day-schedule-grid";
+      for (const day of WEEK_DAYS) {
+        const row = document.createElement("label");
+        row.className = "simple-day-schedule-row";
+        const span = document.createElement("span");
+        span.textContent = `${day.label}曜`;
+        const sel = document.createElement("select");
+        sel.className = "simple-day-select";
+        if (typeof populatePracticeMinuteSelect === "function") {
+          populatePracticeMinuteSelect(sel, this._draftSchedule?.[day.key] ?? 0);
+        }
+        sel.addEventListener("change", () => {
+          this._draftSchedule = this._draftSchedule || {};
+          this._draftSchedule[day.key] = parseInt(sel.value, 10);
+          this._draft = "custom";
+        });
+        row.append(span, sel);
+        dayGrid.appendChild(row);
+      }
+      wrap.appendChild(dayGrid);
       return wrap;
     }
 
@@ -272,6 +424,9 @@ const SimpleInput = {
           }
         } else {
           this._draft = val;
+          if (this._activePicker === "practice") {
+            this._draftSchedule = { ...(PRACTICE_PRESET_SCHEDULES[val] || this.getActiveSchedule()) };
+          }
         }
         const body = document.getElementById("simple-sheet-body");
         if (body) {
@@ -311,7 +466,7 @@ const SimpleInput = {
     );
     this.setSummary(
       "simple-summary-practice",
-      SIMPLE_PRACTICE_OPTIONS.find((p) => p.id === this.state.practicePreset)?.summary || "タップして選ぶ"
+      this.practiceSummaryText()
     );
     const strengthLabels = this.state.strengthIds
       .filter((id) => id !== "none")
@@ -330,6 +485,56 @@ const SimpleInput = {
     }
   },
 
+  getActiveSchedule() {
+    if (this.state.customSchedule) return { ...this.state.customSchedule };
+    return { ...(PRACTICE_PRESET_SCHEDULES[this.state.practicePreset] || PRACTICE_PRESET_SCHEDULES["weekday-30-weekend-60"]) };
+  },
+
+  practiceSummaryText() {
+    if (this.state.practicePreset === "custom" && this.state.customSchedule) {
+      const parts = WEEK_DAYS.filter((d) => this.state.customSchedule[d.key] > 0).map(
+        (d) => `${d.label}${this.state.customSchedule[d.key]}分`
+      );
+      return parts.length ? parts.join("・") : "タップして選ぶ";
+    }
+    return SIMPLE_PRACTICE_OPTIONS.find((p) => p.id === this.state.practicePreset)?.summary || "タップして選ぶ";
+  },
+
+  applyQuickRecommendation(rec) {
+    if (!rec?.patch) return;
+    const p = rec.patch;
+    this.state.issues = [...(p.issues || [])];
+    this.state.goalIds = [...(p.goalIds || [])];
+    this.state.ttHistory = p.ttHistory || "";
+    this.state.practicePreset = p.practicePreset || "weekday-30-weekend-60";
+    this.state.customSchedule = null;
+    this.state.strengthIds = [...(p.strengthIds || ["none"])];
+    if (p.matchFormat) {
+      const el = document.getElementById("matchFormat");
+      if (el) el.value = p.matchFormat;
+    }
+    if (p.dominantHand) {
+      const el = document.getElementById("dominantHand");
+      if (el) el.value = p.dominantHand;
+    }
+    this.syncToDetailedForm();
+    this.updateAllSummaries();
+  },
+
+  renderQuickRecommendations() {
+    const row = document.getElementById("quick-recommend-row");
+    if (!row) return;
+    row.innerHTML = "";
+    for (const rec of QUICK_RECOMMENDATIONS) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "quick-recommend-chip";
+      btn.textContent = rec.label;
+      btn.addEventListener("click", () => this.applyQuickRecommendation(rec));
+      row.appendChild(btn);
+    }
+  },
+
   syncToDetailedForm() {
     document.querySelectorAll('input[name="issue"]').forEach((el) => {
       el.checked = this.state.issues.includes(el.value);
@@ -342,7 +547,7 @@ const SimpleInput = {
     const goalsEl = document.getElementById("goals");
     if (goalsEl && goalsText) goalsEl.value = goalsText;
 
-    const schedule = PRACTICE_PRESET_SCHEDULES[this.state.practicePreset];
+    const schedule = this.getActiveSchedule();
     if (schedule && typeof restoreWeekScheduleToDom === "function") {
       restoreWeekScheduleToDom(schedule);
     }
@@ -365,11 +570,15 @@ const SimpleInput = {
   },
 
   buildFormData() {
-    const schedule = PRACTICE_PRESET_SCHEDULES[this.state.practicePreset] || PRACTICE_PRESET_SCHEDULES["weekday-30-weekend-60"];
+    const schedule = this.getActiveSchedule();
     const goals = this.state.goalIds
       .map((id) => SIMPLE_GOAL_OPTIONS.find((g) => g.id === id)?.text)
       .filter(Boolean)
       .join("\n");
+    const profile =
+      typeof readPlayerProfileFromDom === "function"
+        ? readPlayerProfileFromDom()
+        : { matchFormat: "singles", dominantHand: "unknown" };
 
     return {
       issues: [...this.state.issues],
@@ -387,6 +596,8 @@ const SimpleInput = {
       ttHistory: this.state.ttHistory,
       strengthIds: this.state.strengthIds.filter((id) => id !== "none"),
       inputMode: "simple",
+      matchFormat: profile.matchFormat,
+      dominantHand: profile.dominantHand,
     };
   },
 };

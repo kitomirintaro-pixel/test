@@ -14,6 +14,13 @@ function formatDiaryDate(dateStr) {
   return `${y}年${parseInt(m, 10)}月${parseInt(d, 10)}日（${wd}）`;
 }
 
+const DIARY_EXAMPLES = {
+  issues: "ロングサーブの深さ、バックドライブの安定、第3球の入り",
+  content: "30分練習。フォアドライブ定点20本、サーブ各種20本、多球ラリー15分。",
+  good: "バックの替えが早くなった。ロングサーブの深さが安定してきた。",
+  reflection: "第3球で振りが大きくなりすぎた。次回はコンパクトに当てる。",
+};
+
 function switchAppMode(mode) {
   const menuView = document.getElementById("view-menu");
   const diaryView = document.getElementById("view-diary");
@@ -141,6 +148,23 @@ function refreshDiaryList() {
     const actions = document.createElement("div");
     actions.className = "diary-item-actions";
 
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "btn btn-ghost btn-small";
+    copyBtn.textContent = "コピー";
+    copyBtn.addEventListener("click", async () => {
+      const res = await copyTextToClipboard(diaryEntryToPlainText(e));
+      showDiaryMessage(res.ok ? "日記をコピーしました。" : res.message || "コピーに失敗しました。");
+    });
+
+    const pdfBtn = document.createElement("button");
+    pdfBtn.type = "button";
+    pdfBtn.className = "btn btn-ghost btn-small";
+    pdfBtn.textContent = "PDF";
+    pdfBtn.addEventListener("click", () => {
+      if (typeof printDiaryEntry === "function") printDiaryEntry(e);
+    });
+
     const editBtn = document.createElement("button");
     editBtn.type = "button";
     editBtn.className = "btn btn-ghost btn-small";
@@ -161,7 +185,7 @@ function refreshDiaryList() {
       showDiaryMessage("日記を削除しました。");
     });
 
-    actions.append(editBtn, delBtn);
+    actions.append(copyBtn, pdfBtn, editBtn, delBtn);
     li.append(main, actions);
     ul.appendChild(li);
   }
@@ -183,6 +207,25 @@ function initDiary() {
   document.getElementById("btn-diary-cancel")?.addEventListener("click", () => {
     resetDiaryForm();
     showDiaryMessage("");
+  });
+
+  document.querySelectorAll("[data-diary-example]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-diary-example");
+      const examples = DIARY_EXAMPLES;
+      if (!examples) return;
+      if (key === "full") {
+        document.getElementById("diaryIssues").value = examples.issues;
+        document.getElementById("diaryContent").value = examples.content;
+        document.getElementById("diaryGood").value = examples.good;
+        document.getElementById("diaryReflection").value = examples.reflection;
+      } else if (examples[key]) {
+        const el = document.getElementById(
+          key === "issues" ? "diaryIssues" : key === "content" ? "diaryContent" : key === "good" ? "diaryGood" : "diaryReflection"
+        );
+        if (el) el.value = examples[key];
+      }
+    });
   });
 
   document.getElementById("btn-clear-all-diaries")?.addEventListener("click", () => {
