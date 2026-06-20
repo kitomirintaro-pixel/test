@@ -26,10 +26,22 @@
     </header>
 
     <main id="main" class="coach-main">
-      <section class="app-mode-hero" aria-label="機能の選択">
+      <section class="app-mode-hero" aria-label="SpinCoach について">
         <div class="container app-mode-hero-inner">
-          <p class="app-mode-eyebrow">SpinCoach</p>
-          <p class="app-mode-hero-lead">練習メニューを作るか、日々の練習を日記に残すかを選べます。</p>
+          <div class="site-intro">
+            <h1 class="site-intro-title">
+              卓球の課題から、<span class="gradient-text">練習メニュー</span>を提案
+            </h1>
+            <p class="site-intro-text">
+              SpinCoach は、Spinsight の計測と組み合わせやすい練習プランを<strong>ブラウザだけで</strong>作れる補助ツールです（非公式）。データはこの端末にだけ保存されます。
+            </p>
+            <ul class="site-intro-list">
+              <li>課題・目標・練習時間を選ぶと改善案とメニューを生成</li>
+              <li>記録の保存・PDF・印刷に対応</li>
+              <li>日々の練習は日記機能で振り返り</li>
+            </ul>
+          </div>
+          <p class="app-mode-picker-label">使う機能を選んでください</p>
           <div class="app-mode-grid app-mode-grid-large" role="tablist" aria-label="メイン機能">
             <button
               type="button"
@@ -82,27 +94,29 @@
             />
           </label>
 
-          <fieldset class="fieldset player-profile-fieldset">
-            <legend>プレイヤー設定</legend>
-            <div class="row-2">
-              <label class="field">
-                <span class="field-label">試合形式</span>
-                <select id="matchFormat" name="matchFormat">
-                  <option value="singles">シングルス</option>
-                  <option value="doubles">ダブルス</option>
-                  <option value="both">シングルス・ダブルス両方</option>
-                </select>
-              </label>
-              <label class="field">
-                <span class="field-label">利き手</span>
-                <select id="dominantHand" name="dominantHand">
-                  <option value="unknown">未設定</option>
-                  <option value="right">右利き</option>
-                  <option value="left">左利き</option>
-                </select>
-              </label>
+          <details class="form-accordion">
+            <summary class="form-accordion-summary">プレイヤー設定<span class="form-accordion-hint">試合形式・利き手</span></summary>
+            <div class="form-accordion-body">
+              <div class="row-2 player-profile-row">
+                <label class="field">
+                  <span class="field-label">試合形式</span>
+                  <select id="matchFormat" name="matchFormat">
+                    <option value="singles">シングルス</option>
+                    <option value="doubles">ダブルス</option>
+                    <option value="both">シングルス・ダブルス両方</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span class="field-label">利き手</span>
+                  <select id="dominantHand" name="dominantHand">
+                    <option value="unknown">未設定</option>
+                    <option value="right">右利き</option>
+                    <option value="left">左利き</option>
+                  </select>
+                </label>
+              </div>
             </div>
-          </fieldset>
+          </details>
 
           <div class="input-mode-bar input-mode-bar-large" role="tablist" aria-label="入力方式">
             <button
@@ -130,11 +144,13 @@
           </div>
 
           <div id="form-simple" class="simple-form">
-            <p class="hint muted simple-form-lead">項目をタップして選べます。選んだ内容はそのままプランに反映されます。</p>
-            <div class="quick-recommend-section">
-              <p class="quick-recommend-label">おすすめセット（ワンタップで入力）</p>
-              <div class="quick-recommend-row" id="quick-recommend-row"></div>
-            </div>
+            <p class="hint muted simple-form-lead">各項目をタップして選ぶと、そのままプランに反映されます。</p>
+            <details class="form-accordion form-accordion-optional">
+              <summary class="form-accordion-summary">おすすめセット<span class="form-accordion-hint">ワンタップで入力</span></summary>
+              <div class="form-accordion-body">
+                <div class="quick-recommend-row" id="quick-recommend-row"></div>
+              </div>
+            </details>
             <div class="simple-picker-grid">
               <button type="button" class="simple-picker-card" data-simple-picker="issues">
                 <span class="simple-picker-label">課題</span>
@@ -162,10 +178,11 @@
           <div id="form-detailed" class="form-detailed" hidden>
           <fieldset class="fieldset">
             <legend>いま足りないと感じること（複数選択可）</legend>
-            <p class="hint muted issue-field-hint">大項目を選ぶと全般向けの内容が付きます。種類を細かく選ぶと、その内容が足されます。</p>
+            <p class="hint muted issue-field-hint">カテゴリを開いて選びます。大項目だけでも、細かい種類だけでもOKです。</p>
             <div class="issue-groups">
-              <section class="issue-section">
-                <h3 class="issue-section-title">攻め・ラリー</h3>
+              <details class="issue-section issue-accordion">
+                <summary class="issue-section-title">攻め・ラリー</summary>
+                <div class="issue-accordion-body">
                 <div class="issue-block issue-block-drive">
                   <label class="check check-parent">
                     <input type="checkbox" name="issue" value="drive" />
@@ -229,10 +246,12 @@
                     <span>第3球（攻めの入り）</span>
                   </label>
                 </div>
-              </section>
+                </div>
+              </details>
 
-              <section class="issue-section issue-section-full">
-                <h3 class="issue-section-title">サーブ</h3>
+              <details class="issue-section issue-section-full issue-accordion">
+                <summary class="issue-section-title">サーブ</summary>
+                <div class="issue-accordion-body">
                 <div class="issue-block issue-block-serve">
                   <label class="check check-parent">
                     <input type="checkbox" name="issue" value="serve" />
@@ -292,10 +311,12 @@
                     </label>
                   </div>
                 </div>
-              </section>
+                </div>
+              </details>
 
-              <section class="issue-section">
-                <h3 class="issue-section-title">守備・レシーブ</h3>
+              <details class="issue-section issue-accordion">
+                <summary class="issue-section-title">守備・レシーブ</summary>
+                <div class="issue-accordion-body">
                 <div class="checkbox-grid">
                   <label class="check">
                     <input type="checkbox" name="issue" value="cut_defense" />
@@ -314,10 +335,12 @@
                     <span>回転の見極め・ミート</span>
                   </label>
                 </div>
-              </section>
+                </div>
+              </details>
 
-              <section class="issue-section">
-                <h3 class="issue-section-title">身体・適応・メンタル</h3>
+              <details class="issue-section issue-accordion">
+                <summary class="issue-section-title">身体・適応・メンタル</summary>
+                <div class="issue-accordion-body">
                 <div class="checkbox-grid">
                   <label class="check">
                     <input type="checkbox" name="issue" value="footwork" />
@@ -332,12 +355,14 @@
                     <span>メンタル・試合運び</span>
                   </label>
                 </div>
-              </section>
+                </div>
+              </details>
             </div>
           </fieldset>
 
-          <fieldset class="fieldset">
-            <legend>ラバー（任意）</legend>
+          <details class="form-accordion form-accordion-optional">
+            <summary class="form-accordion-summary">ラバー<span class="form-accordion-hint">任意・カタログ対応</span></summary>
+            <div class="form-accordion-body">
             <p class="hint muted">
               フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。主要ラバーは<strong>カタログ登録済み</strong>（現在
               <span id="rubber-catalog-count">—</span>件・随時追加）で個別ヒントを出します。未登録でも<strong>系統推定</strong>で練習ヒントを足します。<strong>硬さは任意</strong>です。
@@ -458,7 +483,8 @@
                 </label>
               </div>
             </details>
-          </fieldset>
+            </div>
+          </details>
 
           <label class="field">
             <span class="field-label">やりたいこと・具体的な目標</span>
@@ -480,8 +506,11 @@
             未選択でも、「カット」「ドライブ」「ブロック」などのキーワードで項目を推定します。
           </p>
 
-          <fieldset class="fieldset">
-            <legend>Spinsight の数値（任意）</legend>
+          <details class="form-accordion form-accordion-optional">
+            <summary class="form-accordion-summary">Spinsight の数値・体感<span class="form-accordion-hint">任意</span></summary>
+            <div class="form-accordion-body">
+          <fieldset class="fieldset fieldset-unstyled">
+            <legend class="sr-only">Spinsight の数値</legend>
             <div class="row-2">
               <label class="field">
                 <span class="field-label">回転（アプリに表示される数値）</span>
@@ -529,8 +558,8 @@
             </p>
           </fieldset>
 
-          <fieldset class="fieldset">
-            <legend>体感・メモ（任意）</legend>
+          <fieldset class="fieldset fieldset-unstyled">
+            <legend class="sr-only">体感・メモ</legend>
             <div class="row-2">
               <label class="field">
                 <span class="field-label">回転の体感レンジ</span>
@@ -561,9 +590,12 @@
               ></textarea>
             </label>
           </fieldset>
+            </div>
+          </details>
 
-          <fieldset class="fieldset">
-            <legend>練習時間（曜日ごと）</legend>
+          <details class="form-accordion form-accordion-optional">
+            <summary class="form-accordion-summary">練習時間（曜日ごと）<span class="form-accordion-hint">詳細入力用</span></summary>
+            <div class="form-accordion-body">
             <p class="hint muted">
               各曜日を<strong>10分刻み</strong>で設定できます（10分〜2時間）。「休み」にするとその日は回復・振り返り中心の案内になります。
             </p>
@@ -607,11 +639,13 @@
                 <select id="practiceSun" name="practiceSun"></select>
               </label>
             </div>
-          </fieldset>
+            </div>
+          </details>
           </div>
 
-          <fieldset class="fieldset record-section no-print" aria-labelledby="record-section-title">
-            <legend id="record-section-title">保存した記録</legend>
+          <details class="form-accordion form-accordion-optional record-section no-print">
+            <summary class="form-accordion-summary" id="record-section-title">保存した記録</summary>
+            <div class="form-accordion-body">
             <p class="hint muted">この端末のブラウザにだけ保存されます。不要な記録は削除できます。</p>
             <div class="record-toolbar">
               <button type="button" id="btn-clear-all-records" class="btn btn-ghost btn-danger-outline" hidden>
@@ -621,7 +655,8 @@
             <div id="record-list" class="record-list">
               <p class="muted">まだ保存された記録はありません。</p>
             </div>
-          </fieldset>
+            </div>
+          </details>
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">プランを生成する</button>
@@ -671,14 +706,18 @@
                 placeholder="例: ロングサーブの深さ、バックドライブの安定、第三球の入り"
               ></textarea>
             </label>
-            <div class="example-chip-row no-print">
-              <span class="field-label">入力例:</span>
-              <button type="button" class="example-chip" data-diary-example="issues">課題例</button>
-              <button type="button" class="example-chip" data-diary-example="content">練習内容例</button>
-              <button type="button" class="example-chip" data-diary-example="good">良かった例</button>
-              <button type="button" class="example-chip" data-diary-example="reflection">反省例</button>
-              <button type="button" class="example-chip" data-diary-example="full">全部入れる</button>
-            </div>
+            <details class="form-accordion form-accordion-optional no-print">
+              <summary class="form-accordion-summary">入力例<span class="form-accordion-hint">タップで挿入</span></summary>
+              <div class="form-accordion-body">
+                <div class="example-chip-row">
+                  <button type="button" class="example-chip" data-diary-example="issues">課題例</button>
+                  <button type="button" class="example-chip" data-diary-example="content">練習内容例</button>
+                  <button type="button" class="example-chip" data-diary-example="good">良かった例</button>
+                  <button type="button" class="example-chip" data-diary-example="reflection">反省例</button>
+                  <button type="button" class="example-chip" data-diary-example="full">全部入れる</button>
+                </div>
+              </div>
+            </details>
             <label class="field">
               <span class="field-label">練習内容</span>
               <textarea
@@ -716,8 +755,9 @@
             <p id="diary-message" class="save-message muted" hidden></p>
           </form>
 
-          <fieldset class="fieldset diary-list-section">
-            <legend>これまでの日記</legend>
+          <details class="form-accordion form-accordion-optional diary-list-section">
+            <summary class="form-accordion-summary">これまでの日記</summary>
+            <div class="form-accordion-body">
             <div class="record-toolbar">
               <button type="button" id="btn-clear-all-diaries" class="btn btn-ghost btn-danger-outline" hidden>
                 すべて削除
@@ -726,7 +766,8 @@
             <div id="diary-list" class="diary-list">
               <p class="muted">まだ日記はありません。</p>
             </div>
-          </fieldset>
+            </div>
+          </details>
         </div>
       </div>
     </main>
