@@ -704,6 +704,71 @@ const ISSUE_CATALOG = {
   },
 };
 
+const TT_HISTORY_OPTIONS = {
+  under1: { label: "1年未満", note: "基本フォームとラリーの定着を最優先に組んでいます。" },
+  "1to3": { label: "1〜3年", note: "得意技の定着と試合での再現性を意識したメニューです。" },
+  "3to5": { label: "3〜5年", note: "弱点の克服と実戦形式の比率を上げています。" },
+  "5to10": { label: "5〜10年", note: "細かい調整と試合運びを含めた内容です。" },
+  over10: { label: "10年以上", note: "維持・改善と効率的な練習配分を意識しています。" },
+};
+
+const STRENGTH_CATALOG = {
+  lateral: {
+    label: "左右ステップ",
+    drills: [
+      { name: "左右シャトルラン", time: "8分", detail: "台の左右端を素早く往復。小さく早く。10往復×2セット。" },
+      { name: "サイドステップ＋素振り", time: "6分", detail: "左右1歩ずつ移動しながらラケットを振る。足と腕を別々に動かさない。" },
+    ],
+    restHint: "左右ステップ（シャトルラン8分）で試合の横移動に備える",
+  },
+  stamina: {
+    label: "体力・持久力",
+    drills: [
+      { name: "軽いジョギング or 縄跳び", time: "10分", detail: "卓球前後に。きつすぎない強度で呼吸を整える。" },
+      { name: "インターバル素振り", time: "8分", detail: "30秒素振り→30秒休みを8セット。持久力とフォーム維持。" },
+    ],
+    restHint: "軽い有酸素（10分）で持久力を維持",
+  },
+  legs: {
+    label: "脚・下半身",
+    drills: [
+      { name: "スクワット", time: "8分", detail: "膝をつま先と同方向。10回×3セット。深すぎない。" },
+      { name: "ランジ＋復帰", time: "8分", detail: "前後左右のランジ。卓球のステップ動作に近づける。" },
+    ],
+    restHint: "スクワット＋ランジ（各1セット）で下半身を強化",
+  },
+  core: {
+    label: "体幹",
+    drills: [
+      { name: "プランク", time: "6分", detail: "30秒キープ×4セット。腰が反らないよう注意。" },
+      { name: "デッドバグ", time: "8分", detail: "手足を伸ばしながら反対側へ。体幹の安定に。" },
+    ],
+    restHint: "プランク＋体幹ドリル（10分）",
+  },
+};
+
+function historyContextNote(ttHistory) {
+  const key = ttHistory && TT_HISTORY_OPTIONS[ttHistory] ? ttHistory : "1to3";
+  return TT_HISTORY_OPTIONS[key];
+}
+
+function collectStrengthDrills(strengthIds) {
+  const drills = [];
+  for (const id of strengthIds || []) {
+    const cat = STRENGTH_CATALOG[id];
+    if (!cat) continue;
+    drills.push(...cat.drills.map((d) => ({ ...d, category: cat.label })));
+  }
+  return drills;
+}
+
+function strengthRestHint(strengthIds) {
+  const hints = (strengthIds || [])
+    .map((id) => STRENGTH_CATALOG[id]?.restHint)
+    .filter(Boolean);
+  return hints.length ? hints.join("／") : "";
+}
+
 const INVERTED_RUBBERS = new Set([
   "high_friction",
   "tacky_chinese",
@@ -714,6 +779,19 @@ const INVERTED_RUBBERS = new Set([
 
 const DRIVE_ISSUE_IDS = ["drive_speed", "drive_loop", "drive_knuckle", "drive_curve", "drive_shoot"];
 
+const SERVE_CHILD_IDS = [
+  "serve_top",
+  "serve_under",
+  "serve_long",
+  "serve_side_top",
+  "serve_side_under",
+  "serve_makikomi",
+  "serve_yg",
+  "serve_squat",
+  "serve_forehand",
+  "serve_backhand",
+];
+
 function expandDriveIssues(issueIds) {
   const set = new Set(issueIds);
   const hasChild = DRIVE_ISSUE_IDS.some((id) => set.has(id));
@@ -721,6 +799,19 @@ function expandDriveIssues(issueIds) {
     if (hasChild && !set.has("drive")) set.add("drive");
   }
   return [...set];
+}
+
+function expandServeIssues(issueIds) {
+  const set = new Set(issueIds);
+  const hasChild = SERVE_CHILD_IDS.some((id) => set.has(id));
+  if (set.has("serve") || hasChild) {
+    if (hasChild && !set.has("serve")) set.add("serve");
+  }
+  return [...set];
+}
+
+function expandIssueIds(issueIds) {
+  return expandServeIssues(expandDriveIssues(issueIds));
 }
 
 const SURFACE_LABELS = { inverted: "裏", table: "表", pips: "粒高" };
@@ -1574,7 +1665,7 @@ function allocateSessionBlocks(totalMin, template, mainHint) {
   return blocks;
 }
 
-function restDayRow(def) {
+function restDayRow(def, formData) {
   const defaults = {
     mon: { focus: "基礎リズム", extra: "短時間なら素振りとフォーム確認のみ" },
     tue: { focus: "弱点ドリルA", extra: "練習日に変更するとメインドリル中心" },
@@ -1585,13 +1676,14 @@ function restDayRow(def) {
     sun: { focus: "振り返り", extra: "メモを1行だけ残し、来週の一項目を決める" },
   };
   const d = defaults[def.key] || { focus: "休養", extra: "体を休める" };
+  const strengthExtra = strengthRestHint(formData?.strengthIds);
   return {
     day: def.label,
     dayKey: def.key,
     minutes: 0,
     modeLabel: PRACTICE_MODE_LABELS[0],
-    focus: d.focus,
-    extra: d.extra,
+    focus: strengthExtra ? "休養＋筋トレ" : d.focus,
+    extra: strengthExtra ? `${d.extra}。${strengthExtra}` : d.extra,
     blocks: [],
     isRest: true,
   };
@@ -1604,7 +1696,7 @@ function buildWeeklyPlan(issueIds, formData) {
 
   return WEEK_DAY_DEFS.map((def) => {
     const minutes = schedule[def.key];
-    if (!minutes) return restDayRow(def);
+    if (!minutes) return restDayRow(def, formData);
 
     const picked = pickDrillForDay(issueIds, def.index);
     const mainHint = picked
@@ -1654,12 +1746,16 @@ function practiceWeekSummary(schedule) {
 function generatePlan(formData) {
   const selected = [...formData.issues];
   const inferred = inferIssuesFromText(`${formData.goals} ${formData.freeform}`);
-  const issueIds = expandDriveIssues(uniqueByKey([...selected, ...inferred], (id) => id));
+  const issueIds = expandIssueIds(uniqueByKey([...selected, ...inferred], (id) => id));
 
   if (issueIds.length === 0) {
+    const hint =
+      formData.inputMode === "simple"
+        ? "「課題」をタップして1つ以上選んでください。"
+        : "課題を1つ以上選ぶか、「やりたいこと」にキーワード（例: カット、ドライブ）を書いてください。";
     return {
       ok: false,
-      message: "課題を1つ以上選ぶか、「やりたいこと」にキーワード（例: カット、ドライブ）を書いてください。",
+      message: hint,
     };
   }
 
@@ -1693,8 +1789,16 @@ function generatePlan(formData) {
   const summaryParts = issueIds.map((id) => ISSUE_CATALOG[id]?.label).filter(Boolean);
   const rubberSummary = hasRubberInput(formData) ? " 入力したラバーに合わせてヒントを足しています。" : "";
   const timeSummary = practiceWeekSummary(formData.weekSchedule);
+  const historyInfo = historyContextNote(formData.ttHistory);
+  const historySummary = historyInfo ? ` 卓球歴: ${historyInfo.label}。` : "";
 
-  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${rubberSummary}${timeSummary}下に改善ポイントと練習メニューがあります。`;
+  const strengthDrills = collectStrengthDrills(formData.strengthIds);
+  const strengthLabels = (formData.strengthIds || [])
+    .map((id) => STRENGTH_CATALOG[id]?.label)
+    .filter(Boolean);
+  const strengthSummary = strengthLabels.length ? ` 筋トレ: ${strengthLabels.join("・")}を組み込みます。` : "";
+
+  const summary = `いま特に伸ばすとよいのは「${summaryParts.join("」「")}」です。${historySummary}${strengthSummary}${rubberSummary}${timeSummary}${historyInfo?.note || ""} 下に改善ポイントと練習メニューがあります。`;
 
   const rawPlan = {
     ok: true,
@@ -1710,6 +1814,11 @@ function generatePlan(formData) {
     weekSchedule: normalizeWeekSchedule(formData.weekSchedule),
     issueLabels: summaryParts,
     issueIds,
+    ttHistory: formData.ttHistory || "",
+    ttHistoryLabel: historyInfo?.label || "",
+    strengthIds: formData.strengthIds || [],
+    strengthDrills,
+    strengthLabels,
   };
 
   return typeof simplifyPlan === "function" ? simplifyPlan(rawPlan) : rawPlan;
@@ -1867,6 +1976,28 @@ function renderPlan(plan, container) {
   }
   container.appendChild(drillUl);
 
+  if (plan.strengthDrills?.length) {
+    const sh = document.createElement("h2");
+    sh.textContent = "筋トレ（卓球の動きに直結）";
+    container.appendChild(sh);
+    const sul = document.createElement("ul");
+    sul.className = "drill-cards";
+    for (const d of plan.strengthDrills) {
+      const li = document.createElement("li");
+      li.className = "drill-card drill-card-strength";
+      const title = document.createElement("h3");
+      title.textContent = d.name;
+      const meta = document.createElement("p");
+      meta.className = "drill-meta";
+      meta.textContent = `${d.category || "筋トレ"} · 目安 ${d.time}`;
+      const body = document.createElement("p");
+      body.textContent = d.detail;
+      li.append(title, meta, body);
+      sul.appendChild(li);
+    }
+    container.appendChild(sul);
+  }
+
   const weekH = document.createElement("h2");
   weekH.textContent = "1週間の進め方（練習時間別）";
   container.appendChild(weekH);
@@ -1976,6 +2107,10 @@ function applyPracticePreset(preset) {
 }
 
 function collectForm() {
+  if (typeof SimpleInput !== "undefined" && SimpleInput.getMode() === "simple") {
+    return SimpleInput.buildFormData();
+  }
+
   const issues = [...document.querySelectorAll('input[name="issue"]:checked')].map((el) => el.value);
   const goals = document.getElementById("goals").value;
   const rpsRange = document.getElementById("rpsRange").value;
@@ -1998,6 +2133,9 @@ function collectForm() {
     strokeType,
     spinRps,
     ballSpeed,
+    ttHistory: "",
+    strengthIds: [],
+    inputMode: "detailed",
   };
 }
 
@@ -2037,6 +2175,17 @@ function restoreFormFromRecord(formData) {
   document.querySelectorAll('input[name="issue"]').forEach((el) => {
     el.checked = formData.issues?.includes(el.value) ?? false;
   });
+
+  if (formData.inputMode === "simple" && typeof SimpleInput !== "undefined") {
+    SimpleInput.state.issues = [...(formData.issues || [])];
+    SimpleInput.state.ttHistory = formData.ttHistory || "";
+    SimpleInput.state.strengthIds = formData.strengthIds?.length ? [...formData.strengthIds] : ["none"];
+    SimpleInput.applyMode("simple", true);
+    SimpleInput.updateAllSummaries();
+  } else if (typeof SimpleInput !== "undefined") {
+    SimpleInput.syncFromDetailedForm();
+    SimpleInput.applyMode("detailed", true);
+  }
 }
 
 function recordSummaryText(record) {

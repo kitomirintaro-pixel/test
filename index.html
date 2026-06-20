@@ -82,18 +82,82 @@
             />
           </label>
 
+          <div class="input-mode-bar" role="tablist" aria-label="入力方式">
+            <button
+              type="button"
+              id="input-mode-simple"
+              class="input-mode-btn is-active"
+              role="tab"
+              aria-selected="true"
+              data-input-mode="simple"
+            >
+              簡単入力
+            </button>
+            <button
+              type="button"
+              id="input-mode-detailed"
+              class="input-mode-btn"
+              role="tab"
+              aria-selected="false"
+              data-input-mode="detailed"
+            >
+              詳細入力
+            </button>
+          </div>
+
+          <div id="form-simple" class="simple-form">
+            <p class="hint muted simple-form-lead">項目をタップして選べます。選んだ内容はそのままプランに反映されます。</p>
+            <div class="simple-picker-grid">
+              <button type="button" class="simple-picker-card" data-simple-picker="issues">
+                <span class="simple-picker-label">課題</span>
+                <span class="simple-picker-value" id="simple-summary-issues">タップして選ぶ</span>
+              </button>
+              <button type="button" class="simple-picker-card" data-simple-picker="goals">
+                <span class="simple-picker-label">目標</span>
+                <span class="simple-picker-value" id="simple-summary-goals">タップして選ぶ</span>
+              </button>
+              <button type="button" class="simple-picker-card" data-simple-picker="history">
+                <span class="simple-picker-label">卓球歴</span>
+                <span class="simple-picker-value" id="simple-summary-history">タップして選ぶ</span>
+              </button>
+              <button type="button" class="simple-picker-card" data-simple-picker="practice">
+                <span class="simple-picker-label">練習時間</span>
+                <span class="simple-picker-value" id="simple-summary-practice">タップして選ぶ</span>
+              </button>
+              <button type="button" class="simple-picker-card" data-simple-picker="strength">
+                <span class="simple-picker-label">筋トレ</span>
+                <span class="simple-picker-value" id="simple-summary-strength">タップして選ぶ</span>
+              </button>
+            </div>
+          </div>
+
+          <dialog id="simple-picker-sheet" class="simple-picker-sheet">
+            <div class="simple-sheet-inner">
+              <header class="simple-sheet-header">
+                <h2 id="simple-sheet-title" class="simple-sheet-title">選択</h2>
+                <button type="button" id="simple-sheet-close" class="btn btn-ghost btn-small" aria-label="閉じる">閉じる</button>
+              </header>
+              <div id="simple-sheet-body" class="simple-sheet-body"></div>
+              <footer class="simple-sheet-footer">
+                <button type="button" id="simple-sheet-done" class="btn btn-primary">決定</button>
+              </footer>
+            </div>
+          </dialog>
+
+          <div id="form-detailed" class="form-detailed" hidden>
           <fieldset class="fieldset">
             <legend>いま足りないと感じること（複数選択可）</legend>
+            <p class="hint muted issue-field-hint">大項目を選ぶと全般向けの内容が付きます。種類を細かく選ぶと、その内容が足されます。</p>
             <div class="issue-groups">
-              <div>
-                <p class="fieldset-sublegend">攻め・ドライブ・ラリー</p>
-                <div class="drive-block">
+              <section class="issue-section">
+                <h3 class="issue-section-title">攻め・ラリー</h3>
+                <div class="issue-block issue-block-drive">
                   <label class="check check-parent">
                     <input type="checkbox" name="issue" value="drive" />
                     <span>ドライブ</span>
                   </label>
-                  <p class="drive-block-hint muted">種類を選ぶと、そのドライブ向けの内容が足されます（未選択ならドライブ全般）。</p>
-                  <div class="drive-children checkbox-grid">
+                  <p class="issue-block-hint muted">種類を選ぶと、そのドライブ向けの内容が足されます（未選択ならドライブ全般）。</p>
+                  <div class="issue-children checkbox-grid">
                     <label class="check check-child">
                       <input type="checkbox" name="issue" value="drive_speed" />
                       <span>スピードドライブ</span>
@@ -150,56 +214,73 @@
                     <span>第3球（攻めの入り）</span>
                   </label>
                 </div>
-                <p class="fieldset-sublegend">サーブ（回転・フォーム）</p>
-                <div class="checkbox-grid">
-                  <label class="check">
+              </section>
+
+              <section class="issue-section issue-section-full">
+                <h3 class="issue-section-title">サーブ</h3>
+                <div class="issue-block issue-block-serve">
+                  <label class="check check-parent">
                     <input type="checkbox" name="issue" value="serve" />
-                    <span>サーブ全般（分類できない・総合）</span>
+                    <span>サーブ全般</span>
                   </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_top" />
-                    <span>上回転系サーブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_under" />
-                    <span>下回転系サーブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_long" />
-                    <span>ロングサーブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_side_top" />
-                    <span>横回転・上寄り（サイドトップ系）</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_side_under" />
-                    <span>横回転・下寄り（サイドアンダー系）</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_makikomi" />
-                    <span>巻き込み（体幹・フック軌道）</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_yg" />
-                    <span>YG系（横系・チーム独自の呼び方含む）</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_squat" />
-                    <span>しゃがみ込み・低重心</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_forehand" />
-                    <span>フォアサーブ</span>
-                  </label>
-                  <label class="check">
-                    <input type="checkbox" name="issue" value="serve_backhand" />
-                    <span>バックサーブ</span>
-                  </label>
+                  <p class="issue-block-hint muted">種類を選ぶと、そのサーブ向けの内容が足されます（未選択ならサーブ全般）。</p>
+
+                  <p class="issue-sublegend">回転の種類</p>
+                  <div class="issue-children checkbox-grid">
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_top" />
+                      <span>上回転系</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_under" />
+                      <span>下回転系</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_long" />
+                      <span>ロングサーブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_side_top" />
+                      <span>横回転・上寄り</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_side_under" />
+                      <span>横回転・下寄り</span>
+                    </label>
+                  </div>
+
+                  <p class="issue-sublegend">フォーム・軌道</p>
+                  <div class="issue-children checkbox-grid">
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_makikomi" />
+                      <span>巻き込み</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_squat" />
+                      <span>しゃがみ込み・低重心</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_yg" />
+                      <span>YG系</span>
+                    </label>
+                  </div>
+
+                  <p class="issue-sublegend">フォア／バック</p>
+                  <div class="issue-children checkbox-grid">
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_forehand" />
+                      <span>フォアサーブ</span>
+                    </label>
+                    <label class="check check-child">
+                      <input type="checkbox" name="issue" value="serve_backhand" />
+                      <span>バックサーブ</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <p class="fieldset-sublegend">守備・処理</p>
+              </section>
+
+              <section class="issue-section">
+                <h3 class="issue-section-title">守備・レシーブ</h3>
                 <div class="checkbox-grid">
                   <label class="check">
                     <input type="checkbox" name="issue" value="cut_defense" />
@@ -218,9 +299,10 @@
                     <span>回転の見極め・ミート</span>
                   </label>
                 </div>
-              </div>
-              <div>
-                <p class="fieldset-sublegend">身体・適応・メンタル</p>
+              </section>
+
+              <section class="issue-section">
+                <h3 class="issue-section-title">身体・適応・メンタル</h3>
                 <div class="checkbox-grid">
                   <label class="check">
                     <input type="checkbox" name="issue" value="footwork" />
@@ -235,7 +317,7 @@
                     <span>メンタル・試合運び</span>
                   </label>
                 </div>
-              </div>
+              </section>
             </div>
           </fieldset>
 
@@ -535,6 +617,7 @@
               </label>
             </div>
           </fieldset>
+          </div>
 
           <fieldset class="fieldset record-section no-print" aria-labelledby="record-section-title">
             <legend id="record-section-title">保存した記録</legend>
@@ -649,6 +732,7 @@
     <script src="poses.js"></script>
     <script src="print-plan.js"></script>
     <script src="rubber-catalog.js"></script>
+    <script src="simple-input.js"></script>
     <script src="coach.js"></script>
     <script src="diary.js"></script>
     <script>
