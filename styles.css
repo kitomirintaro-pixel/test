@@ -54,7 +54,7 @@ body {
 }
 
 .container {
-  width: min(1100px, 92vw);
+  width: min(1100px, 96vw);
   margin-inline: auto;
 }
 
@@ -320,10 +320,7 @@ body {
 }
 
 .simple-form {
-  padding: 1rem 1.1rem;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--bg-elevated);
+  margin-top: 0.25rem;
 }
 
 .simple-form-lead {
@@ -740,9 +737,53 @@ body {
   gap: 0.5rem;
 }
 
+@media (max-width: 899px) {
+  .coach-layout {
+    gap: 1rem;
+  }
+
+  .coach-form,
+  .diary-form {
+    padding: 0.85rem 0;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .coach-output-wrap,
+  .plan-output {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .input-mode-bar,
+  .form-accordion,
+  .simple-picker-grid,
+  .field,
+  .form-actions {
+    width: 100%;
+  }
+
+  .form-accordion-summary {
+    min-width: 0;
+  }
+
+  .form-accordion-hint {
+    white-space: normal;
+    text-align: right;
+  }
+}
+
 @media (max-width: 719px) {
   .site-header .tagline {
     display: none;
+  }
+
+  .coach-main .container,
+  .app-mode-hero-inner {
+    width: min(1100px, 96vw);
   }
 
   #view-menu > .coach-hero,
@@ -812,16 +853,8 @@ body {
     max-width: none;
   }
 
-  .coach-form {
-    padding: 1rem;
-  }
-
   .coach-main {
     padding-bottom: 2rem;
-  }
-
-  .simple-form {
-    padding: 0.85rem;
   }
 
   .simple-picker-card {
@@ -977,20 +1010,24 @@ body {
   display: grid;
   gap: 2rem;
   align-items: start;
+  width: 100%;
+}
+
+.coach-form {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 @media (min-width: 900px) {
   .coach-layout {
     grid-template-columns: 1fr 1fr;
   }
-}
-
-.coach-form {
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
 }
 
 .fieldset {
