@@ -1372,6 +1372,8 @@ details.issue-section {
   letter-spacing: 0.03em;
   border-radius: 14px;
   border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #a78bfa, var(--accent));
+  color: #041016;
   box-shadow:
     0 16px 44px rgba(110, 231, 255, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
@@ -1380,16 +1382,12 @@ details.issue-section {
 .btn-submit-main:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 20px 52px rgba(110, 231, 255, 0.4),
+    0 20px 52px rgba(167, 139, 250, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .btn-submit-main:active {
   transform: translateY(0);
-}
-
-.diary-form-actions .btn-submit-main {
-  background: linear-gradient(135deg, #a78bfa, var(--accent));
 }
 
 .coach-output-wrap {

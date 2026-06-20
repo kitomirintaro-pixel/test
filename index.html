@@ -14,14 +14,14 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260524f" />
+    <link rel="stylesheet" href="styles.css?v=20260524g" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
     <header class="site-header">
       <div class="container header-inner">
         <a class="logo" href="#">SpinCoach</a>
-        <p class="tagline">Spinsight と相性の良い練習設計（非公式・ブラウザ内完結）</p>
+        <p class="tagline">Spinsight 向け練習設計（非公式）</p>
       </div>
     </header>
 
@@ -33,12 +33,11 @@
               卓球の課題から、<span class="gradient-text">練習メニュー</span>を提案
             </h1>
             <p class="site-intro-text">
-              SpinCoach は、Spinsight の計測と組み合わせやすい練習プランを<strong>ブラウザだけで</strong>作れる補助ツールです（非公式）。データはこの端末にだけ保存されます。
+              Spinsight と組み合わせやすい練習プランをブラウザで作成（非公式）。データはこの端末のみ保存。
             </p>
             <ul class="site-intro-list">
-              <li>課題・目標・練習時間を選ぶと改善案とメニューを生成</li>
-              <li>記録の保存・PDF・印刷に対応</li>
-              <li>日々の練習は日記機能で振り返り</li>
+              <li>課題からメニュー生成・PDF対応</li>
+              <li>日記で振り返り</li>
             </ul>
           </div>
           <p class="app-mode-picker-label">使う機能を選んでください</p>
@@ -77,7 +76,7 @@
           <div class="name-field-card">
             <label class="field field-name">
               <span class="field-label field-label-prominent">お名前</span>
-              <span class="field-hint-inline">記録の保存に使います（任意）</span>
+              <span class="field-hint-inline">記録保存用（任意）</span>
               <input
                 type="text"
                 id="playerName"
@@ -140,7 +139,6 @@
           </div>
 
           <div id="form-simple" class="simple-form">
-            <p class="hint muted simple-form-lead">各項目をタップして選ぶと、そのままプランに反映されます。</p>
             <details class="form-accordion form-accordion-optional">
               <summary class="form-accordion-summary">おすすめセット<span class="form-accordion-hint">ワンタップで入力</span></summary>
               <div class="form-accordion-body">
@@ -173,8 +171,7 @@
 
           <div id="form-detailed" class="form-detailed" hidden>
           <fieldset class="fieldset">
-            <legend>いま足りないと感じること（複数選択可）</legend>
-            <p class="hint muted issue-field-hint">カテゴリを開いて選びます。大項目だけでも、細かい種類だけでもOKです。</p>
+            <legend>課題（複数可）</legend>
             <div class="issue-groups">
               <details class="issue-section issue-accordion">
                 <summary class="issue-section-title">攻め・ラリー</summary>
@@ -184,7 +181,6 @@
                     <input type="checkbox" name="issue" value="drive" />
                     <span>ドライブ</span>
                   </label>
-                  <p class="issue-block-hint muted">種類を選ぶと、そのドライブ向けの内容が足されます（未選択ならドライブ全般）。</p>
                   <div class="issue-children checkbox-grid">
                     <label class="check check-child">
                       <input type="checkbox" name="issue" value="drive_speed" />
@@ -253,7 +249,6 @@
                     <input type="checkbox" name="issue" value="serve" />
                     <span>サーブ全般</span>
                   </label>
-                  <p class="issue-block-hint muted">種類を選ぶと、そのサーブ向けの内容が足されます（未選択ならサーブ全般）。</p>
 
                   <p class="issue-sublegend">回転の種類</p>
                   <div class="issue-children checkbox-grid">
@@ -360,8 +355,7 @@
             <summary class="form-accordion-summary">ラバー<span class="form-accordion-hint">任意・カタログ対応</span></summary>
             <div class="form-accordion-body">
             <p class="hint muted">
-              フォア面・バック面それぞれ、メーカー・ラバー名・裏／表／粒高を入力してください。主要ラバーは<strong>カタログ登録済み</strong>（現在
-              <span id="rubber-catalog-count">—</span>件・随時追加）で個別ヒントを出します。未登録でも<strong>系統推定</strong>で練習ヒントを足します。<strong>硬さは任意</strong>です。
+              メーカー・ラバー名・種類を入力。カタログ <span id="rubber-catalog-count">—</span>件対応。硬さは任意。
             </p>
 
             <div class="rubber-side-block">
@@ -397,7 +391,7 @@
               </div>
               <label class="field field-optional rubber-field">
                 <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
-                <input type="text" class="input-prominent" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="わからなければ空欄でOK（例: 40度　柔らかめ）" autocomplete="off" />
+                <input type="text" class="input-prominent" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="例: 40度・柔らかめ" autocomplete="off" />
               </label>
             </div>
 
@@ -434,20 +428,16 @@
               </div>
               <label class="field field-optional rubber-field">
                 <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
-                <input type="text" class="input-prominent" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" placeholder="わからなければ空欄でOK（例: 40度　柔らかめ）" autocomplete="off" />
+                <input type="text" class="input-prominent" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" placeholder="例: 40度・柔らかめ" autocomplete="off" />
               </label>
             </div>
             <details class="rubber-hardness-details">
-              <summary>硬さの書き方（知っている人向け）</summary>
-              <p class="hint muted">
-                欧州系は「42.5度」などショアA（°）、国内のバタフライ等は「硬め」「MAX」など表記が異なることがあります。パッケージの表記をそのまま書けます。サイトでは基準の変換はしません。
-              </p>
+              <summary>硬さの書き方</summary>
+              <p class="hint muted">パッケージ表記のまま入力（°・硬め・MAX など）。</p>
             </details>
             <details class="rubber-category-details">
-              <summary>ラバーの系統を自分で指定する（任意・自動判別と違うとき）</summary>
-              <p class="hint muted">
-                通常はメーカー・ラバー名から自動判別します。グレイザー09cがテンション扱いになるなど合わないときだけ、フォア・バックそれぞれ選んでください。
-              </p>
+              <summary>系統を手動指定（任意）</summary>
+              <p class="hint muted">自動判別と違うときだけ選んでください。</p>
               <div class="row-2 rubber-fields-row">
                 <label class="field rubber-field">
                   <span class="field-label">フォア面の系統</span>
@@ -483,7 +473,7 @@
           </details>
 
           <label class="field">
-            <span class="field-label">やりたいこと・具体的な目標</span>
+            <span class="field-label">目標</span>
             <textarea
               id="goals"
               name="goals"
@@ -498,9 +488,6 @@
             <button type="button" class="example-chip" data-goals-example="receive_better">レシーブ改善</button>
             <button type="button" class="example-chip" data-goals-example="fore_stable">フォア安定</button>
           </div>
-          <p class="hint muted">
-            未選択でも、「カット」「ドライブ」「ブロック」などのキーワードで項目を推定します。
-          </p>
 
           <details class="form-accordion form-accordion-optional">
             <summary class="form-accordion-summary">Spinsight の数値・体感<span class="form-accordion-hint">任意</span></summary>
@@ -509,7 +496,7 @@
             <legend class="sr-only">Spinsight の数値</legend>
             <div class="row-2">
               <label class="field">
-                <span class="field-label">回転（アプリに表示される数値）</span>
+                <span class="field-label">回転</span>
                 <input
                   type="number"
                   id="spinRps"
@@ -521,7 +508,7 @@
                 />
               </label>
               <label class="field">
-                <span class="field-label">球速（アプリに表示される数値）</span>
+                <span class="field-label">球速</span>
                 <input
                   type="number"
                   id="ballSpeed"
@@ -534,7 +521,7 @@
               </label>
             </div>
             <label class="field">
-              <span class="field-label">上記の数値は主にどのショット？</span>
+              <span class="field-label">主なショット</span>
               <select id="strokeType" name="strokeType">
                 <option value="unknown">指定なし／複数混在</option>
                 <option value="serve">サーブ</option>
@@ -549,16 +536,13 @@
                 <option value="other">その他</option>
               </select>
             </label>
-            <p class="hint muted">
-              単位はアプリの表示に合わせて解釈してください（サイト側では数値のみ保持し、絶対評価はしません）。
-            </p>
           </fieldset>
 
           <fieldset class="fieldset fieldset-unstyled">
             <legend class="sr-only">体感・メモ</legend>
             <div class="row-2">
               <label class="field">
-                <span class="field-label">回転の体感レンジ</span>
+                <span class="field-label">回転の体感</span>
                 <select id="rpsRange" name="rpsRange">
                   <option value="unknown">わからない / 未計測</option>
                   <option value="low">低め（自分の平均より下がり気味）</option>
@@ -567,7 +551,7 @@
                 </select>
               </label>
               <label class="field">
-                <span class="field-label">同じフォームの再現性</span>
+                <span class="field-label">再現性</span>
                 <select id="stability" name="stability">
                   <option value="unknown">わからない</option>
                   <option value="shaky">まだブレが大きい</option>
@@ -577,7 +561,7 @@
               </label>
             </div>
             <label class="field">
-              <span class="field-label">アプリの所感・条件（自由記述）</span>
+              <span class="field-label">メモ</span>
               <textarea
                 id="spinsightNotes"
                 name="spinsightNotes"
@@ -592,9 +576,7 @@
           <details class="form-accordion form-accordion-optional">
             <summary class="form-accordion-summary">練習時間（曜日ごと）<span class="form-accordion-hint">詳細入力用</span></summary>
             <div class="form-accordion-body">
-            <p class="hint muted">
-              各曜日を<strong>10分刻み</strong>で設定できます（10分〜2時間）。「休み」にするとその日は回復・振り返り中心の案内になります。
-            </p>
+            <p class="hint muted">10分刻み（10分〜2時間）。休み＝回復・振り返り中心。</p>
             <div class="practice-preset-row no-print">
               <span class="field-label">まとめて設定:</span>
               <button type="button" class="btn btn-ghost btn-small" data-practice-preset="all-30">毎日30分</button>
@@ -642,7 +624,7 @@
           <details class="form-accordion form-accordion-optional record-section no-print">
             <summary class="form-accordion-summary" id="record-section-title">保存した記録</summary>
             <div class="form-accordion-body">
-            <p class="hint muted">この端末のブラウザにだけ保存されます。不要な記録は削除できます。</p>
+            <p class="hint muted">この端末にのみ保存。</p>
             <div class="record-toolbar">
               <button type="button" id="btn-clear-all-records" class="btn btn-ghost btn-danger-outline" hidden>
                 すべて削除
@@ -654,7 +636,7 @@
             </div>
           </details>
 
-          <div class="form-actions form-actions-main">
+          <div class="form-actions form-actions-main diary-form-actions">
             <button type="submit" class="btn btn-primary btn-submit-main">プランを生成する</button>
           </div>
         </form>
@@ -670,7 +652,7 @@
         <div class="container diary-layout">
           <div class="diary-hero">
             <h1>練習日記</h1>
-            <p class="lead">その日の課題・練習内容・良かったところ・反省を残せます。この端末のブラウザにだけ保存されます。</p>
+            <p class="lead">練習内容と振り返りを記録（この端末のみ）。</p>
           </div>
 
           <form id="diary-form" class="diary-form" novalidate>
