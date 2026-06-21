@@ -26,6 +26,7 @@ const DIAGNOSIS_STEPS = [
     options: [
       { id: "drive_types", label: "ドライブの種類（スピード・ループなど）", issues: ["drive_speed", "drive_loop"] },
       { id: "flick", label: "フリック・チキータ", issues: ["flick_short"] },
+      { id: "smash", label: "スマッシュ", issues: ["smash"] },
       { id: "serve_spin", label: "サーブの回転・変化", issues: ["serve_top", "serve_under", "serve_long"] },
       { id: "counter", label: "カウンター・速攻", issues: ["counter_attack"] },
       { id: "defense", label: "カット・守備", issues: ["cut_defense", "block_game"] },
@@ -180,7 +181,12 @@ const Diagnosis = {
     }
 
     window.setTimeout(() => {
-      document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const generated =
+        typeof generateAndShowPlan === "function" ? generateAndShowPlan() : false;
+      const target = generated
+        ? document.getElementById("plan-output")
+        : document.getElementById("coach-form");
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 120);
   },
 

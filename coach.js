@@ -2552,6 +2552,26 @@ function refreshRecordList() {
   listEl.appendChild(ul);
 }
 
+function generateAndShowPlan() {
+  const out = document.getElementById("plan-output");
+  const err = document.getElementById("plan-error");
+  if (!out || !err) return false;
+
+  err.textContent = "";
+  err.hidden = true;
+  const data = collectForm();
+  const plan = generatePlan(data);
+  if (!plan.ok) {
+    err.textContent = plan.message;
+    err.hidden = false;
+    out.hidden = true;
+    out.innerHTML = "";
+    return false;
+  }
+  renderPlan(plan, out);
+  return true;
+}
+
 function init() {
   const form = document.getElementById("coach-form");
   const out = document.getElementById("plan-output");
@@ -2578,19 +2598,9 @@ function init() {
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    err.textContent = "";
-    err.hidden = true;
-    const data = collectForm();
-    const plan = generatePlan(data);
-    if (!plan.ok) {
-      err.textContent = plan.message;
-      err.hidden = false;
-      out.hidden = true;
-      out.innerHTML = "";
-      return;
+    if (generateAndShowPlan()) {
+      out.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    renderPlan(plan, out);
-    out.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
