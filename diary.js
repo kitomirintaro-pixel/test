@@ -227,6 +227,22 @@ function showDiaryMessage(text) {
   if (text && typeof showAppStatus === "function") showAppStatus(text);
 }
 
+function getDiaryFieldsForMenu() {
+  return {
+    issues: document.getElementById("diaryIssues")?.value || "",
+    content: document.getElementById("diaryContent")?.value || "",
+    good: document.getElementById("diaryGood")?.value || "",
+    reflection: document.getElementById("diaryReflection")?.value || "",
+  };
+}
+
+function getDiaryCombinedText(fields = getDiaryFieldsForMenu()) {
+  return [fields.issues, fields.content, fields.good, fields.reflection]
+    .map((s) => String(s || "").trim())
+    .filter(Boolean)
+    .join("\n");
+}
+
 function inferIssuesFromDiaryText(text) {
   if (!text.trim()) return [];
   const inferred = typeof inferIssuesFromText === "function" ? inferIssuesFromText(text) : [];
@@ -234,9 +250,12 @@ function inferIssuesFromDiaryText(text) {
 }
 
 function createMenuFromDiary() {
-  const issuesText = document.getElementById("diaryIssues")?.value || "";
-  const issueIds = inferIssuesFromDiaryText(issuesText);
+  const fields = getDiaryFieldsForMenu();
+  const combined = getDiaryCombinedText(fields);
+  const issueIds = inferIssuesFromDiaryText(combined);
+
   switchAppMode("menu");
+
   if (typeof SimpleInput !== "undefined") {
     SimpleInput.applyQuickRecommendation({
       patch: {
@@ -247,11 +266,39 @@ function createMenuFromDiary() {
         strengthIds: ["none"],
       },
     });
+  } else {
+    document.querySelectorAll('input[name="issue"]').forEach((el) => {
+      el.checked = issueIds.includes(el.value);
+    });
   }
+
+  const notesEl = document.getElementById("spinsightNotes");
+  if (notesEl && combined) {
+    notesEl.value = `【日記より】\n${combined.slice(0, 600)}`;
+  }
+
+  const goalsEl = document.getElementById("goals");
+  if (goalsEl && fields.reflection.trim()) {
+    goalsEl.value = fields.reflection.trim().slice(0, 500);
+  }
+
   window.setTimeout(() => {
-    document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (typeof showAppStatus === "function") {
-      showAppStatus("日記の課題をメニュー画面に反映しました。");
+    if (typeof generateAndShowPlan === "function") {
+      const ok = generateAndShowPlan();
+      const target = ok ? document.getElementById("plan-output") : document.getElementById("coach-form");
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (typeof showAppStatus === "function") {
+        showAppStatus(
+          ok
+            ? "日記の内容から練習メニューを作成しました。"
+            : "課題を反映しました。内容を確認してプランを生成してください。"
+        );
+      }
+    } else {
+      document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (typeof showAppStatus === "function") {
+        showAppStatus("日記の課題をメニュー画面に反映しました。");
+      }
     }
   }, 120);
 }
