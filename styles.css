@@ -321,6 +321,7 @@ body {
 
 .simple-form {
   margin-top: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .simple-form-lead {
@@ -608,6 +609,7 @@ body {
   width: 100%;
   min-height: 3.5rem;
   font-size: 1.12rem;
+  border-radius: 999px;
 }
 
 .simple-chip-area {
@@ -1933,7 +1935,7 @@ select.hardness-active {
 }
 
 .record-section {
-  margin-top: 0.5rem;
+  margin-top: 1.35rem;
   margin-bottom: 0.25rem;
 }
 
