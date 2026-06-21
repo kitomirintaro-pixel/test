@@ -181,8 +181,9 @@ const Diagnosis = {
     };
   },
 
-  applyToMenu({ generatePlan = false } = {}) {
+  applyToMenu({ generatePlan = true } = {}) {
     const patch = this.buildMenuPatch();
+    const result = this.computeResults();
     if (typeof switchAppMode === "function") switchAppMode("menu");
 
     if (typeof SimpleInput !== "undefined") {
@@ -193,11 +194,24 @@ const Diagnosis = {
       });
     }
 
+    const notesEl = document.getElementById("spinsightNotes");
+    if (notesEl && result.issues.length) {
+      const labels = result.issues.map((id) => getIssueLabel(id)).join("、");
+      notesEl.value = `【課題診断より】\nおすすめ課題: ${labels}`;
+    }
+
     window.setTimeout(() => {
       if (generatePlan && typeof generateAndShowPlan === "function") {
         const ok = generateAndShowPlan();
         const target = ok ? document.getElementById("plan-output") : document.getElementById("coach-form");
         target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (typeof showAppStatus === "function") {
+          showAppStatus(
+            ok
+              ? "診断結果から練習メニューを作成しました。"
+              : "課題を反映しました。内容を確認してプランを生成してください。"
+          );
+        }
       } else {
         document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
         if (typeof showAppStatus === "function") {
@@ -278,7 +292,7 @@ const Diagnosis = {
 
     const hint = document.createElement("p");
     hint.className = "diagnosis-step-hint";
-    hint.textContent = "メニュー画面で内容を確認してからプランを生成できます。";
+    hint.textContent = "ボタンを押すと、おすすめ課題を反映して練習メニューを自動作成します。";
 
     const list = document.createElement("ul");
     list.className = "diagnosis-result-list";
@@ -321,7 +335,7 @@ const Diagnosis = {
     const menuBtn = document.createElement("button");
     menuBtn.type = "button";
     menuBtn.className = "btn btn-primary btn-submit-main";
-    menuBtn.textContent = "すぐプランを作る";
+    menuBtn.textContent = "この課題でメニューを作る";
     menuBtn.addEventListener("click", () => this.applyToMenu({ generatePlan: true }));
 
     actions.append(retryBtn, reviewBtn, menuBtn);
