@@ -1973,6 +1973,38 @@ function shouldSimplifyPlan() {
 let lastPlan = null;
 let lastFormData = null;
 
+function resetCurrentPlan({ scrollToForm = true } = {}) {
+  const out = document.getElementById("plan-output");
+  const err = document.getElementById("plan-error");
+  const msg = document.getElementById("save-message");
+  if (out) {
+    out.innerHTML = "";
+    out.hidden = true;
+  }
+  if (err) {
+    err.textContent = "";
+    err.hidden = true;
+  }
+  if (msg) {
+    msg.textContent = "";
+    msg.hidden = true;
+  }
+  lastPlan = null;
+  lastFormData = null;
+  const notes = document.getElementById("spinsightNotes");
+  if (notes && typeof stripHandoffNotes === "function") {
+    notes.value = stripHandoffNotes(notes.value);
+  }
+  if (scrollToForm) {
+    document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  if (typeof showAppStatus === "function") {
+    showAppStatus("表示中のプランをリセットしました。保存済みの記録はそのままです。");
+  }
+}
+
+window.resetCurrentPlan = resetCurrentPlan;
+
 function renderPlan(plan, container) {
   container.innerHTML = "";
   container.hidden = false;
@@ -1989,7 +2021,7 @@ function renderPlan(plan, container) {
 
   const actionsHint = document.createElement("p");
   actionsHint.className = "plan-actions-hint";
-  actionsHint.textContent = "PDF出力・コピー・端末への記録";
+  actionsHint.textContent = "PDF出力・コピー・端末への記録・プランのリセット";
 
   const toolbar = document.createElement("div");
   toolbar.className = "plan-toolbar";
@@ -2010,6 +2042,11 @@ function renderPlan(plan, container) {
         background: "linear-gradient(135deg, #4ade80, #15803d)",
         borderColor: "#166534",
         color: "#052e16",
+      },
+      reset: {
+        background: "rgba(255, 255, 255, 0.08)",
+        borderColor: "rgba(255, 255, 255, 0.22)",
+        color: "#e8ecf4",
       },
     };
     const t = themes[theme];
@@ -2075,7 +2112,18 @@ function renderPlan(plan, container) {
     }
   });
 
-  toolbar.append(btnPrint, btnCopy, btnSave);
+  const btnReset = document.createElement("button");
+  btnReset.type = "button";
+  btnReset.className = "plan-action-btn plan-action-btn-reset";
+  btnReset.textContent = "プランをリセット";
+  applyPlanActionTheme(btnReset, "reset");
+  btnReset.addEventListener("click", () => {
+    const ok = window.confirm("表示中のプランを消します。保存済みの記録は残ります。よろしいですか？");
+    if (!ok) return;
+    resetCurrentPlan();
+  });
+
+  toolbar.append(btnPrint, btnCopy, btnSave, btnReset);
   actionsCard.append(actionsHeading, actionsHint, toolbar);
   container.appendChild(actionsCard);
 
@@ -2564,6 +2612,20 @@ function refreshRecordList() {
       out.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
+    const regenBtn = document.createElement("button");
+    regenBtn.type = "button";
+    regenBtn.className = "btn btn-small record-action-btn record-action-regen";
+    regenBtn.textContent = "再生成";
+    regenBtn.addEventListener("click", () => {
+      restoreFormFromRecord(r.formData);
+      if (typeof generateAndShowPlan === "function" && generateAndShowPlan()) {
+        document.getElementById("plan-output")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (typeof showAppStatus === "function") {
+          showAppStatus("記録の内容でプランを再生成しました。");
+        }
+      }
+    });
+
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.className = "btn btn-small record-action-btn record-action-delete";
@@ -2582,7 +2644,7 @@ function refreshRecordList() {
       }
     });
 
-    actions.append(openBtn, delBtn);
+    actions.append(openBtn, regenBtn, delBtn);
     li.append(main, actions);
     ul.appendChild(li);
   }

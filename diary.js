@@ -165,6 +165,18 @@ function refreshDiaryList() {
     const actions = document.createElement("div");
     actions.className = "diary-item-actions";
 
+    const menuBtn = document.createElement("button");
+    menuBtn.type = "button";
+    menuBtn.className = "btn btn-primary btn-submit-main diary-item-menu-btn";
+    menuBtn.textContent = "この課題でメニューを作る";
+    menuBtn.addEventListener("click", () => {
+      loadDiaryToForm(e);
+      createMenuFromDiary();
+    });
+
+    const subActions = document.createElement("div");
+    subActions.className = "diary-item-sub-actions";
+
     const copyBtn = document.createElement("button");
     copyBtn.type = "button";
     copyBtn.className = "btn btn-ghost btn-small";
@@ -202,16 +214,8 @@ function refreshDiaryList() {
       showDiaryMessage("日記を削除しました。");
     });
 
-    const menuBtn = document.createElement("button");
-    menuBtn.type = "button";
-    menuBtn.className = "btn btn-ghost btn-small";
-    menuBtn.textContent = "この課題でメニューを作る";
-    menuBtn.addEventListener("click", () => {
-      loadDiaryToForm(e);
-      createMenuFromDiary();
-    });
-
-    actions.append(copyBtn, pdfBtn, menuBtn, editBtn, delBtn);
+    subActions.append(copyBtn, pdfBtn, editBtn, delBtn);
+    actions.append(menuBtn, subActions);
     li.append(main, actions);
     ul.appendChild(li);
   }
@@ -253,6 +257,9 @@ function createMenuFromDiary() {
   const fields = getDiaryFieldsForMenu();
   const combined = getDiaryCombinedText(fields);
   const issueIds = inferIssuesFromDiaryText(combined);
+  const goalIds =
+    typeof inferGoalIdsFromText === "function" ? inferGoalIdsFromText(combined) : [];
+  const finalGoalIds = goalIds.length ? goalIds : ["fun_rally"];
 
   switchAppMode("menu");
 
@@ -260,7 +267,7 @@ function createMenuFromDiary() {
     SimpleInput.applyQuickRecommendation({
       patch: {
         issues: issueIds.slice(0, 6),
-        goalIds: ["fun_rally"],
+        goalIds: finalGoalIds,
         ttHistory: SimpleInput.state.ttHistory || "1to3",
         practicePreset: SimpleInput.state.practicePreset || "weekday-30-weekend-60",
         strengthIds: ["none"],
@@ -273,13 +280,17 @@ function createMenuFromDiary() {
   }
 
   const notesEl = document.getElementById("spinsightNotes");
-  if (notesEl && combined) {
-    notesEl.value = `【日記より】\n${combined.slice(0, 600)}`;
+  if (notesEl && combined && typeof appendHandoffNote === "function") {
+    appendHandoffNote(notesEl, "日記より", combined.slice(0, 600));
   }
 
   const goalsEl = document.getElementById("goals");
   if (goalsEl && fields.reflection.trim()) {
     goalsEl.value = fields.reflection.trim().slice(0, 500);
+    if (typeof SimpleInput !== "undefined") {
+      SimpleInput.syncFromDetailedForm();
+      SimpleInput.updateAllSummaries();
+    }
   }
 
   window.setTimeout(() => {

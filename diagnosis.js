@@ -195,9 +195,9 @@ const Diagnosis = {
     }
 
     const notesEl = document.getElementById("spinsightNotes");
-    if (notesEl && result.issues.length) {
+    if (notesEl && result.issues.length && typeof appendHandoffNote === "function") {
       const labels = result.issues.map((id) => getIssueLabel(id)).join("、");
-      notesEl.value = `【課題診断より】\nおすすめ課題: ${labels}`;
+      appendHandoffNote(notesEl, "課題診断より", `おすすめ課題: ${labels}`);
     }
 
     window.setTimeout(() => {
@@ -292,7 +292,7 @@ const Diagnosis = {
 
     const hint = document.createElement("p");
     hint.className = "diagnosis-step-hint";
-    hint.textContent = "ボタンを押すと、おすすめ課題を反映して練習メニューを自動作成します。";
+    hint.textContent = "「この課題でメニューを作る」を押すと、おすすめ課題を反映して練習メニューを自動作成します。";
 
     const list = document.createElement("ul");
     list.className = "diagnosis-result-list";
@@ -326,19 +326,13 @@ const Diagnosis = {
     retryBtn.textContent = "最初から";
     retryBtn.addEventListener("click", () => this.resetView());
 
-    const reviewBtn = document.createElement("button");
-    reviewBtn.type = "button";
-    reviewBtn.className = "btn btn-ghost";
-    reviewBtn.textContent = "メニューで確認する";
-    reviewBtn.addEventListener("click", () => this.applyToMenu({ generatePlan: false }));
-
     const menuBtn = document.createElement("button");
     menuBtn.type = "button";
     menuBtn.className = "btn btn-primary btn-submit-main";
     menuBtn.textContent = "この課題でメニューを作る";
     menuBtn.addEventListener("click", () => this.applyToMenu({ generatePlan: true }));
 
-    actions.append(retryBtn, reviewBtn, menuBtn);
+    actions.append(retryBtn, menuBtn);
     this.root.append(title, hint, list, actions);
   },
 };

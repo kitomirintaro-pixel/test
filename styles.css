@@ -169,6 +169,34 @@ body {
   margin-top: 0.25rem;
 }
 
+.quick-start-guide {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(110, 231, 255, 0.28);
+  background: rgba(110, 231, 255, 0.05);
+  text-align: left;
+}
+
+.quick-start-heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.quick-start-steps {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.quick-start-steps li + li {
+  margin-top: 0.2rem;
+}
+
 .app-mode-picker-label {
   margin: 0 0 0.85rem;
   font-size: 0.92rem;
@@ -805,10 +833,9 @@ body {
 
 .diary-item {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
   padding: 0.85rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 10px;
@@ -841,8 +868,27 @@ body {
 
 .diary-item-actions {
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.diary-item-menu-btn {
+  width: 100%;
+  min-height: 3.1rem;
+  font-size: 0.98rem;
+  padding: 0.75rem 1rem;
+}
+
+.diary-item-sub-actions {
+  display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.diary-item-sub-actions .btn-small {
+  flex: 1 1 auto;
+  min-width: 4.5rem;
 }
 
 .diagnosis-layout {
@@ -2372,6 +2418,17 @@ select.hardness-active {
 .record-action-view:hover {
   border-color: rgba(147, 197, 253, 0.85);
   background: rgba(37, 99, 235, 0.34);
+}
+
+.record-action-regen {
+  border-color: rgba(110, 231, 255, 0.55);
+  background: rgba(110, 231, 255, 0.12);
+  color: #cffafe;
+}
+
+.record-action-regen:hover {
+  border-color: rgba(110, 231, 255, 0.85);
+  background: rgba(110, 231, 255, 0.22);
 }
 
 .record-action-delete {

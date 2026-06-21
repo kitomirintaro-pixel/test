@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260525f" />
+    <link rel="stylesheet" href="styles.css?v=20260526a" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -45,6 +45,14 @@
               <li>課題診断でおすすめを提案</li>
               <li>日記で振り返り</li>
             </ul>
+            <div class="quick-start-guide no-print">
+              <p class="quick-start-heading">かんたん3ステップ</p>
+              <ol class="quick-start-steps">
+                <li>課題診断または課題を選ぶ</li>
+                <li>「この課題でメニューを作る」でプラン生成</li>
+                <li>PDF保存・記録保存で残す</li>
+              </ol>
+            </div>
           </div>
           <p class="app-mode-picker-label">使う機能を選んでください</p>
           <div class="app-mode-grid app-mode-grid-large" role="tablist" aria-label="メイン機能">
@@ -525,7 +533,17 @@
             </div>
             <label class="field"><span class="field-label">主なショット</span>
               <select id="strokeType" name="strokeType">
-                <option value="unknown">指定なし</option><option value="serve">サーブ</option><option value="fh_drive">フォアドライブ</option><option value="bh_drive">バックドライブ</option><option value="flick">フリック</option><option value="block">ブロック</option><option value="receive">レシーブ</option>
+                <option value="unknown">指定なし／複数混在</option>
+                <option value="serve">サーブ</option>
+                <option value="fh_topspin">フォア・上回転（ループ等）</option>
+                <option value="bh_topspin">バック・上回転</option>
+                <option value="fh_drive">フォアドライブ</option>
+                <option value="bh_drive">バックドライブ</option>
+                <option value="flick">フリック・チキータ</option>
+                <option value="block">ブロック</option>
+                <option value="cut">カット</option>
+                <option value="receive">レシーブ全般</option>
+                <option value="other">その他</option>
               </select>
             </label>
             <div class="row-2">
@@ -540,7 +558,7 @@
           <details class="form-accordion form-accordion-optional record-section no-print">
             <summary class="form-accordion-summary" id="record-section-title">保存した記録</summary>
             <div class="form-accordion-body">
-            <p class="hint muted">この端末にのみ保存。</p>
+            <p class="hint muted">この端末にのみ保存。機種変更前は「データをエクスポート」でバックアップを取っておくと安心です。</p>
             <div class="record-toolbar">
               <button type="button" id="btn-export-data" class="btn btn-ghost btn-small">データをエクスポート</button>
               <button type="button" id="btn-import-data" class="btn btn-ghost btn-small">インポート</button>
@@ -643,6 +661,7 @@
           <details class="form-accordion form-accordion-optional diary-list-section">
             <summary class="form-accordion-summary">これまでの日記</summary>
             <div class="form-accordion-body">
+            <p class="hint muted backup-hint">日記も記録と一緒に、練習メニュー画面の「データをエクスポート」でバックアップできます。</p>
             <div class="record-toolbar">
               <button type="button" id="btn-clear-all-diaries" class="btn btn-ghost btn-danger-outline" hidden>
                 すべて削除
@@ -688,17 +707,17 @@
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
-    <script defer src="simple-text.js?v=20260525f"></script>
-    <script defer src="storage.js?v=20260525f"></script>
-    <script defer src="poses.js?v=20260525f"></script>
-    <script defer src="print-plan.js?v=20260525f"></script>
-    <script defer src="rubber-catalog.js?v=20260525f"></script>
-    <script defer src="copy-text.js?v=20260525f"></script>
-    <script defer src="simple-input.js?v=20260525f"></script>
-    <script defer src="coach.js?v=20260525f"></script>
-    <script defer src="diagnosis.js?v=20260525f"></script>
-    <script defer src="diary.js?v=20260525f"></script>
-    <script defer src="ui-shared.js?v=20260525f"></script>
+    <script defer src="simple-text.js?v=20260526a"></script>
+    <script defer src="storage.js?v=20260526a"></script>
+    <script defer src="poses.js?v=20260526a"></script>
+    <script defer src="print-plan.js?v=20260526a"></script>
+    <script defer src="rubber-catalog.js?v=20260526a"></script>
+    <script defer src="copy-text.js?v=20260526a"></script>
+    <script defer src="simple-input.js?v=20260526a"></script>
+    <script defer src="coach.js?v=20260526a"></script>
+    <script defer src="diagnosis.js?v=20260526a"></script>
+    <script defer src="diary.js?v=20260526a"></script>
+    <script defer src="ui-shared.js?v=20260526a"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");

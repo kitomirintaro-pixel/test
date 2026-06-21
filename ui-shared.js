@@ -12,6 +12,22 @@ function showAppStatus(text, durationMs = 3200) {
   }, durationMs);
 }
 
+function appendHandoffNote(el, tag, text) {
+  if (!el || !String(text || "").trim()) return;
+  const block = `【${tag}】\n${String(text).trim()}`;
+  const current = el.value || "";
+  if (current.includes(block)) return;
+  const re = new RegExp(`\\n?【${tag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}】[\\s\\S]*?(?=\\n【|$)`);
+  const cleaned = current.replace(re, "").trim();
+  el.value = cleaned ? `${cleaned}\n\n${block}` : block;
+}
+
+function stripHandoffNotes(value) {
+  return String(value || "")
+    .replace(/\n?【[^】]+】[\s\S]*?(?=\n【|$)/g, "")
+    .trim();
+}
+
 function scrollToDetails(id) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -146,3 +162,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.showAppStatus = showAppStatus;
+window.appendHandoffNote = appendHandoffNote;
+window.stripHandoffNotes = stripHandoffNotes;

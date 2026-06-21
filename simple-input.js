@@ -214,6 +214,31 @@ function fillPracticeMinuteSelect(selectEl, selectedValue) {
   }
 }
 
+const GOAL_KEYWORD_MAP = [
+  [/試合|勝ち|緊張|メンタル/, "match_win"],
+  [/サーブ|第3|三球/, "serve_strong"],
+  [/レシーブ|受け|ツッツキ|ストップ/, "receive_better"],
+  [/フォア|ドライブ|ループ/, "fore_stable"],
+  [/フット|足|ステップ|還元/, "footwork_up"],
+  [/バック/, "backhand_up"],
+  [/ラリー|楽し/, "fun_rally"],
+];
+
+function inferGoalIdsFromText(text) {
+  const ids = new Set();
+  const t = String(text || "").trim();
+  if (!t) return [];
+  for (const g of SIMPLE_GOAL_OPTIONS) {
+    if (t.includes(g.label) || t.includes(g.text)) ids.add(g.id);
+  }
+  for (const [re, id] of GOAL_KEYWORD_MAP) {
+    if (re.test(t)) ids.add(id);
+  }
+  return [...ids].slice(0, 2);
+}
+
+window.inferGoalIdsFromText = inferGoalIdsFromText;
+
 const SimpleInput = {
   mode: "simple",
   state: {
@@ -604,10 +629,11 @@ const SimpleInput = {
 
   buildFormData() {
     const schedule = this.getActiveSchedule();
-    const goals = this.state.goalIds
+    const presetGoals = this.state.goalIds
       .map((id) => SIMPLE_GOAL_OPTIONS.find((g) => g.id === id)?.text)
-      .filter(Boolean)
-      .join("\n");
+      .filter(Boolean);
+    const customGoals = document.getElementById("goals")?.value?.trim() || "";
+    const goals = [...presetGoals, customGoals].filter(Boolean).join("\n");
     const profile =
       typeof readPlayerProfileFromDom === "function"
         ? readPlayerProfileFromDom()
