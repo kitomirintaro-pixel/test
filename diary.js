@@ -205,7 +205,7 @@ function refreshDiaryList() {
     const menuBtn = document.createElement("button");
     menuBtn.type = "button";
     menuBtn.className = "btn btn-ghost btn-small";
-    menuBtn.textContent = "メニューへ";
+    menuBtn.textContent = "この課題でメニューを作る";
     menuBtn.addEventListener("click", () => {
       loadDiaryToForm(e);
       createMenuFromDiary();
