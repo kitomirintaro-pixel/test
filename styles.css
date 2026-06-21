@@ -66,10 +66,74 @@ body {
   padding-bottom: 3rem;
 }
 
+.app-status {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  max-width: min(92vw, 28rem);
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(110, 231, 255, 0.35);
+  background: rgba(18, 23, 34, 0.96);
+  color: var(--text);
+  font-size: 0.92rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
 .app-mode-hero {
   padding: clamp(1.25rem, 5vw, 3rem) 0 clamp(1.25rem, 4vw, 2.5rem);
   border-bottom: 1px solid var(--border);
   background: rgba(110, 231, 255, 0.06);
+}
+
+.app-mode-hero-toggle {
+  display: none;
+  margin: 0 0 0.75rem;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+  font-size: 0.82rem;
+  color: var(--accent);
+  background: transparent;
+  border: 1px dashed rgba(110, 231, 255, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.app-mode-hero.is-collapsed .app-mode-hero-body {
+  display: none;
+}
+
+.shared-form-optional {
+  margin-top: 0.5rem;
+}
+
+.simple-optional-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.simple-optional-link {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--accent);
+  background: rgba(110, 231, 255, 0.08);
+  border: 1px solid rgba(110, 231, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.simple-optional-link:hover {
+  background: rgba(110, 231, 255, 0.14);
+}
+
+.plan-language-toggle {
+  margin-top: 0.65rem;
 }
 
 .site-intro {
@@ -913,12 +977,30 @@ body {
     display: none;
   }
 
+  .app-mode-hero {
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+  }
+
+  .app-mode-hero-toggle {
+    display: inline-block;
+  }
+
   .app-mode-hero-inner {
     text-align: left;
   }
 
   .app-mode-picker-label {
     text-align: left;
+  }
+
+  .app-mode-grid-large {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+  }
+
+  .app-mode-grid-large .app-mode-desc {
+    display: none;
   }
 
   .app-mode-grid {
@@ -1396,6 +1478,35 @@ details.issue-section {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
+.technique-visual {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.technique-visual-pose {
+  width: 100%;
+}
+
+.issue-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  background: #152032;
+}
+
+.technique-fallback[hidden] {
+  display: none;
+}
+
+.technique-fallback:not([hidden]) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .issue-icon-svg {
   width: 100%;
   height: 100%;
@@ -1719,40 +1830,6 @@ details.issue-section {
   font-size: 0.96rem;
 }
 
-.week-grid {
-  display: grid;
-  gap: 0.65rem;
-}
-
-@media (min-width: 640px) {
-  .week-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.week-cell {
-  padding: 0.85rem 1rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.2);
-}
-
-.week-cell strong {
-  font-family: var(--font-sans);
-  display: block;
-  margin-bottom: 0.35rem;
-}
-
-.week-focus {
-  margin: 0 0 0.35rem;
-  font-weight: 600;
-}
-
-.week-extra {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
 .disclaimer {
   margin-top: 1.5rem;
   font-size: 0.88rem;
@@ -1990,7 +2067,7 @@ details.issue-section {
 .optional-tag {
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 .practice-preset-row {
@@ -2198,6 +2275,22 @@ select.hardness-active {
   display: block;
   margin: 0 auto;
   background: #152032;
+}
+
+.pose-img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px 12px 0 0;
+  object-fit: cover;
+  aspect-ratio: 260 / 122;
+  background: #152032;
+}
+
+.pose-figure .technique-visual-pose .technique-fallback .pose-svg {
+  border-radius: 12px 12px 0 0;
 }
 
 .record-section {
@@ -2582,11 +2675,19 @@ code {
     scroll-behavior: auto;
   }
 
-  .btn {
+  .btn,
+  .app-mode-card,
+  .input-mode-btn,
+  .diagnosis-option,
+  .simple-picker-card {
     transition: none;
   }
 
   .btn-primary:hover {
     transform: none;
+  }
+
+  .app-status {
+    transition: none;
   }
 }

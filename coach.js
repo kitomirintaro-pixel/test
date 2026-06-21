@@ -1962,7 +1962,12 @@ function generatePlan(formData) {
     dominantHandNote: handInfo?.note || "",
   };
 
-  return typeof simplifyPlan === "function" ? simplifyPlan(rawPlan) : rawPlan;
+  return typeof shouldSimplifyPlan() ? simplifyPlan(rawPlan) : rawPlan;
+}
+
+function shouldSimplifyPlan() {
+  const el = document.getElementById("simpleLanguageToggle");
+  return el ? el.checked : true;
 }
 
 let lastPlan = null;
@@ -2032,10 +2037,13 @@ function renderPlan(plan, container) {
   applyPlanActionTheme(btnCopy, "copy");
   btnCopy.addEventListener("click", async () => {
     const res = await copyTextToClipboard(planToPlainText(plan));
+    const text = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
+    if (typeof showAppStatus === "function") showAppStatus(text);
     const msg = document.getElementById("save-message");
     if (msg) {
-      msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
+      msg.textContent = text;
       msg.hidden = false;
+      msg.setAttribute("role", "status");
     }
   });
 
@@ -2049,8 +2057,17 @@ function renderPlan(plan, container) {
     const res = RecordStore.save(name, lastFormData, plan);
     const msg = document.getElementById("save-message");
     if (msg) {
-      msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
+      const label = res.ok ? res.record.playerName : "";
+      msg.textContent = res.ok
+        ? res.usedDefaultName
+          ? `「${label}」として記録を保存しました。`
+          : `${label} さんの記録を保存しました。`
+        : res.message;
       msg.hidden = false;
+      msg.setAttribute("role", "status");
+    }
+    if (res.ok && typeof showAppStatus === "function") {
+      showAppStatus(res.usedDefaultName ? `「${res.record.playerName}」として保存しました。` : "記録を保存しました。");
     }
     if (res.ok && typeof refreshRecordList === "function") {
       refreshRecordList();
@@ -2065,6 +2082,7 @@ function renderPlan(plan, container) {
   const saveMsg = document.createElement("p");
   saveMsg.id = "save-message";
   saveMsg.className = "save-message muted no-print";
+  saveMsg.setAttribute("role", "status");
   saveMsg.hidden = true;
   container.appendChild(saveMsg);
 
@@ -2094,6 +2112,9 @@ function renderPlan(plan, container) {
         grid.appendChild(fig);
       }
       container.appendChild(grid);
+      if (typeof initTechniqueImageFallback === "function") {
+        initTechniqueImageFallback(grid);
+      }
     }
   }
 
@@ -2343,6 +2364,19 @@ function planToPlainText(plan) {
     plan.improvements.forEach((item, i) => lines.push(`${i + 1}. ${item.text}`));
   }
 
+  if (plan.rubberAdvice?.length) {
+    lines.push("", "■ ラバーアドバイス");
+    for (const block of plan.rubberAdvice) {
+      lines.push(`・${block.title}`);
+      block.bullets.forEach((b) => lines.push(`  - ${b}`));
+    }
+  }
+
+  if (plan.serveRubberExtras?.length) {
+    lines.push("", "■ サーブ×ラバー");
+    plan.serveRubberExtras.forEach((t) => lines.push(`・${t}`));
+  }
+
   if (plan.drills?.length) {
     lines.push("", "■ 練習メニュー");
     for (const d of plan.drills) {
@@ -2558,12 +2592,28 @@ function refreshRecordList() {
 function generateAndShowPlan() {
   const out = document.getElementById("plan-output");
   const err = document.getElementById("plan-error");
+  const submitBtn = document.querySelector("#coach-form button[type='submit']");
   if (!out || !err) return false;
 
   err.textContent = "";
   err.hidden = true;
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.dataset.loadingLabel = submitBtn.dataset.loadingLabel || submitBtn.textContent;
+    submitBtn.textContent = "生成中…";
+  }
+
+  const finish = () => {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitBtn.dataset.loadingLabel || "プランを生成する";
+    }
+  };
+
   const data = collectForm();
   const plan = generatePlan(data);
+  finish();
+
   if (!plan.ok) {
     err.textContent = plan.message;
     err.hidden = false;

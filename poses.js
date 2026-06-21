@@ -58,9 +58,6 @@ const ISSUE_TO_POSE = {
   spin_reading: "block_game",
   pace_adapt: "footwork",
   mental: "footwork",
-  drive_knuckle: "drive",
-  topspin_rally: "drive_loop",
-  counter_attack: "drive_speed",
 };
 
 /** 卓球台・ネット・ラベル付きの共通シーン（矢印図解スタイル） */
@@ -76,6 +73,80 @@ const POSE_TO_ICON = {
   block_game: "defense",
   footwork: "footwork",
 };
+
+/**
+ * ChatGPT などで作成した画像を assets/techniques/ に置くと自動で表示されます。
+ * ファイル名: {kind}.webp（PNG も可 — TECHNIQUE_IMAGE_EXT を変更）
+ * kinds: drive, speed, loop, curve, shoot, backhand, smash, serve, attack, flick, defense, footwork, mental
+ * 推奨サイズ: 520×244px（横長）、暗め背景・矢印で球の軌道が分かる構成
+ */
+const TECHNIQUE_IMAGE_BASE = "assets/techniques/";
+const TECHNIQUE_IMAGE_EXT = ".webp";
+const TECHNIQUE_IMAGE_ALT_EXT = ".png";
+
+function escapeAttr(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+/** 差し替え用画像（13枚）。assets/techniques/{id}.webp または .png */
+const TECHNIQUE_IMAGE_CATALOG = [
+  { id: "drive", label: "ドライブ", motion: "ラケットでボールを前へまっすぐ押し出す。水平のオレンジ矢印" },
+  { id: "speed", label: "スピードドライブ", motion: "速い水平ドライブ。太い前向き矢印と速度線（並行の短い線）" },
+  { id: "loop", label: "ループドライブ", motion: "ボールが上に弧を描いて飛ぶ。紫色の曲線矢印" },
+  { id: "curve", label: "カーブドライブ", motion: "ボールが横に曲がる。横へ膨らむ曲線矢印" },
+  { id: "shoot", label: "シュートドライブ", motion: "低い打点でネット際をまっすぐ押す。低い水平矢印" },
+  { id: "backhand", label: "バックドライブ", motion: "左方向へ打つバックハンド。左向きの矢印" },
+  { id: "smash", label: "スマッシュ", motion: "高いボールを上から叩く。下向きの太い矢印" },
+  { id: "serve", label: "サーブ", motion: "ボールを投げ上げて打つ。上への点線＋打った後の飛び方向矢印" },
+  { id: "attack", label: "攻め・第3球", motion: "積極的に前へ攻める。速い前向き矢印" },
+  { id: "flick", label: "フリック", motion: "短い球を上に弾く。短い球から上方向へ弾く矢印" },
+  { id: "defense", label: "守備・ブロック", motion: "左から来た球をラケット面で止めて返す。左→右の矢印" },
+  { id: "footwork", label: "フットワーク", motion: "打った後中央へ戻る。足元の踏み出しと戻る矢印" },
+  { id: "mental", label: "メンタル", motion: "集中・落ち着き。中央に向かう矢印やターゲット" },
+];
+
+function getTechniqueImageSrc(kind, ext = TECHNIQUE_IMAGE_EXT) {
+  return `${TECHNIQUE_IMAGE_BASE}${kind}${ext}`;
+}
+
+function getTechniqueVisualHtml(kind, { variant = "icon", alt = "", svgFallback = "" }) {
+  const imgClass = variant === "pose" ? "pose-img" : "issue-icon-img";
+  const src = getTechniqueImageSrc(kind);
+  return `<span class="technique-visual technique-visual-${variant}">
+    <img class="${imgClass}" src="${src}" data-technique-kind="${kind}" alt="${escapeAttr(alt || kind)}" width="520" height="244" loading="lazy" decoding="async" />
+    <span class="technique-fallback" hidden aria-hidden="true">${svgFallback}</span>
+  </span>`;
+}
+
+function initTechniqueImageFallback(root = document) {
+  root.querySelectorAll(".technique-visual img").forEach((img) => {
+    if (img.dataset.fallbackBound) return;
+    img.dataset.fallbackBound = "1";
+    const showSvgFallback = () => {
+      img.hidden = true;
+      const fb = img.parentElement?.querySelector(".technique-fallback");
+      if (fb) {
+        fb.hidden = false;
+        fb.removeAttribute("aria-hidden");
+      }
+    };
+    const onError = () => {
+      const kind = img.dataset.techniqueKind;
+      if (kind && img.dataset.triedAltExt !== "1") {
+        img.dataset.triedAltExt = "1";
+        img.hidden = false;
+        img.src = getTechniqueImageSrc(kind, TECHNIQUE_IMAGE_ALT_EXT);
+        return;
+      }
+      showSvgFallback();
+    };
+    if (img.complete && img.naturalWidth === 0) onError();
+    else img.addEventListener("error", onError, { once: false });
+  });
+}
 
 function buildPoseSvg({ title, hint, content }) {
   const accessible = hint ? `${title} — ${hint}` : title;
@@ -102,6 +173,18 @@ function svgPose(kind) {
   });
 }
 
+function getPoseVisualHtml(poseId) {
+  const kind = POSE_TO_ICON[poseId] || "drive";
+  const label = POSE_LABELS[poseId] || poseId;
+  const hint = POSE_HINTS[poseId] || "";
+  const alt = hint ? `${label} — ${hint}` : label;
+  return getTechniqueVisualHtml(kind, {
+    variant: "pose",
+    alt,
+    svgFallback: svgPose(poseId),
+  });
+}
+
 function getPosesForIssues(issueIds) {
   const seen = new Set();
   const out = [];
@@ -113,7 +196,7 @@ function getPosesForIssues(issueIds) {
       id: poseId,
       label: POSE_LABELS[poseId] || poseId,
       hint: POSE_HINTS[poseId] || "",
-      svg: svgPose(poseId),
+      svg: getPoseVisualHtml(poseId),
     });
     if (out.length >= 4) break;
   }
@@ -299,7 +382,12 @@ const ISSUE_ICON_ART = Object.fromEntries(
 
 function getIssueIconSvg(issueId) {
   const kind = ISSUE_TO_ICON[issueId] || ISSUE_TO_ICON[ISSUE_TO_POSE[issueId]] || "drive";
-  return ISSUE_ICON_ART[kind] || ISSUE_ICON_ART.drive;
+  const svg = ISSUE_ICON_ART[kind] || ISSUE_ICON_ART.drive;
+  const label =
+    typeof ISSUE_CATALOG !== "undefined" && ISSUE_CATALOG[issueId]?.label
+      ? ISSUE_CATALOG[issueId].label
+      : kind;
+  return getTechniqueVisualHtml(kind, { variant: "icon", alt: label, svgFallback: svg });
 }
 
 function initDetailedIssueIcons() {
@@ -313,8 +401,13 @@ function initDetailedIssueIcons() {
     label.classList.add("check-with-icon");
     label.innerHTML = `<span class="issue-icon">${getIssueIconSvg(input.value)}</span><span class="issue-check-body"><input type="checkbox" name="issue" value="${input.value}"${checked} /><span>${text}</span></span>`;
   });
+  initTechniqueImageFallback(document.getElementById("form-detailed"));
 }
 
 if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", initDetailedIssueIcons);
+}
+
+if (typeof window !== "undefined") {
+  window.initTechniqueImageFallback = initTechniqueImageFallback;
 }

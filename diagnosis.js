@@ -6,8 +6,9 @@ const DIAGNOSIS_STEPS = [
   {
     id: "match",
     title: "試合・練習で困ること",
-    hint: "当てはまるものをすべて選んでください",
+    hint: "当てはまるものを1つ以上選んでください",
     multi: true,
+    requireSelection: true,
     options: [
       { id: "rally", label: "ラリーが続かない", issues: ["topspin_rally", "drive"] },
       { id: "attack", label: "攻め切れない・決めきれない", issues: ["drive", "smash", "third_ball"] },
@@ -23,6 +24,7 @@ const DIAGNOSIS_STEPS = [
     title: "伸ばしたい技術",
     hint: "気になるものを選んでください（任意）",
     multi: true,
+    requireSelection: false,
     options: [
       { id: "drive_types", label: "ドライブの種類（スピード・ループなど）", issues: ["drive_speed", "drive_loop"] },
       { id: "flick", label: "フリック・チキータ", issues: ["flick_short"] },
@@ -38,11 +40,13 @@ const DIAGNOSIS_STEPS = [
     title: "卓球歴",
     hint: "近いものを1つ選んでください",
     multi: false,
+    requireSelection: true,
     options: [
       { id: "under1", label: "1年未満", ttHistory: "under1", issues: [] },
       { id: "1to3", label: "1〜3年", ttHistory: "1to3", issues: [] },
       { id: "3to5", label: "3〜5年", ttHistory: "3to5", issues: [] },
-      { id: "over5", label: "5年以上", ttHistory: "5to10", issues: [] },
+      { id: "5to10", label: "5〜10年", ttHistory: "5to10", issues: [] },
+      { id: "over10", label: "10年以上", ttHistory: "over10", issues: [] },
     ],
   },
 ];
@@ -88,6 +92,13 @@ const Diagnosis = {
     return this.stepIndex >= DIAGNOSIS_STEPS.length;
   },
 
+  canProceedStep(step) {
+    const selected = this.selections[step.id] || [];
+    if (step.requireSelection) return selected.length > 0;
+    if (step.multi) return true;
+    return selected.length > 0;
+  },
+
   toggleOption(stepId, optionId) {
     const step = DIAGNOSIS_STEPS.find((s) => s.id === stepId);
     if (!step) return;
@@ -97,6 +108,7 @@ const Diagnosis = {
     if (step.multi) {
       if (optionId === "none") {
         this.selections[stepId] = idx >= 0 ? [] : ["none"];
+        this.render();
         return;
       }
       const noneIdx = selected.indexOf("none");
@@ -111,9 +123,7 @@ const Diagnosis = {
 
   nextStep() {
     const step = this.getCurrentStep();
-    if (step && !step.multi && (!this.selections[step.id] || this.selections[step.id].length === 0)) {
-      return;
-    }
+    if (!step || !this.canProceedStep(step)) return;
     this.stepIndex += 1;
     this.render();
   },
@@ -160,33 +170,40 @@ const Diagnosis = {
     };
   },
 
-  applyToMenu() {
+  buildMenuPatch() {
     const result = this.computeResults();
-    if (typeof switchAppMode === "function") switchAppMode("menu");
-
-    const patch = {
+    return {
       issues: result.issues,
       goalIds: result.goalIds.length ? result.goalIds : ["fun_rally"],
       ttHistory: result.ttHistory,
       practicePreset: "weekday-30-weekend-60",
       strengthIds: result.issues.includes("footwork") ? ["lateral"] : ["none"],
     };
+  },
+
+  applyToMenu({ generatePlan = false } = {}) {
+    const patch = this.buildMenuPatch();
+    if (typeof switchAppMode === "function") switchAppMode("menu");
 
     if (typeof SimpleInput !== "undefined") {
       SimpleInput.applyQuickRecommendation({ patch });
     } else {
       document.querySelectorAll('input[name="issue"]').forEach((el) => {
-        el.checked = result.issues.includes(el.value);
+        el.checked = patch.issues.includes(el.value);
       });
     }
 
     window.setTimeout(() => {
-      const generated =
-        typeof generateAndShowPlan === "function" ? generateAndShowPlan() : false;
-      const target = generated
-        ? document.getElementById("plan-output")
-        : document.getElementById("coach-form");
-      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (generatePlan && typeof generateAndShowPlan === "function") {
+        const ok = generateAndShowPlan();
+        const target = ok ? document.getElementById("plan-output") : document.getElementById("coach-form");
+        target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (typeof showAppStatus === "function") {
+          showAppStatus("課題をメニュー画面に反映しました。内容を確認してプランを生成できます。");
+        }
+      }
     }, 120);
   },
 
@@ -221,8 +238,10 @@ const Diagnosis = {
     for (const opt of step.options) {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "diagnosis-option" + (selected.includes(opt.id) ? " is-selected" : "");
+      const isSelected = selected.includes(opt.id);
+      btn.className = "diagnosis-option" + (isSelected ? " is-selected" : "");
       btn.textContent = opt.label;
+      btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
       btn.addEventListener("click", () => this.toggleOption(step.id, opt.id));
       options.appendChild(btn);
     }
@@ -243,8 +262,7 @@ const Diagnosis = {
     nextBtn.type = "button";
     nextBtn.className = "btn btn-primary btn-submit-main";
     nextBtn.textContent = this.stepIndex === DIAGNOSIS_STEPS.length - 1 ? "結果を見る" : "次へ";
-    const canNext = step.multi || selected.length > 0;
-    nextBtn.disabled = !canNext && !step.multi;
+    nextBtn.disabled = !this.canProceedStep(step);
     nextBtn.addEventListener("click", () => this.nextStep());
     actions.appendChild(nextBtn);
 
@@ -260,7 +278,7 @@ const Diagnosis = {
 
     const hint = document.createElement("p");
     hint.className = "diagnosis-step-hint";
-    hint.textContent = "この内容で練習メニューを作れます。必要ならメニュー画面で調整してください。";
+    hint.textContent = "メニュー画面で内容を確認してからプランを生成できます。";
 
     const list = document.createElement("ul");
     list.className = "diagnosis-result-list";
@@ -281,6 +299,10 @@ const Diagnosis = {
       list.appendChild(li);
     }
 
+    if (typeof initTechniqueImageFallback === "function") {
+      initTechniqueImageFallback(list);
+    }
+
     const actions = document.createElement("div");
     actions.className = "diagnosis-actions diagnosis-actions-result";
 
@@ -290,13 +312,19 @@ const Diagnosis = {
     retryBtn.textContent = "最初から";
     retryBtn.addEventListener("click", () => this.resetView());
 
+    const reviewBtn = document.createElement("button");
+    reviewBtn.type = "button";
+    reviewBtn.className = "btn btn-ghost";
+    reviewBtn.textContent = "メニューで確認する";
+    reviewBtn.addEventListener("click", () => this.applyToMenu({ generatePlan: false }));
+
     const menuBtn = document.createElement("button");
     menuBtn.type = "button";
     menuBtn.className = "btn btn-primary btn-submit-main";
-    menuBtn.textContent = "この課題で練習メニューを作る";
-    menuBtn.addEventListener("click", () => this.applyToMenu());
+    menuBtn.textContent = "すぐプランを作る";
+    menuBtn.addEventListener("click", () => this.applyToMenu({ generatePlan: true }));
 
-    actions.append(retryBtn, menuBtn);
+    actions.append(retryBtn, reviewBtn, menuBtn);
     this.root.append(title, hint, list, actions);
   },
 };

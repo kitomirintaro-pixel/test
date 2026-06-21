@@ -3,9 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <meta
       name="description"
       content="Spinsight の計測と組み合わせて、卓球の課題から改善案と練習メニューを作る補助ツール（非公式）"
@@ -17,20 +14,25 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260524y" />
+    <link rel="stylesheet" href="styles.css?v=20260525b" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
     <header class="site-header">
       <div class="container header-inner">
-        <a class="logo" href="#">SpinCoach</a>
+        <a class="logo" href="#main">SpinCoach</a>
         <p class="tagline">Spinsight 向け練習設計（非公式）</p>
       </div>
     </header>
+    <div id="app-status" class="app-status" role="status" aria-live="polite" hidden></div>
 
     <main id="main" class="coach-main">
       <section class="app-mode-hero" aria-label="SpinCoach について">
         <div class="container app-mode-hero-inner">
+          <button type="button" class="app-mode-hero-toggle no-print" aria-expanded="true">
+            説明をたたむ
+          </button>
+          <div class="app-mode-hero-body">
           <div class="site-intro">
             <h1 class="site-intro-title">
               卓球の課題から、<span class="gradient-text">練習メニュー</span>を提案
@@ -83,6 +85,7 @@
               <span class="app-mode-desc">自分の課題を見つける</span>
             </button>
           </div>
+          </div>
         </div>
       </section>
 
@@ -92,7 +95,7 @@
           <div class="name-field-card">
             <label class="field field-name">
               <span class="field-label field-label-prominent">お名前</span>
-              <span class="field-hint-inline">記録保存用（任意）</span>
+              <span class="field-hint-inline">記録保存時に使用（空なら自動で日付名）</span>
               <input
                 type="text"
                 id="playerName"
@@ -125,6 +128,10 @@
                 </select>
               </label>
             </div>
+            <label class="check check-inline plan-language-toggle">
+              <input type="checkbox" id="simpleLanguageToggle" checked />
+              <span>やさしい言い方でプランを表示</span>
+            </label>
           </div>
 
           <div class="input-mode-bar input-mode-bar-large" role="tablist" aria-label="入力方式">
@@ -179,6 +186,10 @@
                 <span class="simple-picker-label">筋トレ</span>
                 <span class="simple-picker-value" id="simple-summary-strength">タップして選ぶ</span>
               </button>
+            </div>
+            <div class="simple-optional-links no-print">
+              <button type="button" class="simple-optional-link" data-scroll-target="shared-rubber-section">ラバー設定（任意）</button>
+              <button type="button" class="simple-optional-link" data-scroll-target="shared-spinsight-section">Spinsight数値（任意）</button>
             </div>
           </div>
 
@@ -364,127 +375,6 @@
             </div>
           </fieldset>
 
-          <details class="form-accordion form-accordion-optional">
-            <summary class="form-accordion-summary">ラバー<span class="form-accordion-hint">任意・カタログ対応</span></summary>
-            <div class="form-accordion-body">
-            <p class="hint muted">
-              メーカー・ラバー名・種類を入力。カタログ <span id="rubber-catalog-count">—</span>件対応。硬さは任意。
-            </p>
-
-            <div class="rubber-side-block">
-              <h3 class="rubber-side-title">フォア面</h3>
-              <div class="row-2 rubber-fields-row">
-                <label class="field rubber-field">
-                  <span class="field-label">メーカー</span>
-                  <input type="text" class="input-prominent" id="rubberFhBrand" name="rubberFhBrand" maxlength="40" placeholder="例: ヤサカ" autocomplete="off" />
-                </label>
-                <label class="field rubber-field">
-                  <span class="field-label">ラバー名</span>
-                  <input type="text" class="input-prominent" id="rubberFhName" name="rubberFhName" maxlength="60" placeholder="例: マークⅤ" autocomplete="off" />
-                </label>
-              </div>
-              <div class="rubber-side-bottom">
-                <fieldset class="surface-picker surface-picker-full">
-                  <legend class="field-label surface-picker-legend">種類（タップして選ぶ）</legend>
-                  <div class="surface-options">
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberFhSurface" value="inverted" />
-                      <span class="surface-toggle-label">裏</span>
-                    </label>
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberFhSurface" value="table" />
-                      <span class="surface-toggle-label">表</span>
-                    </label>
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberFhSurface" value="pips" />
-                      <span class="surface-toggle-label">粒高</span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-              <label class="field field-optional rubber-field">
-                <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
-                <input type="text" class="input-prominent" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="例: 40度・柔らかめ" autocomplete="off" />
-              </label>
-            </div>
-
-            <div class="rubber-side-block">
-              <h3 class="rubber-side-title">バック面</h3>
-              <div class="row-2 rubber-fields-row">
-                <label class="field rubber-field">
-                  <span class="field-label">メーカー</span>
-                  <input type="text" class="input-prominent" id="rubberBhBrand" name="rubberBhBrand" maxlength="40" placeholder="例: ヤサカ" autocomplete="off" />
-                </label>
-                <label class="field rubber-field">
-                  <span class="field-label">ラバー名</span>
-                  <input type="text" class="input-prominent" id="rubberBhName" name="rubberBhName" maxlength="60" placeholder="例: マークⅤ" autocomplete="off" />
-                </label>
-              </div>
-              <div class="rubber-side-bottom">
-                <fieldset class="surface-picker surface-picker-full">
-                  <legend class="field-label surface-picker-legend">種類（タップして選ぶ）</legend>
-                  <div class="surface-options">
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberBhSurface" value="inverted" />
-                      <span class="surface-toggle-label">裏</span>
-                    </label>
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberBhSurface" value="table" />
-                      <span class="surface-toggle-label">表</span>
-                    </label>
-                    <label class="surface-toggle">
-                      <input type="radio" name="rubberBhSurface" value="pips" />
-                      <span class="surface-toggle-label">粒高</span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-              <label class="field field-optional rubber-field">
-                <span class="field-label">硬さ <span class="optional-tag">任意</span></span>
-                <input type="text" class="input-prominent" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" placeholder="例: 40度・柔らかめ" autocomplete="off" />
-              </label>
-            </div>
-            <details class="rubber-hardness-details">
-              <summary>硬さの書き方</summary>
-              <p class="hint muted">パッケージ表記のまま入力（°・硬め・MAX など）。</p>
-            </details>
-            <details class="rubber-category-details">
-              <summary>系統を手動指定（任意）</summary>
-              <p class="hint muted">自動判別と違うときだけ選んでください。</p>
-              <div class="row-2 rubber-fields-row">
-                <label class="field rubber-field">
-                  <span class="field-label">フォア面の系統</span>
-                  <select class="input-prominent select-prominent" id="rubberFhCategory" name="rubberFhCategory">
-                    <option value="auto">自動（商品名から推定）</option>
-                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
-                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
-                    <option value="tensor_euro">テンション（欧州系）</option>
-                    <option value="high_friction">高摩擦裏（バランス型）</option>
-                    <option value="short_pips">表（ショート）</option>
-                    <option value="medium_pips">粒高（ミディアム）</option>
-                    <option value="long_pips">粒高（ロング）</option>
-                    <option value="anti">アンチ系</option>
-                  </select>
-                </label>
-                <label class="field rubber-field">
-                  <span class="field-label">バック面の系統</span>
-                  <select class="input-prominent select-prominent" id="rubberBhCategory" name="rubberBhCategory">
-                    <option value="auto">自動（商品名から推定）</option>
-                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
-                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
-                    <option value="tensor_euro">テンション（欧州系）</option>
-                    <option value="high_friction">高摩擦裏（バランス型）</option>
-                    <option value="short_pips">表（ショート）</option>
-                    <option value="medium_pips">粒高（ミディアム）</option>
-                    <option value="long_pips">粒高（ロング）</option>
-                    <option value="anti">アンチ系</option>
-                  </select>
-                </label>
-              </div>
-            </details>
-            </div>
-          </details>
-
           <label class="field">
             <span class="field-label">目標</span>
             <textarea
@@ -501,90 +391,6 @@
             <button type="button" class="example-chip" data-goals-example="receive_better">レシーブ改善</button>
             <button type="button" class="example-chip" data-goals-example="fore_stable">フォア安定</button>
           </div>
-
-          <details class="form-accordion form-accordion-optional">
-            <summary class="form-accordion-summary">Spinsight の数値・体感<span class="form-accordion-hint">任意</span></summary>
-            <div class="form-accordion-body">
-          <fieldset class="fieldset fieldset-unstyled">
-            <legend class="sr-only">Spinsight の数値</legend>
-            <div class="row-2">
-              <label class="field">
-                <span class="field-label">回転</span>
-                <input
-                  type="number"
-                  id="spinRps"
-                  name="spinRps"
-                  min="0"
-                  step="0.1"
-                  inputmode="decimal"
-                  placeholder="例: 78.5"
-                />
-              </label>
-              <label class="field">
-                <span class="field-label">球速</span>
-                <input
-                  type="number"
-                  id="ballSpeed"
-                  name="ballSpeed"
-                  min="0"
-                  step="0.1"
-                  inputmode="decimal"
-                  placeholder="例: 65"
-                />
-              </label>
-            </div>
-            <label class="field">
-              <span class="field-label">主なショット</span>
-              <select id="strokeType" name="strokeType">
-                <option value="unknown">指定なし／複数混在</option>
-                <option value="serve">サーブ</option>
-                <option value="fh_topspin">フォア・上回転（ループ等）</option>
-                <option value="bh_topspin">バック・上回転</option>
-                <option value="fh_drive">フォアドライブ</option>
-                <option value="bh_drive">バックドライブ</option>
-                <option value="flick">フリック・チキータ</option>
-                <option value="block">ブロック</option>
-                <option value="cut">カット</option>
-                <option value="receive">レシーブ全般</option>
-                <option value="other">その他</option>
-              </select>
-            </label>
-          </fieldset>
-
-          <fieldset class="fieldset fieldset-unstyled">
-            <legend class="sr-only">体感・メモ</legend>
-            <div class="row-2">
-              <label class="field">
-                <span class="field-label">回転の体感</span>
-                <select id="rpsRange" name="rpsRange">
-                  <option value="unknown">わからない / 未計測</option>
-                  <option value="low">低め（自分の平均より下がり気味）</option>
-                  <option value="mid">中くらい</option>
-                  <option value="high">高め（自分の平均より上がり気味）</option>
-                </select>
-              </label>
-              <label class="field">
-                <span class="field-label">再現性</span>
-                <select id="stability" name="stability">
-                  <option value="unknown">わからない</option>
-                  <option value="shaky">まだブレが大きい</option>
-                  <option value="ok">そこそこ安定</option>
-                  <option value="solid">かなり安定</option>
-                </select>
-              </label>
-            </div>
-            <label class="field">
-              <span class="field-label">メモ</span>
-              <textarea
-                id="spinsightNotes"
-                name="spinsightNotes"
-                rows="3"
-                placeholder="例: OpenPlay で計測。照明が暗いとブレる。フォアだけ数値を残している。"
-              ></textarea>
-            </label>
-          </fieldset>
-            </div>
-          </details>
 
           <details class="form-accordion form-accordion-optional">
             <summary class="form-accordion-summary">練習時間（曜日ごと）<span class="form-accordion-hint">詳細入力用</span></summary>
@@ -634,11 +440,111 @@
           </details>
           </div>
 
+          <div class="shared-form-optional">
+          <details id="shared-rubber-section" class="form-accordion form-accordion-optional">
+            <summary class="form-accordion-summary">ラバー<span class="form-accordion-hint">任意・簡単/詳細どちらでも</span></summary>
+            <div class="form-accordion-body">
+            <p class="hint muted">メーカー・ラバー名・種類を入力。カタログ <span id="rubber-catalog-count">—</span>件対応。</p>
+            <div class="rubber-side-block">
+              <h3 class="rubber-side-title">フォア面</h3>
+              <div class="row-2 rubber-fields-row">
+                <label class="field rubber-field"><span class="field-label">メーカー</span><input type="text" class="input-prominent" id="rubberFhBrand" name="rubberFhBrand" maxlength="40" placeholder="例: ヤサカ" autocomplete="off" /></label>
+                <label class="field rubber-field"><span class="field-label">ラバー名</span><input type="text" class="input-prominent" id="rubberFhName" name="rubberFhName" maxlength="60" placeholder="例: マークⅤ" autocomplete="off" /></label>
+              </div>
+              <div class="rubber-side-bottom">
+                <fieldset class="surface-picker surface-picker-full">
+                  <legend class="field-label surface-picker-legend">種類</legend>
+                  <div class="surface-options">
+                    <label class="surface-toggle"><input type="radio" name="rubberFhSurface" value="inverted" /><span class="surface-toggle-label">裏</span></label>
+                    <label class="surface-toggle"><input type="radio" name="rubberFhSurface" value="table" /><span class="surface-toggle-label">表</span></label>
+                    <label class="surface-toggle"><input type="radio" name="rubberFhSurface" value="pips" /><span class="surface-toggle-label">粒高</span></label>
+                  </div>
+                </fieldset>
+              </div>
+              <label class="field field-optional rubber-field"><span class="field-label">硬さ <span class="optional-tag">任意</span></span><input type="text" class="input-prominent" id="rubberFhHardness" name="rubberFhHardness" maxlength="30" placeholder="例: 40度" autocomplete="off" /></label>
+            </div>
+            <div class="rubber-side-block">
+              <h3 class="rubber-side-title">バック面</h3>
+              <div class="row-2 rubber-fields-row">
+                <label class="field rubber-field"><span class="field-label">メーカー</span><input type="text" class="input-prominent" id="rubberBhBrand" name="rubberBhBrand" maxlength="40" autocomplete="off" /></label>
+                <label class="field rubber-field"><span class="field-label">ラバー名</span><input type="text" class="input-prominent" id="rubberBhName" name="rubberBhName" maxlength="60" autocomplete="off" /></label>
+              </div>
+              <div class="rubber-side-bottom">
+                <fieldset class="surface-picker surface-picker-full">
+                  <legend class="field-label surface-picker-legend">種類</legend>
+                  <div class="surface-options">
+                    <label class="surface-toggle"><input type="radio" name="rubberBhSurface" value="inverted" /><span class="surface-toggle-label">裏</span></label>
+                    <label class="surface-toggle"><input type="radio" name="rubberBhSurface" value="table" /><span class="surface-toggle-label">表</span></label>
+                    <label class="surface-toggle"><input type="radio" name="rubberBhSurface" value="pips" /><span class="surface-toggle-label">粒高</span></label>
+                  </div>
+                </fieldset>
+              </div>
+              <label class="field field-optional rubber-field"><span class="field-label">硬さ <span class="optional-tag">任意</span></span><input type="text" class="input-prominent" id="rubberBhHardness" name="rubberBhHardness" maxlength="30" autocomplete="off" /></label>
+            </div>
+            <details class="rubber-category-details">
+              <summary>系統を手動指定（任意）</summary>
+              <div class="row-2 rubber-fields-row">
+                <label class="field rubber-field">
+                  <span class="field-label">フォア面の系統</span>
+                  <select class="input-prominent select-prominent" id="rubberFhCategory" name="rubberFhCategory">
+                    <option value="auto">自動（商品名から推定）</option>
+                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
+                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
+                    <option value="tensor_euro">テンション（欧州系）</option>
+                    <option value="high_friction">高摩擦裏（バランス型）</option>
+                    <option value="short_pips">表（ショート）</option>
+                    <option value="medium_pips">粒高（ミディアム）</option>
+                    <option value="long_pips">粒高（ロング）</option>
+                    <option value="anti">アンチ系</option>
+                  </select>
+                </label>
+                <label class="field rubber-field">
+                  <span class="field-label">バック面の系統</span>
+                  <select class="input-prominent select-prominent" id="rubberBhCategory" name="rubberBhCategory">
+                    <option value="auto">自動（商品名から推定）</option>
+                    <option value="tacky_hybrid">粘着（トップシート＋スプリング）</option>
+                    <option value="tacky_chinese">粘着（中国系・強粘着）</option>
+                    <option value="tensor_euro">テンション（欧州系）</option>
+                    <option value="high_friction">高摩擦裏（バランス型）</option>
+                    <option value="short_pips">表（ショート）</option>
+                    <option value="medium_pips">粒高（ミディアム）</option>
+                    <option value="long_pips">粒高（ロング）</option>
+                    <option value="anti">アンチ系</option>
+                  </select>
+                </label>
+              </div>
+            </details>
+            </div>
+          </details>
+          <details id="shared-spinsight-section" class="form-accordion form-accordion-optional">
+            <summary class="form-accordion-summary">Spinsight の数値・体感<span class="form-accordion-hint">任意</span></summary>
+            <div class="form-accordion-body">
+            <div class="row-2">
+              <label class="field"><span class="field-label">回転</span><input type="number" id="spinRps" name="spinRps" min="0" step="0.1" inputmode="decimal" placeholder="例: 78.5" /></label>
+              <label class="field"><span class="field-label">球速</span><input type="number" id="ballSpeed" name="ballSpeed" min="0" step="0.1" inputmode="decimal" placeholder="例: 65" /></label>
+            </div>
+            <label class="field"><span class="field-label">主なショット</span>
+              <select id="strokeType" name="strokeType">
+                <option value="unknown">指定なし</option><option value="serve">サーブ</option><option value="fh_drive">フォアドライブ</option><option value="bh_drive">バックドライブ</option><option value="flick">フリック</option><option value="block">ブロック</option><option value="receive">レシーブ</option>
+              </select>
+            </label>
+            <div class="row-2">
+              <label class="field"><span class="field-label">回転の体感</span><select id="rpsRange" name="rpsRange"><option value="unknown">未計測</option><option value="low">低め</option><option value="mid">中くらい</option><option value="high">高め</option></select></label>
+              <label class="field"><span class="field-label">再現性</span><select id="stability" name="stability"><option value="unknown">わからない</option><option value="shaky">ブレ大</option><option value="ok">そこそこ</option><option value="solid">安定</option></select></label>
+            </div>
+            <label class="field"><span class="field-label">メモ</span><textarea id="spinsightNotes" name="spinsightNotes" rows="3" placeholder="計測メモ"></textarea></label>
+            </div>
+          </details>
+          </div>
+
           <details class="form-accordion form-accordion-optional record-section no-print">
             <summary class="form-accordion-summary" id="record-section-title">保存した記録</summary>
             <div class="form-accordion-body">
             <p class="hint muted">この端末にのみ保存。</p>
             <div class="record-toolbar">
+              <button type="button" id="btn-export-data" class="btn btn-ghost btn-small">データをエクスポート</button>
+              <button type="button" id="btn-import-data" class="btn btn-ghost btn-small">インポート</button>
+              <input type="file" id="import-data-file" accept="application/json,.json" hidden />
               <button type="button" id="btn-clear-all-records" class="btn btn-ghost btn-danger-outline" hidden>
                 すべて削除
               </button>
@@ -728,9 +634,10 @@
             </label>
             <div class="form-actions form-actions-main diary-form-actions">
               <button type="submit" class="btn btn-primary btn-submit-main" id="btn-diary-save">日記を保存</button>
+              <button type="button" class="btn btn-ghost" id="btn-diary-create-menu">この課題でメニューを作る</button>
               <button type="button" class="btn btn-ghost" id="btn-diary-cancel" hidden>編集をやめる</button>
             </div>
-            <p id="diary-message" class="save-message muted" hidden></p>
+            <p id="diary-message" class="save-message muted" role="status" hidden></p>
           </form>
 
           <details class="form-accordion form-accordion-optional diary-list-section">
@@ -781,16 +688,17 @@
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
-    <script src="simple-text.js?v=20260524y"></script>
-    <script src="storage.js?v=20260524y"></script>
-    <script src="poses.js?v=20260524y"></script>
-    <script src="print-plan.js?v=20260524y"></script>
-    <script src="rubber-catalog.js?v=20260524y"></script>
-    <script src="copy-text.js?v=20260524y"></script>
-    <script src="simple-input.js?v=20260524y"></script>
-    <script src="coach.js?v=20260524y"></script>
-    <script src="diagnosis.js?v=20260524y"></script>
-    <script src="diary.js?v=20260524y"></script>
+    <script defer src="simple-text.js?v=20260525b"></script>
+    <script defer src="storage.js?v=20260525b"></script>
+    <script defer src="poses.js?v=20260525b"></script>
+    <script defer src="print-plan.js?v=20260525b"></script>
+    <script defer src="rubber-catalog.js?v=20260525b"></script>
+    <script defer src="copy-text.js?v=20260525b"></script>
+    <script defer src="simple-input.js?v=20260525b"></script>
+    <script defer src="coach.js?v=20260525b"></script>
+    <script defer src="diagnosis.js?v=20260525b"></script>
+    <script defer src="diary.js?v=20260525b"></script>
+    <script defer src="ui-shared.js?v=20260525b"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");

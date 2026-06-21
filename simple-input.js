@@ -9,12 +9,16 @@ const SIMPLE_ISSUE_GROUPS = [
       { id: "drive", label: "ドライブ" },
       { id: "drive_speed", label: "スピードドライブ" },
       { id: "drive_loop", label: "ループドライブ" },
+      { id: "drive_knuckle", label: "ナックルドライブ" },
+      { id: "drive_curve", label: "カーブドライブ" },
+      { id: "drive_shoot", label: "シュートドライブ" },
       { id: "backhand_drive", label: "バックドライブ" },
       { id: "topspin_rally", label: "上回転ラリー" },
       { id: "counter_attack", label: "カウンター" },
       { id: "flick_short", label: "フリック・チキータ" },
       { id: "smash", label: "スマッシュ" },
       { id: "push_attack", label: "攻めプッシュ" },
+      { id: "lobbing", label: "ロビング" },
       { id: "third_ball", label: "第3球" },
     ],
   },
@@ -26,6 +30,10 @@ const SIMPLE_ISSUE_GROUPS = [
       { id: "serve_under", label: "下回転系" },
       { id: "serve_long", label: "ロングサーブ" },
       { id: "serve_side_top", label: "横回転・上寄り" },
+      { id: "serve_side_under", label: "横回転・下寄り" },
+      { id: "serve_makikomi", label: "巻き込み系" },
+      { id: "serve_yg", label: "YG系" },
+      { id: "serve_squat", label: "しゃがみ込み系" },
       { id: "serve_forehand", label: "フォアサーブ" },
       { id: "serve_backhand", label: "バックサーブ" },
     ],
@@ -431,6 +439,7 @@ const SimpleInput = {
       const selected = multi ? draft.includes(val) : draft === val;
       btn.className = `simple-chip${selected ? " is-selected" : ""}`;
       btn.textContent = item[labelKey];
+      btn.setAttribute("aria-pressed", selected ? "true" : "false");
       btn.addEventListener("click", () => {
         if (multi) {
           if (this._activePicker === "strength" && val === "none") {
@@ -569,7 +578,7 @@ const SimpleInput = {
       .filter(Boolean)
       .join("\n");
     const goalsEl = document.getElementById("goals");
-    if (goalsEl && goalsText) goalsEl.value = goalsText;
+    if (goalsEl) goalsEl.value = goalsText;
 
     const schedule = this.getActiveSchedule();
     if (schedule && typeof restoreWeekScheduleToDom === "function") {
@@ -581,7 +590,7 @@ const SimpleInput = {
     this.state.issues = [...document.querySelectorAll('input[name="issue"]:checked')].map((el) => el.value);
 
     const goalsVal = document.getElementById("goals")?.value || "";
-    this.state.goalIds = SIMPLE_GOAL_OPTIONS.filter((g) => goalsVal.includes(g.text.slice(0, 8))).map((g) => g.id);
+    this.state.goalIds = SIMPLE_GOAL_OPTIONS.filter((g) => goalsVal.includes(g.text)).map((g) => g.id);
     if (!this.state.goalIds.length && goalsVal.trim()) {
       this.state.goalIds = ["match_win"];
     }
@@ -603,20 +612,25 @@ const SimpleInput = {
       typeof readPlayerProfileFromDom === "function"
         ? readPlayerProfileFromDom()
         : { matchFormat: "singles", dominantHand: "unknown" };
+    const spinEl = (id) => document.getElementById(id);
+    const parseNum = (id) => {
+      const v = parseFloat(spinEl(id)?.value);
+      return Number.isFinite(v) ? v : null;
+    };
 
     return {
       issues: [...this.state.issues],
       goals,
-      rpsRange: "unknown",
-      stability: "unknown",
-      freeform: "",
+      rpsRange: spinEl("rpsRange")?.value || "unknown",
+      stability: spinEl("stability")?.value || "unknown",
+      freeform: spinEl("spinsightNotes")?.value || "",
       playerName: document.getElementById("playerName")?.value || "",
       rubberFh: typeof readRubberSideFromDom === "function" ? readRubberSideFromDom("rubberFh") : {},
       rubberBh: typeof readRubberSideFromDom === "function" ? readRubberSideFromDom("rubberBh") : {},
       weekSchedule: schedule,
-      strokeType: "unknown",
-      spinRps: null,
-      ballSpeed: null,
+      strokeType: spinEl("strokeType")?.value || "unknown",
+      spinRps: parseNum("spinRps"),
+      ballSpeed: parseNum("ballSpeed"),
       ttHistory: this.state.ttHistory,
       strengthIds: this.state.strengthIds.filter((id) => id !== "none"),
       inputMode: "simple",

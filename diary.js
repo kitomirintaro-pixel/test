@@ -43,6 +43,11 @@ function switchAppMode(mode) {
   tabDiary.setAttribute("aria-selected", String(active === "diary"));
   if (tabDiagnosis) tabDiagnosis.setAttribute("aria-selected", String(active === "diagnosis"));
 
+  document.querySelectorAll(".app-mode-grid [role='tab']").forEach((tab) => {
+    const selected = tab.classList.contains("is-active");
+    tab.tabIndex = selected ? 0 : -1;
+  });
+
   try {
     sessionStorage.setItem("spincoach_app_mode", active);
   } catch {
@@ -197,7 +202,16 @@ function refreshDiaryList() {
       showDiaryMessage("日記を削除しました。");
     });
 
-    actions.append(copyBtn, pdfBtn, editBtn, delBtn);
+    const menuBtn = document.createElement("button");
+    menuBtn.type = "button";
+    menuBtn.className = "btn btn-ghost btn-small";
+    menuBtn.textContent = "メニューへ";
+    menuBtn.addEventListener("click", () => {
+      loadDiaryToForm(e);
+      createMenuFromDiary();
+    });
+
+    actions.append(copyBtn, pdfBtn, menuBtn, editBtn, delBtn);
     li.append(main, actions);
     ul.appendChild(li);
   }
@@ -209,6 +223,37 @@ function showDiaryMessage(text) {
   if (!msg) return;
   msg.textContent = text;
   msg.hidden = !text;
+  msg.setAttribute("role", "status");
+  if (text && typeof showAppStatus === "function") showAppStatus(text);
+}
+
+function inferIssuesFromDiaryText(text) {
+  if (!text.trim()) return [];
+  const inferred = typeof inferIssuesFromText === "function" ? inferIssuesFromText(text) : [];
+  return inferred.length ? inferred : ["drive"];
+}
+
+function createMenuFromDiary() {
+  const issuesText = document.getElementById("diaryIssues")?.value || "";
+  const issueIds = inferIssuesFromDiaryText(issuesText);
+  switchAppMode("menu");
+  if (typeof SimpleInput !== "undefined") {
+    SimpleInput.applyQuickRecommendation({
+      patch: {
+        issues: issueIds.slice(0, 6),
+        goalIds: ["fun_rally"],
+        ttHistory: SimpleInput.state.ttHistory || "1to3",
+        practicePreset: SimpleInput.state.practicePreset || "weekday-30-weekend-60",
+        strengthIds: ["none"],
+      },
+    });
+  }
+  window.setTimeout(() => {
+    document.getElementById("coach-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof showAppStatus === "function") {
+      showAppStatus("日記の課題をメニュー画面に反映しました。");
+    }
+  }, 120);
 }
 
 function initDiary() {
@@ -249,6 +294,10 @@ function initDiary() {
     resetDiaryForm();
     refreshDiaryList();
     showDiaryMessage("すべての日記を削除しました。");
+  });
+
+  document.getElementById("btn-diary-create-menu")?.addEventListener("click", () => {
+    createMenuFromDiary();
   });
 
   form?.addEventListener("submit", (e) => {

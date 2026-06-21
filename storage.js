@@ -21,9 +21,13 @@ const RecordStore = {
     return this._read().sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1));
   },
 
+  defaultName() {
+    const d = new Date();
+    return `記録 ${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+  },
+
   save(playerName, formData, plan) {
-    const name = String(playerName || "").trim();
-    if (!name) return { ok: false, message: "名前を入力してください。" };
+    const name = String(playerName || "").trim() || this.defaultName();
     if (!plan?.ok) return { ok: false, message: "先にプランを生成してください。" };
 
     const record = {
@@ -36,7 +40,7 @@ const RecordStore = {
     const list = this._read();
     list.unshift(record);
     this._write(list);
-    return { ok: true, record };
+    return { ok: true, record, usedDefaultName: !String(playerName || "").trim() };
   },
 
   get(id) {
@@ -112,5 +116,37 @@ const DiaryStore = {
 
   clearAll() {
     this._write([]);
+  },
+};
+
+const DataStore = {
+  exportAll() {
+    return JSON.stringify(
+      {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        records: RecordStore._read(),
+        diaries: DiaryStore._read(),
+      },
+      null,
+      2
+    );
+  },
+
+  importAll(jsonStr) {
+    let data;
+    try {
+      data = JSON.parse(jsonStr);
+    } catch {
+      return { ok: false, message: "JSON形式ではありません。" };
+    }
+    if (!data || typeof data !== "object") {
+      return { ok: false, message: "データ形式が不正です。" };
+    }
+    const records = Array.isArray(data.records) ? data.records : [];
+    const diaries = Array.isArray(data.diaries) ? data.diaries : [];
+    RecordStore._write(records);
+    DiaryStore._write(diaries);
+    return { ok: true, records: records.length, diaries: diaries.length };
   },
 };
