@@ -24,28 +24,39 @@ const DIARY_EXAMPLES = {
 function switchAppMode(mode) {
   const menuView = document.getElementById("view-menu");
   const diaryView = document.getElementById("view-diary");
+  const diagnosisView = document.getElementById("view-diagnosis");
   const tabMenu = document.getElementById("tab-menu");
   const tabDiary = document.getElementById("tab-diary");
+  const tabDiagnosis = document.getElementById("tab-diagnosis");
   if (!menuView || !diaryView || !tabMenu || !tabDiary) return;
 
-  const isMenu = mode === "menu";
-  menuView.hidden = !isMenu;
-  diaryView.hidden = isMenu;
-  tabMenu.classList.toggle("is-active", isMenu);
-  tabDiary.classList.toggle("is-active", !isMenu);
-  tabMenu.setAttribute("aria-selected", String(isMenu));
-  tabDiary.setAttribute("aria-selected", String(!isMenu));
+  const active = mode === "diary" || mode === "diagnosis" ? mode : "menu";
+  menuView.hidden = active !== "menu";
+  diaryView.hidden = active !== "diary";
+  if (diagnosisView) diagnosisView.hidden = active !== "diagnosis";
+
+  tabMenu.classList.toggle("is-active", active === "menu");
+  tabDiary.classList.toggle("is-active", active === "diary");
+  if (tabDiagnosis) tabDiagnosis.classList.toggle("is-active", active === "diagnosis");
+
+  tabMenu.setAttribute("aria-selected", String(active === "menu"));
+  tabDiary.setAttribute("aria-selected", String(active === "diary"));
+  if (tabDiagnosis) tabDiagnosis.setAttribute("aria-selected", String(active === "diagnosis"));
 
   try {
-    sessionStorage.setItem("spincoach_app_mode", mode);
+    sessionStorage.setItem("spincoach_app_mode", active);
   } catch {
     /* ignore */
   }
 
-  if (!isMenu) {
+  if (active === "diary") {
     const dateEl = document.getElementById("diaryDate");
     if (dateEl && !dateEl.value) dateEl.value = todayDateString();
     refreshDiaryList();
+  }
+
+  if (active === "diagnosis" && typeof Diagnosis !== "undefined") {
+    Diagnosis.render();
   }
 }
 
@@ -61,7 +72,8 @@ function initAppMode() {
   } catch {
     /* ignore */
   }
-  switchAppMode(saved === "diary" ? "diary" : "menu");
+  const valid = ["menu", "diary", "diagnosis"];
+  switchAppMode(valid.includes(saved) ? saved : "menu");
 }
 
 function resetDiaryForm() {

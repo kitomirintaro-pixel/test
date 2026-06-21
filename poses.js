@@ -49,6 +49,18 @@ const ISSUE_TO_POSE = {
   serve_backhand: "serve",
   serve_long: "serve",
   footwork: "footwork",
+  flick_short: "drive_speed",
+  push_attack: "drive",
+  lobbing: "drive_loop",
+  third_ball: "serve",
+  cut_defense: "block_game",
+  underspin_receive: "block_game",
+  spin_reading: "block_game",
+  pace_adapt: "footwork",
+  mental: "footwork",
+  drive_knuckle: "drive",
+  topspin_rally: "drive_loop",
+  counter_attack: "drive_speed",
 };
 
 /** 卓球台・ネット・ラベル付きの共通シーン */
@@ -231,4 +243,30 @@ function getPosesForIssues(issueIds) {
     if (out.length >= 4) break;
   }
   return out;
+}
+
+function getIssueIconSvg(issueId) {
+  const poseId = ISSUE_TO_POSE[issueId] || "drive";
+  let svg = svgPose(poseId);
+  svg = svg.replace('class="pose-svg"', 'class="issue-icon-svg"');
+  svg = svg.replace('viewBox="0 0 260 170"', 'viewBox="0 0 260 138"');
+  svg = svg.replace(/<rect x="0" y="148" width="260" height="22"[\s\S]*?<\/svg>/, "</svg>");
+  return svg;
+}
+
+function initDetailedIssueIcons() {
+  document.querySelectorAll("#form-detailed input[name='issue']").forEach((input) => {
+    const label = input.closest("label.check");
+    if (!label || label.classList.contains("check-with-icon")) return;
+
+    const textEl = input.nextElementSibling;
+    const text = textEl?.textContent || "";
+    const checked = input.checked ? " checked" : "";
+    label.classList.add("check-with-icon");
+    label.innerHTML = `<span class="issue-icon">${getIssueIconSvg(input.value)}</span><span class="issue-check-body"><input type="checkbox" name="issue" value="${input.value}"${checked} /><span>${text}</span></span>`;
+  });
+}
+
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", initDetailedIssueIcons);
 }

@@ -147,9 +147,20 @@ body {
 }
 
 .app-mode-grid-large {
-  gap: clamp(1.25rem, 4vw, 2rem);
+  gap: clamp(1rem, 3vw, 1.5rem);
   max-width: none;
   margin-inline: auto;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 900px) {
+  .app-mode-grid-large {
+    grid-template-columns: 1fr;
+  }
+
+  .app-mode-grid-large .app-mode-card {
+    min-height: clamp(9rem, 28vw, 12rem);
+  }
 }
 
 .app-mode-card {
@@ -767,6 +778,127 @@ body {
   gap: 0.5rem;
 }
 
+.diagnosis-layout {
+  padding-bottom: 2rem;
+}
+
+.diagnosis-hero {
+  margin-bottom: 1.25rem;
+}
+
+.diagnosis-hero h1 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.diagnosis-app {
+  padding: 1.15rem 1.2rem;
+  border-radius: 16px;
+  border: 2px solid rgba(167, 139, 250, 0.28);
+  background: rgba(167, 139, 250, 0.06);
+}
+
+.diagnosis-progress {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+}
+
+.diagnosis-step-title {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+}
+
+.diagnosis-step-hint {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.diagnosis-options {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.diagnosis-option {
+  font: inherit;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.diagnosis-option:hover {
+  border-color: rgba(167, 139, 250, 0.45);
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.diagnosis-option.is-selected {
+  border-color: rgba(167, 139, 250, 0.65);
+  background: rgba(167, 139, 250, 0.18);
+  font-weight: 700;
+}
+
+.diagnosis-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.diagnosis-actions-result {
+  margin-top: 0.5rem;
+}
+
+.diagnosis-actions .btn-submit-main {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.diagnosis-result-list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.diagnosis-result-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.diagnosis-result-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 38px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.diagnosis-result-icon .issue-icon-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.diagnosis-result-label {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 @media (max-width: 719px) {
   .site-header .tagline {
     display: none;
@@ -1236,6 +1368,48 @@ details.issue-section {
 .check input {
   margin-top: 0.35rem;
   accent-color: var(--accent);
+}
+
+.check.check-with-icon {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.65rem 0.75rem;
+}
+
+.check.check-with-icon input {
+  margin-top: 0.2rem;
+}
+
+.issue-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 42px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.issue-icon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.issue-check-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.issue-check-body > span:last-child {
+  flex: 1;
+  min-width: 0;
 }
 
 .field {
@@ -2145,7 +2319,8 @@ select.hardness-active {
   body.is-printing .no-print,
   body.is-printing .plan-toolbar,
   body.is-printing .app-mode-hero,
-  body.is-printing #view-diary {
+  body.is-printing #view-diary,
+  body.is-printing #view-diagnosis {
     display: none !important;
   }
 

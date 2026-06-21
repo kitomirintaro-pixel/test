@@ -17,7 +17,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260524r" />
+    <link rel="stylesheet" href="styles.css?v=20260524s" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -40,6 +40,7 @@
             </p>
             <ul class="site-intro-list">
               <li>課題からメニュー生成・PDF対応</li>
+              <li>課題診断でおすすめを提案</li>
               <li>日記で振り返り</li>
             </ul>
           </div>
@@ -68,6 +69,18 @@
             >
               <span class="app-mode-title">練習日記</span>
               <span class="app-mode-desc">日々の練習を記録・振り返り</span>
+            </button>
+            <button
+              type="button"
+              id="tab-diagnosis"
+              class="app-mode-card"
+              role="tab"
+              aria-selected="false"
+              aria-controls="view-diagnosis"
+              data-app-mode="diagnosis"
+            >
+              <span class="app-mode-title">課題診断</span>
+              <span class="app-mode-desc">自分の課題を見つける</span>
             </button>
           </div>
         </div>
@@ -735,6 +748,16 @@
           </details>
         </div>
       </div>
+
+      <div id="view-diagnosis" class="app-view" role="tabpanel" aria-labelledby="tab-diagnosis" hidden>
+        <div class="container diagnosis-layout">
+          <div class="diagnosis-hero">
+            <h1>課題診断</h1>
+            <p class="lead">いくつかの質問から、いま伸ばすとよい課題を提案します。</p>
+          </div>
+          <div id="diagnosis-app" class="diagnosis-app"></div>
+        </div>
+      </div>
     </main>
 
     <dialog id="simple-picker-sheet" class="simple-picker-sheet">
@@ -758,15 +781,16 @@
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
-    <script src="simple-text.js?v=20260524r"></script>
-    <script src="storage.js?v=20260524r"></script>
-    <script src="poses.js?v=20260524r"></script>
-    <script src="print-plan.js?v=20260524r"></script>
-    <script src="rubber-catalog.js?v=20260524r"></script>
-    <script src="copy-text.js?v=20260524r"></script>
-    <script src="simple-input.js?v=20260524r"></script>
-    <script src="coach.js?v=20260524r"></script>
-    <script src="diary.js?v=20260524r"></script>
+    <script src="simple-text.js?v=20260524s"></script>
+    <script src="storage.js?v=20260524s"></script>
+    <script src="poses.js?v=20260524s"></script>
+    <script src="print-plan.js?v=20260524s"></script>
+    <script src="rubber-catalog.js?v=20260524s"></script>
+    <script src="copy-text.js?v=20260524s"></script>
+    <script src="simple-input.js?v=20260524s"></script>
+    <script src="coach.js?v=20260524s"></script>
+    <script src="diagnosis.js?v=20260524s"></script>
+    <script src="diary.js?v=20260524s"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");
