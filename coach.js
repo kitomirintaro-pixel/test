@@ -1989,10 +1989,36 @@ function renderPlan(plan, container) {
   const toolbar = document.createElement("div");
   toolbar.className = "plan-toolbar";
 
+  function applyPlanActionTheme(btn, theme) {
+    const themes = {
+      pdf: {
+        background: "linear-gradient(135deg, #fb923c, #c2410c)",
+        borderColor: "#9a3412",
+        color: "#1a0500",
+      },
+      copy: {
+        background: "linear-gradient(135deg, #fde047, #ca8a04)",
+        borderColor: "#a16207",
+        color: "#422006",
+      },
+      save: {
+        background: "linear-gradient(135deg, #4ade80, #15803d)",
+        borderColor: "#166534",
+        color: "#052e16",
+      },
+    };
+    const t = themes[theme];
+    btn.style.setProperty("background", t.background);
+    btn.style.setProperty("border-color", t.borderColor);
+    btn.style.setProperty("color", t.color, "important");
+    btn.style.setProperty("-webkit-text-fill-color", t.color, "important");
+  }
+
   const btnPrint = document.createElement("button");
   btnPrint.type = "button";
   btnPrint.className = "plan-action-btn plan-action-btn-pdf";
   btnPrint.textContent = "PDFで保存";
+  applyPlanActionTheme(btnPrint, "pdf");
   btnPrint.addEventListener("click", () => {
     if (typeof printPlan === "function") {
       printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
@@ -2003,6 +2029,7 @@ function renderPlan(plan, container) {
   btnCopy.type = "button";
   btnCopy.className = "plan-action-btn plan-action-btn-copy";
   btnCopy.textContent = "メニューをコピー";
+  applyPlanActionTheme(btnCopy, "copy");
   btnCopy.addEventListener("click", async () => {
     const res = await copyTextToClipboard(planToPlainText(plan));
     const msg = document.getElementById("save-message");
@@ -2016,6 +2043,7 @@ function renderPlan(plan, container) {
   btnSave.type = "button";
   btnSave.className = "plan-action-btn plan-action-btn-save";
   btnSave.textContent = "記録を保存";
+  applyPlanActionTheme(btnSave, "save");
   btnSave.addEventListener("click", () => {
     const name = document.getElementById("playerName")?.value;
     const res = RecordStore.save(name, lastFormData, plan);

@@ -1931,7 +1931,6 @@ select.hardness-active {
   min-height: 4rem;
   margin: 0;
   padding: 0.95rem 1.35rem;
-  font: inherit;
   font-family: var(--font-sans);
   font-size: 1.08rem;
   font-weight: 700;
@@ -2255,8 +2254,8 @@ select.hardness-active {
 .plan-action-btn-pdf {
   background: linear-gradient(135deg, #fb923c, #c2410c);
   border-color: #9a3412;
-  color: #431407;
-  -webkit-text-fill-color: #431407;
+  color: #1a0500 !important;
+  -webkit-text-fill-color: #1a0500 !important;
   box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35);
 }
 
@@ -2264,33 +2263,33 @@ select.hardness-active {
   transform: translateY(-1px);
   border-color: #ea580c;
   background: linear-gradient(135deg, #fdba74, #ea580c);
-  color: #431407;
-  -webkit-text-fill-color: #431407;
+  color: #1a0500 !important;
+  -webkit-text-fill-color: #1a0500 !important;
   box-shadow: 0 12px 32px rgba(234, 88, 12, 0.45);
 }
 
 .plan-action-btn-copy {
-  background: linear-gradient(135deg, #60a5fa, #1d4ed8);
-  border-color: #1e40af;
-  color: #172554;
-  -webkit-text-fill-color: #172554;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+  background: linear-gradient(135deg, #fde047, #ca8a04);
+  border-color: #a16207;
+  color: #422006 !important;
+  -webkit-text-fill-color: #422006 !important;
+  box-shadow: 0 8px 24px rgba(202, 138, 4, 0.35);
 }
 
 .plan-action-btn-copy:hover {
   transform: translateY(-1px);
-  border-color: #2563eb;
-  background: linear-gradient(135deg, #93c5fd, #2563eb);
-  color: #172554;
-  -webkit-text-fill-color: #172554;
-  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.45);
+  border-color: #ca8a04;
+  background: linear-gradient(135deg, #fef08a, #eab308);
+  color: #422006 !important;
+  -webkit-text-fill-color: #422006 !important;
+  box-shadow: 0 12px 32px rgba(202, 138, 4, 0.45);
 }
 
 .plan-action-btn-save {
   background: linear-gradient(135deg, #4ade80, #15803d);
   border-color: #166534;
-  color: #052e16;
-  -webkit-text-fill-color: #052e16;
+  color: #052e16 !important;
+  -webkit-text-fill-color: #052e16 !important;
   box-shadow: 0 8px 24px rgba(22, 163, 74, 0.35);
 }
 
@@ -2298,8 +2297,8 @@ select.hardness-active {
   transform: translateY(-1px);
   border-color: #16a34a;
   background: linear-gradient(135deg, #86efac, #16a34a);
-  color: #052e16;
-  -webkit-text-fill-color: #052e16;
+  color: #052e16 !important;
+  -webkit-text-fill-color: #052e16 !important;
   box-shadow: 0 12px 32px rgba(22, 163, 74, 0.45);
 }
 
