@@ -1989,64 +1989,46 @@ function renderPlan(plan, container) {
   const toolbar = document.createElement("div");
   toolbar.className = "plan-toolbar";
 
-  function makePlanActionButton(title, desc, className, onClick) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = className;
-    const titleEl = document.createElement("span");
-    titleEl.className = "plan-action-title";
-    titleEl.textContent = title;
-    const descEl = document.createElement("span");
-    descEl.className = "plan-action-desc";
-    descEl.textContent = desc;
-    btn.append(titleEl, descEl);
-    btn.addEventListener("click", onClick);
-    return btn;
-  }
-
-  const btnPrint = makePlanActionButton(
-    "PDFで保存",
-    "印刷画面からPDFに保存",
-    "btn btn-action-large btn-action-pdf",
-    () => {
-      if (typeof printPlan === "function") {
-        printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
-      }
+  const btnPrint = document.createElement("button");
+  btnPrint.type = "button";
+  btnPrint.className = "plan-action-btn plan-action-btn-pdf";
+  btnPrint.textContent = "PDFで保存";
+  btnPrint.addEventListener("click", () => {
+    if (typeof printPlan === "function") {
+      printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
     }
-  );
+  });
 
-  const btnCopy = makePlanActionButton(
-    "メニューをコピー",
-    "テキストで他アプリへ貼り付け",
-    "btn btn-action-large btn-action-copy",
-    async () => {
-      const res = await copyTextToClipboard(planToPlainText(plan));
-      const msg = document.getElementById("save-message");
-      if (msg) {
-        msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
-        msg.hidden = false;
-      }
+  const btnCopy = document.createElement("button");
+  btnCopy.type = "button";
+  btnCopy.className = "plan-action-btn plan-action-btn-copy";
+  btnCopy.textContent = "メニューをコピー";
+  btnCopy.addEventListener("click", async () => {
+    const res = await copyTextToClipboard(planToPlainText(plan));
+    const msg = document.getElementById("save-message");
+    if (msg) {
+      msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
+      msg.hidden = false;
     }
-  );
+  });
 
-  const btnSave = makePlanActionButton(
-    "記録を保存",
-    "この端末に履歴として残す",
-    "btn btn-action-large btn-action-save",
-    () => {
-      const name = document.getElementById("playerName")?.value;
-      const res = RecordStore.save(name, lastFormData, plan);
-      const msg = document.getElementById("save-message");
-      if (msg) {
-        msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
-        msg.hidden = false;
-      }
-      if (res.ok && typeof refreshRecordList === "function") {
-        refreshRecordList();
-        document.getElementById("record-section-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+  const btnSave = document.createElement("button");
+  btnSave.type = "button";
+  btnSave.className = "plan-action-btn plan-action-btn-save";
+  btnSave.textContent = "記録を保存";
+  btnSave.addEventListener("click", () => {
+    const name = document.getElementById("playerName")?.value;
+    const res = RecordStore.save(name, lastFormData, plan);
+    const msg = document.getElementById("save-message");
+    if (msg) {
+      msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
+      msg.hidden = false;
     }
-  );
+    if (res.ok && typeof refreshRecordList === "function") {
+      refreshRecordList();
+      document.getElementById("record-section-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  });
 
   toolbar.append(btnPrint, btnCopy, btnSave);
   actionsCard.append(actionsHeading, actionsHint, toolbar);
