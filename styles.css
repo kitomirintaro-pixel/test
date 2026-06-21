@@ -2168,18 +2168,27 @@ select.hardness-active {
 
 .pose-figure figcaption {
   margin: 0;
-  padding: 0.5rem 0.65rem 0.65rem;
+  padding: 0.65rem 0.75rem 0.75rem;
   font-size: 0.82rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.45;
   border-top: 1px solid var(--border);
+  text-align: left;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .pose-figure figcaption strong {
   display: block;
   color: var(--accent);
-  font-size: 0.9rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+
+.pose-figure-hint {
+  display: block;
+  color: var(--text);
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .pose-svg {
@@ -2188,6 +2197,7 @@ select.hardness-active {
   height: auto;
   display: block;
   margin: 0 auto;
+  background: #152032;
 }
 
 .record-section {

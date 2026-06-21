@@ -2085,7 +2085,10 @@ function renderPlan(plan, container) {
         strong.textContent = p.label;
         cap.appendChild(strong);
         if (p.hint) {
-          cap.append(document.createTextNode(p.hint));
+          const hintEl = document.createElement("span");
+          hintEl.className = "pose-figure-hint";
+          hintEl.textContent = p.hint;
+          cap.appendChild(hintEl);
         }
         fig.appendChild(cap);
         grid.appendChild(fig);

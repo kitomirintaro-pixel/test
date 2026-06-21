@@ -78,19 +78,17 @@ const POSE_TO_ICON = {
 };
 
 function buildPoseSvg({ title, hint, content }) {
-  return `<svg class="pose-svg" viewBox="0 0 260 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pose-title">
-    <title id="pose-title">${title}</title>
-    <rect width="260" height="170" rx="12" fill="#152032"/>
-    <rect x="15" y="118" width="230" height="28" rx="4" fill="#166534" opacity="0.9"/>
-    <rect x="15" y="118" width="230" height="6" rx="2" fill="#2d7a5f"/>
-    <line x1="130" y1="118" x2="130" y2="146" stroke="#86efac" stroke-width="1.5" opacity="0.65"/>
-    <text x="130" y="114" text-anchor="middle" fill="#9aa3b5" font-size="9" font-family="sans-serif">ネット</text>
-    <g transform="translate(66, 38) scale(2.15)">
+  const accessible = hint ? `${title} — ${hint}` : title;
+  return `<svg class="pose-svg" viewBox="0 0 260 122" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${accessible.replace(/"/g, "&quot;")}">
+    <rect width="260" height="122" rx="12" fill="#152032"/>
+    <rect x="12" y="6" width="236" height="80" rx="8" fill="#0f172a"/>
+    <g transform="translate(79, 14) scale(1.6)">
       ${content}
     </g>
-    <text x="130" y="108" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="sans-serif">${hint}</text>
-    <rect x="0" y="148" width="260" height="22" fill="#121722" opacity="0.95"/>
-    <text x="130" y="163" text-anchor="middle" fill="#6ee7ff" font-size="11" font-weight="bold" font-family="sans-serif">${title}</text>
+    <rect x="15" y="92" width="230" height="24" rx="4" fill="#166534" opacity="0.9"/>
+    <rect x="15" y="92" width="230" height="5" rx="2" fill="#2d7a5f"/>
+    <line x1="130" y1="92" x2="130" y2="116" stroke="#86efac" stroke-width="1.5" opacity="0.65"/>
+    <text x="130" y="88" text-anchor="middle" fill="#64748b" font-size="8" font-family="sans-serif">ネット</text>
   </svg>`;
 }
 
