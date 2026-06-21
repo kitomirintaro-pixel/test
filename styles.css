@@ -882,11 +882,11 @@ body {
 
 .diagnosis-result-icon {
   flex-shrink: 0;
-  width: 52px;
-  height: 38px;
-  border-radius: 8px;
+  width: 68px;
+  height: 50px;
+  border-radius: 10px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
 .diagnosis-result-icon .issue-icon-svg {
@@ -1373,8 +1373,8 @@ details.issue-section {
 
 .check.check-with-icon {
   display: grid;
-  grid-template-columns: 58px 1fr;
-  gap: 0.65rem;
+  grid-template-columns: 68px 1fr;
+  gap: 0.75rem;
   align-items: center;
   padding: 0.65rem 0.75rem;
 }
@@ -1387,12 +1387,13 @@ details.issue-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 42px;
-  border-radius: 8px;
+  width: 68px;
+  height: 50px;
+  border-radius: 10px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
 .issue-icon-svg {

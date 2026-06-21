@@ -245,13 +245,134 @@ function getPosesForIssues(issueIds) {
   return out;
 }
 
+const ISSUE_TO_ICON = {
+  drive: "drive",
+  drive_speed: "speed",
+  drive_loop: "loop",
+  drive_knuckle: "drive",
+  drive_curve: "curve",
+  drive_shoot: "shoot",
+  backhand_drive: "backhand",
+  topspin_rally: "loop",
+  counter_attack: "speed",
+  flick_short: "flick",
+  smash: "smash",
+  push_attack: "drive",
+  lobbing: "loop",
+  third_ball: "attack",
+  serve: "serve",
+  serve_top: "serve",
+  serve_under: "serve",
+  serve_long: "serve",
+  serve_side_top: "serve",
+  serve_side_under: "serve",
+  serve_makikomi: "serve",
+  serve_yg: "serve",
+  serve_squat: "serve",
+  serve_forehand: "serve",
+  serve_backhand: "serve",
+  cut_defense: "defense",
+  block_game: "defense",
+  underspin_receive: "defense",
+  spin_reading: "defense",
+  footwork: "footwork",
+  pace_adapt: "footwork",
+  mental: "mental",
+};
+
+function issueIconShell(content) {
+  return `<svg class="issue-icon-svg" viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect width="64" height="48" rx="9" fill="#152032"/>
+    <rect x="5" y="35" width="54" height="7" rx="2" fill="#166534" opacity="0.85"/>
+    <line x1="32" y1="35" x2="32" y2="42" stroke="#86efac" stroke-width="1.2" opacity="0.55"/>
+    ${content}
+  </svg>`;
+}
+
+const ISSUE_ICON_ART = {
+  drive: issueIconShell(`
+    <path d="M16 34 L16 22 C16 18 19 15 23 15 C26 15 28 17 29 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M29 19 L38 24 L46 22" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="47" cy="21" rx="3.8" ry="4.8" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+    <circle cx="50" cy="24" r="3.2" fill="#fb923c"/>
+  `),
+  speed: issueIconShell(`
+    <path d="M17 33 L17 22 C17 18 20 16 23 16 C26 16 28 18 29 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M30 21 L42 21" fill="none" stroke="#6ee7ff" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="48" cy="21" r="3.2" fill="#fb923c"/>
+    <path d="M34 17 L44 17 M36 25 L46 25" stroke="#ff8c42" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+  `),
+  loop: issueIconShell(`
+    <path d="M18 33 L18 22 C18 18 21 16 24 16 C27 16 29 18 30 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M31 24 C34 16 40 14 46 18 C49 20 49 24 46 26" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="47" cy="26" r="3.2" fill="#fb923c"/>
+    <path d="M33 28 L31 32" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round"/>
+  `),
+  curve: issueIconShell(`
+    <path d="M17 33 L17 22 C17 18 20 16 23 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M28 22 C36 18 44 20 50 28" fill="none" stroke="#6ee7ff" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="51" cy="29" r="3.2" fill="#fb923c"/>
+    <ellipse cx="30" cy="24" rx="3.5" ry="4.5" fill="#ef4444" opacity="0.9"/>
+  `),
+  shoot: issueIconShell(`
+    <path d="M19 33 L19 24 C19 21 22 19 25 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M27 26 L48 30" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="50" cy="30" r="3" fill="#fb923c"/>
+    <line x1="8" y1="33" x2="58" y2="33" stroke="#334155" stroke-width="1" stroke-dasharray="2 2"/>
+  `),
+  backhand: issueIconShell(`
+    <path d="M47 33 L47 22 C47 18 44 16 41 16 C38 16 36 18 35 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M34 21 L24 24 L18 22" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="16" cy="21" rx="3.8" ry="4.8" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+    <circle cx="13" cy="24" r="3.2" fill="#fb923c"/>
+  `),
+  smash: issueIconShell(`
+    <path d="M28 34 L28 18 C28 14 31 12 34 12 C37 12 39 14 40 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M36 16 L40 8 L44 14" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="42" cy="10" r="3.2" fill="#fb923c"/>
+    <path d="M41 12 L41 18" stroke="#ff8c42" stroke-width="2" stroke-linecap="round"/>
+  `),
+  serve: issueIconShell(`
+    <path d="M30 34 L30 20 C30 17 32 15 35 15 C38 15 40 17 41 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="43" cy="11" r="3" fill="#fb923c" opacity="0.95"/>
+    <path d="M41 18 L46 28" fill="none" stroke="#6ee7ff" stroke-width="2.4" stroke-linecap="round"/>
+    <ellipse cx="47" cy="29" rx="3.5" ry="4.5" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+  `),
+  attack: issueIconShell(`
+    <path d="M18 33 L18 22 C18 18 21 16 24 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M27 21 L38 24 L48 20" fill="none" stroke="#6ee7ff" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="50" cy="19" r="3.2" fill="#fb923c"/>
+    <path d="M12 14 L18 12 L16 18 Z" fill="#ff8c42" opacity="0.8"/>
+  `),
+  flick: issueIconShell(`
+    <path d="M22 33 L22 24 C22 21 24 19 27 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M28 24 L36 22 L42 18" fill="none" stroke="#6ee7ff" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="44" cy="17" r="2.8" fill="#fb923c"/>
+    <path d="M30 30 C34 28 38 28 42 30" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  `),
+  defense: issueIconShell(`
+    <path d="M34 33 L34 21 C34 18 37 16 40 16 C43 16 45 18 46 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <rect x="24" y="22" width="8" height="10" rx="2" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+    <circle cx="18" cy="24" r="3" fill="#fb923c"/>
+    <path d="M12 24 L22 24" stroke="#ff8c42" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  `),
+  footwork: issueIconShell(`
+    <path d="M30 33 L30 20 C30 17 33 15 36 15" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
+    <ellipse cx="36" cy="24" rx="3.5" ry="4.5" fill="#ef4444" opacity="0.9"/>
+    <path d="M22 32 C26 28 30 28 34 32" fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18 36 L24 34 M40 34 L46 36" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  `),
+  mental: issueIconShell(`
+    <circle cx="32" cy="20" r="9" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+    <path d="M28 20 C28 17 30 15 32 15 C34 15 36 17 36 20 C36 22 34 24 32 24 C30 24 28 22 28 20 Z" fill="#6ee7ff" opacity="0.35"/>
+    <path d="M20 12 L24 16 M44 12 L40 16 M32 8 L32 12" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M22 30 L42 30" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  `),
+};
+
 function getIssueIconSvg(issueId) {
-  const poseId = ISSUE_TO_POSE[issueId] || "drive";
-  let svg = svgPose(poseId);
-  svg = svg.replace('class="pose-svg"', 'class="issue-icon-svg"');
-  svg = svg.replace('viewBox="0 0 260 170"', 'viewBox="0 0 260 138"');
-  svg = svg.replace(/<rect x="0" y="148" width="260" height="22"[\s\S]*?<\/svg>/, "</svg>");
-  return svg;
+  const kind = ISSUE_TO_ICON[issueId] || ISSUE_TO_ICON[ISSUE_TO_POSE[issueId]] || "drive";
+  return ISSUE_ICON_ART[kind] || ISSUE_ICON_ART.drive;
 }
 
 function initDetailedIssueIcons() {
