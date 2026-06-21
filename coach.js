@@ -1974,52 +1974,83 @@ function renderPlan(plan, container) {
   lastPlan = plan;
   lastFormData = collectForm();
 
+  const actionsCard = document.createElement("section");
+  actionsCard.className = "plan-actions-card no-print";
+  actionsCard.setAttribute("aria-label", "プランの保存・共有");
+
+  const actionsHeading = document.createElement("p");
+  actionsHeading.className = "plan-actions-heading";
+  actionsHeading.textContent = "保存・共有";
+
+  const actionsHint = document.createElement("p");
+  actionsHint.className = "plan-actions-hint";
+  actionsHint.textContent = "PDF出力・コピー・端末への記録";
+
   const toolbar = document.createElement("div");
-  toolbar.className = "plan-toolbar no-print";
+  toolbar.className = "plan-toolbar";
 
-  const btnPrint = document.createElement("button");
-  btnPrint.type = "button";
-  btnPrint.className = "btn btn-primary btn-action-large";
-  btnPrint.textContent = "PDFで保存";
-  btnPrint.addEventListener("click", () => {
-    if (typeof printPlan === "function") {
-      printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
-    }
-  });
+  function makePlanActionButton(title, desc, className, onClick) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = className;
+    const titleEl = document.createElement("span");
+    titleEl.className = "plan-action-title";
+    titleEl.textContent = title;
+    const descEl = document.createElement("span");
+    descEl.className = "plan-action-desc";
+    descEl.textContent = desc;
+    btn.append(titleEl, descEl);
+    btn.addEventListener("click", onClick);
+    return btn;
+  }
 
-  const btnCopy = document.createElement("button");
-  btnCopy.type = "button";
-  btnCopy.className = "btn btn-ghost btn-action-large btn-action-secondary";
-  btnCopy.textContent = "メニューをコピー";
-  btnCopy.addEventListener("click", async () => {
-    const res = await copyTextToClipboard(planToPlainText(plan));
-    const msg = document.getElementById("save-message");
-    if (msg) {
-      msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
-      msg.hidden = false;
+  const btnPrint = makePlanActionButton(
+    "PDFで保存",
+    "印刷画面からPDFに保存",
+    "btn btn-action-large btn-action-pdf",
+    () => {
+      if (typeof printPlan === "function") {
+        printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
+      }
     }
-  });
+  );
 
-  const btnSave = document.createElement("button");
-  btnSave.type = "button";
-  btnSave.className = "btn btn-ghost btn-action-large btn-action-secondary";
-  btnSave.textContent = "記録を保存";
-  btnSave.addEventListener("click", () => {
-    const name = document.getElementById("playerName")?.value;
-    const res = RecordStore.save(name, lastFormData, plan);
-    const msg = document.getElementById("save-message");
-    if (msg) {
-      msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
-      msg.hidden = false;
+  const btnCopy = makePlanActionButton(
+    "メニューをコピー",
+    "テキストで他アプリへ貼り付け",
+    "btn btn-action-large btn-action-copy",
+    async () => {
+      const res = await copyTextToClipboard(planToPlainText(plan));
+      const msg = document.getElementById("save-message");
+      if (msg) {
+        msg.textContent = res.ok ? "練習メニューをコピーしました。" : res.message || "コピーに失敗しました。";
+        msg.hidden = false;
+      }
     }
-    if (res.ok && typeof refreshRecordList === "function") {
-      refreshRecordList();
-      document.getElementById("record-section-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  );
+
+  const btnSave = makePlanActionButton(
+    "記録を保存",
+    "この端末に履歴として残す",
+    "btn btn-action-large btn-action-save",
+    () => {
+      const name = document.getElementById("playerName")?.value;
+      const res = RecordStore.save(name, lastFormData, plan);
+      const msg = document.getElementById("save-message");
+      if (msg) {
+        msg.textContent = res.ok ? `${name} さんの記録を保存しました。` : res.message;
+        msg.hidden = false;
+      }
+      if (res.ok && typeof refreshRecordList === "function") {
+        refreshRecordList();
+        document.getElementById("record-section-title")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
     }
-  });
+  );
 
   toolbar.append(btnPrint, btnCopy, btnSave);
-  container.appendChild(toolbar);
+  actionsCard.append(actionsHeading, actionsHint, toolbar);
+  container.appendChild(actionsCard);
 
   const saveMsg = document.createElement("p");
   saveMsg.id = "save-message";
@@ -2477,7 +2508,7 @@ function refreshRecordList() {
 
     const openBtn = document.createElement("button");
     openBtn.type = "button";
-    openBtn.className = "btn btn-ghost btn-small";
+    openBtn.className = "btn btn-small record-action-btn record-action-view";
     openBtn.textContent = "表示";
     openBtn.addEventListener("click", () => {
       restoreFormFromRecord(r.formData);
@@ -2488,7 +2519,7 @@ function refreshRecordList() {
 
     const delBtn = document.createElement("button");
     delBtn.type = "button";
-    delBtn.className = "btn btn-ghost btn-small btn-danger-outline";
+    delBtn.className = "btn btn-small record-action-btn record-action-delete";
     delBtn.textContent = "削除";
     delBtn.addEventListener("click", () => {
       const ok = window.confirm(

@@ -1895,53 +1895,118 @@ select.hardness-active {
   pointer-events: auto;
 }
 
+.plan-actions-card {
+  margin-bottom: 2rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border-radius: 16px;
+  border: 2px solid rgba(110, 231, 255, 0.28);
+  background: rgba(110, 231, 255, 0.06);
+}
+
+.plan-actions-heading {
+  margin: 0 0 0.35rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.plan-actions-hint {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
 .plan-toolbar {
   display: grid;
-  gap: 0.65rem;
-  margin-bottom: 1.25rem;
+  gap: 1.35rem;
+  margin-bottom: 0;
 }
 
 .plan-toolbar .btn {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  line-height: 1.35;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.plan-action-title {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.plan-action-desc {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .btn-action-large {
-  min-height: 3.35rem;
-  padding: 0.9rem 1.25rem;
+  min-height: 4rem;
+  padding: 0.95rem 1.35rem;
   font-size: 1.08rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
-.btn-action-large.btn-primary {
-  background: linear-gradient(135deg, #a78bfa, var(--accent));
-  color: #041016;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 36px rgba(110, 231, 255, 0.28);
+.btn-action-pdf {
+  background: linear-gradient(135deg, #fdba74, #ea580c);
+  color: #1c0a00;
 }
 
-.btn-action-large.btn-primary:hover {
+.btn-action-pdf .plan-action-desc {
+  color: rgba(28, 10, 0, 0.72);
+}
+
+.btn-action-pdf:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 44px rgba(167, 139, 250, 0.4);
+  box-shadow: 0 12px 32px rgba(234, 88, 12, 0.38);
 }
 
-.btn.btn-ghost.btn-action-secondary {
-  border: 2px solid rgba(110, 231, 255, 0.35);
-  background: rgba(110, 231, 255, 0.12);
-  color: var(--text);
-  font-weight: 700;
+.btn-action-copy {
+  background: linear-gradient(135deg, #93c5fd, #2563eb);
+  color: #eff6ff;
 }
 
-.btn.btn-ghost.btn-action-secondary:hover {
-  border-color: rgba(110, 231, 255, 0.55);
-  background: rgba(110, 231, 255, 0.18);
+.btn-action-copy .plan-action-desc {
+  color: rgba(239, 246, 255, 0.88);
+}
+
+.btn-action-copy:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.38);
+}
+
+.btn-action-save {
+  background: linear-gradient(135deg, #86efac, #16a34a);
+  color: #052e16;
+}
+
+.btn-action-save .plan-action-desc {
+  color: rgba(5, 46, 22, 0.72);
+}
+
+.btn-action-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 32px rgba(22, 163, 74, 0.38);
 }
 
 .save-message {
-  margin: 0 0 1rem;
+  margin: -0.75rem 0 1.5rem;
+  padding: 0.65rem 0.85rem;
   font-size: 0.92rem;
+  border-radius: 10px;
+  background: rgba(110, 231, 255, 0.08);
+  border: 1px solid rgba(110, 231, 255, 0.2);
 }
 
 .pose-grid {
@@ -2011,10 +2076,10 @@ select.hardness-active {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 10px;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
 }
@@ -2037,7 +2102,41 @@ select.hardness-active {
 .record-item-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.record-action-btn {
+  min-width: 5rem;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: 2px solid transparent;
+}
+
+.record-action-view {
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(37, 99, 235, 0.22);
+  color: #dbeafe;
+}
+
+.record-action-view:hover {
+  border-color: rgba(147, 197, 253, 0.85);
+  background: rgba(37, 99, 235, 0.34);
+}
+
+.record-action-delete {
+  border-color: rgba(248, 113, 113, 0.65);
+  background: rgba(220, 38, 38, 0.2);
+  color: #fecaca;
+}
+
+.record-action-delete:hover {
+  border-color: rgba(252, 165, 165, 0.85);
+  background: rgba(220, 38, 38, 0.32);
 }
 
 .btn-small {
