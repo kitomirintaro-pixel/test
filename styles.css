@@ -788,6 +788,9 @@ body {
 
 .diary-form-actions {
   margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .diary-list-section {
