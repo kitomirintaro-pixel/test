@@ -280,93 +280,141 @@ const ISSUE_TO_ICON = {
   mental: "mental",
 };
 
+/** 矢印（軌道・動きの方向を示す） */
+function iconArrow(x1, y1, x2, y2, color = "#ffb347", width = 3, dashed = false) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len;
+  const uy = dy / len;
+  const px = -uy;
+  const py = ux;
+  const head = 6;
+  const bx = x2 - ux * head;
+  const by = y2 - uy * head;
+  const dash = dashed ? ' stroke-dasharray="4 2"' : "";
+  return `
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"${dash}/>
+    <polygon points="${x2},${y2} ${bx + px * 3.5},${by + py * 3.5} ${bx - px * 3.5},${by - py * 3.5}" fill="${color}"/>
+  `;
+}
+
+/** 曲線矢印（ループ・カーブ用） */
+function iconCurveArrow(d, color = "#c4b5fd", width = 3) {
+  const endMatch = d.match(/,\s*([\d.]+)\s+([\d.]+)\s*$/);
+  const ex = endMatch ? Number(endMatch[1]) : 50;
+  const ey = endMatch ? Number(endMatch[2]) : 20;
+  return `
+    <path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>
+    ${iconArrow(ex - 5, ey, ex, ey, color, width)}
+  `;
+}
+
+function iconBall(x, y, r = 4.5) {
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="#fb923c" stroke="#fff" stroke-width="1.2"/>`;
+}
+
+function iconPaddle(x, y, flip = false) {
+  const sx = flip ? -1 : 1;
+  return `
+    <g transform="translate(${x},${y}) scale(${sx},1)">
+      <rect x="-2" y="-7" width="10" height="14" rx="2" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+      <rect x="8" y="-2" width="7" height="4" rx="1" fill="#94a3b8"/>
+    </g>
+  `;
+}
+
 function issueIconShell(content) {
   return `<svg class="issue-icon-svg" viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect width="64" height="48" rx="9" fill="#152032"/>
-    <rect x="5" y="35" width="54" height="7" rx="2" fill="#166534" opacity="0.85"/>
-    <line x1="32" y1="35" x2="32" y2="42" stroke="#86efac" stroke-width="1.2" opacity="0.55"/>
+    <rect x="4" y="36" width="56" height="6" rx="2" fill="#166534" opacity="0.9"/>
+    <line x1="32" y1="36" x2="32" y2="42" stroke="#86efac" stroke-width="1.2" opacity="0.6"/>
     ${content}
   </svg>`;
 }
 
 const ISSUE_ICON_ART = {
   drive: issueIconShell(`
-    <path d="M16 34 L16 22 C16 18 19 15 23 15 C26 15 28 17 29 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M29 19 L38 24 L46 22" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <ellipse cx="47" cy="21" rx="3.8" ry="4.8" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
-    <circle cx="50" cy="24" r="3.2" fill="#fb923c"/>
+    ${iconPaddle(22, 24)}
+    ${iconBall(34, 24)}
+    ${iconArrow(40, 24, 58, 24, "#ffb347", 3.5)}
+    ${iconArrow(18, 28, 24, 24, "#6ee7ff", 2.5)}
   `),
   speed: issueIconShell(`
-    <path d="M17 33 L17 22 C17 18 20 16 23 16 C26 16 28 18 29 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M30 21 L42 21" fill="none" stroke="#6ee7ff" stroke-width="2.8" stroke-linecap="round"/>
-    <circle cx="48" cy="21" r="3.2" fill="#fb923c"/>
-    <path d="M34 17 L44 17 M36 25 L46 25" stroke="#ff8c42" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+    ${iconPaddle(18, 24)}
+    ${iconBall(30, 24)}
+    ${iconArrow(36, 24, 58, 24, "#ffb347", 4)}
+    ${iconArrow(38, 19, 54, 19, "#ff8c42", 2, true)}
+    ${iconArrow(38, 29, 54, 29, "#ff8c42", 2, true)}
   `),
   loop: issueIconShell(`
-    <path d="M18 33 L18 22 C18 18 21 16 24 16 C27 16 29 18 30 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M31 24 C34 16 40 14 46 18 C49 20 49 24 46 26" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
-    <circle cx="47" cy="26" r="3.2" fill="#fb923c"/>
-    <path d="M33 28 L31 32" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round"/>
+    ${iconPaddle(20, 30)}
+    ${iconBall(28, 30)}
+    ${iconCurveArrow("M32 30 Q40 10 54 22", "#c4b5fd", 3.5)}
+    ${iconArrow(16, 32, 22, 28, "#6ee7ff", 2.5)}
   `),
   curve: issueIconShell(`
-    <path d="M17 33 L17 22 C17 18 20 16 23 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M28 22 C36 18 44 20 50 28" fill="none" stroke="#6ee7ff" stroke-width="2.4" stroke-linecap="round"/>
-    <circle cx="51" cy="29" r="3.2" fill="#fb923c"/>
-    <ellipse cx="30" cy="24" rx="3.5" ry="4.5" fill="#ef4444" opacity="0.9"/>
+    ${iconPaddle(18, 26)}
+    ${iconBall(28, 26)}
+    ${iconCurveArrow("M32 26 Q44 14 56 28", "#6ee7ff", 3.5)}
+    ${iconArrow(10, 30, 18, 26, "#94a3b8", 2, true)}
   `),
   shoot: issueIconShell(`
-    <path d="M19 33 L19 24 C19 21 22 19 25 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M27 26 L48 30" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round"/>
-    <circle cx="50" cy="30" r="3" fill="#fb923c"/>
-    <line x1="8" y1="33" x2="58" y2="33" stroke="#334155" stroke-width="1" stroke-dasharray="2 2"/>
+    ${iconPaddle(16, 32)}
+    ${iconBall(28, 33)}
+    ${iconArrow(34, 33, 58, 33, "#ffb347", 3.5)}
+    <line x1="6" y1="33" x2="58" y2="33" stroke="#475569" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
   `),
   backhand: issueIconShell(`
-    <path d="M47 33 L47 22 C47 18 44 16 41 16 C38 16 36 18 35 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M34 21 L24 24 L18 22" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <ellipse cx="16" cy="21" rx="3.8" ry="4.8" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
-    <circle cx="13" cy="24" r="3.2" fill="#fb923c"/>
+    ${iconPaddle(42, 24, true)}
+    ${iconBall(30, 24)}
+    ${iconArrow(26, 24, 6, 24, "#ffb347", 3.5)}
+    ${iconArrow(46, 28, 40, 24, "#6ee7ff", 2.5)}
   `),
   smash: issueIconShell(`
-    <path d="M28 34 L28 18 C28 14 31 12 34 12 C37 12 39 14 40 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M36 16 L40 8 L44 14" fill="none" stroke="#6ee7ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="42" cy="10" r="3.2" fill="#fb923c"/>
-    <path d="M41 12 L41 18" stroke="#ff8c42" stroke-width="2" stroke-linecap="round"/>
+    ${iconBall(46, 10, 4)}
+    ${iconPaddle(40, 16)}
+    ${iconArrow(48, 14, 50, 32, "#ffb347", 4)}
+    ${iconArrow(42, 8, 46, 12, "#6ee7ff", 2.5)}
   `),
   serve: issueIconShell(`
-    <path d="M30 34 L30 20 C30 17 32 15 35 15 C38 15 40 17 41 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <circle cx="43" cy="11" r="3" fill="#fb923c" opacity="0.95"/>
-    <path d="M41 18 L46 28" fill="none" stroke="#6ee7ff" stroke-width="2.4" stroke-linecap="round"/>
-    <ellipse cx="47" cy="29" rx="3.5" ry="4.5" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
+    ${iconBall(40, 8, 3.5)}
+    ${iconArrow(40, 12, 40, 20, "#94a3b8", 2, true)}
+    ${iconPaddle(34, 24)}
+    ${iconArrow(38, 22, 52, 30, "#ffb347", 3.5)}
   `),
   attack: issueIconShell(`
-    <path d="M18 33 L18 22 C18 18 21 16 24 16" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M27 21 L38 24 L48 20" fill="none" stroke="#6ee7ff" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="50" cy="19" r="3.2" fill="#fb923c"/>
-    <path d="M12 14 L18 12 L16 18 Z" fill="#ff8c42" opacity="0.8"/>
+    ${iconPaddle(16, 24)}
+    ${iconBall(28, 22)}
+    ${iconArrow(34, 22, 58, 18, "#ffb347", 4)}
+    ${iconArrow(8, 12, 16, 18, "#ef4444", 2.5)}
   `),
   flick: issueIconShell(`
-    <path d="M22 33 L22 24 C22 21 24 19 27 19" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M28 24 L36 22 L42 18" fill="none" stroke="#6ee7ff" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="44" cy="17" r="2.8" fill="#fb923c"/>
-    <path d="M30 30 C34 28 38 28 42 30" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    ${iconPaddle(22, 32)}
+    ${iconBall(30, 32, 3.5)}
+    ${iconArrow(34, 30, 48, 18, "#ffb347", 3.5)}
+    <path d="M10 34 C18 32 24 32 30 34" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3 2"/>
   `),
   defense: issueIconShell(`
-    <path d="M34 33 L34 21 C34 18 37 16 40 16 C43 16 45 18 46 20" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <rect x="24" y="22" width="8" height="10" rx="2" fill="#ef4444" stroke="#fca5a5" stroke-width="1"/>
-    <circle cx="18" cy="24" r="3" fill="#fb923c"/>
-    <path d="M12 24 L22 24" stroke="#ff8c42" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    ${iconArrow(6, 24, 22, 24, "#fb923c", 3)}
+    ${iconPaddle(26, 24)}
+    ${iconBall(20, 24, 3.5)}
+    ${iconArrow(32, 24, 48, 26, "#6ee7ff", 2.5)}
   `),
   footwork: issueIconShell(`
-    <path d="M30 33 L30 20 C30 17 33 15 36 15" fill="none" stroke="#cbd5e1" stroke-width="2.2" stroke-linecap="round"/>
-    <ellipse cx="36" cy="24" rx="3.5" ry="4.5" fill="#ef4444" opacity="0.9"/>
-    <path d="M22 32 C26 28 30 28 34 32" fill="none" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round"/>
-    <path d="M18 36 L24 34 M40 34 L46 36" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+    ${iconPaddle(36, 22)}
+    ${iconBall(44, 20, 3.5)}
+    ${iconArrow(28, 34, 36, 30, "#6ee7ff", 2.5)}
+    ${iconArrow(40, 30, 32, 34, "#c4b5fd", 2.5, true)}
+    <circle cx="28" cy="35" r="2.5" fill="#94a3b8"/>
+    <circle cx="32" cy="35" r="2.5" fill="#cbd5e1"/>
   `),
   mental: issueIconShell(`
-    <circle cx="32" cy="20" r="9" fill="none" stroke="#cbd5e1" stroke-width="2"/>
-    <path d="M28 20 C28 17 30 15 32 15 C34 15 36 17 36 20 C36 22 34 24 32 24 C30 24 28 22 28 20 Z" fill="#6ee7ff" opacity="0.35"/>
-    <path d="M20 12 L24 16 M44 12 L40 16 M32 8 L32 12" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round"/>
-    <path d="M22 30 L42 30" stroke="#6ee7ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <circle cx="32" cy="22" r="10" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="32" cy="22" r="4" fill="#6ee7ff" opacity="0.5"/>
+    ${iconArrow(10, 22, 24, 22, "#a78bfa", 2.5)}
+    ${iconArrow(54, 22, 40, 22, "#a78bfa", 2.5)}
+    ${iconArrow(32, 6, 32, 16, "#a78bfa", 2.5)}
   `),
 };
 
