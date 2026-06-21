@@ -1917,8 +1917,9 @@ select.hardness-active {
 }
 
 .plan-toolbar {
-  display: grid;
-  gap: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
   margin-bottom: 0;
 }
 
@@ -1934,6 +1935,10 @@ select.hardness-active {
   line-height: 1.35;
   border: 2px solid transparent;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.plan-toolbar .btn:not(:last-child) {
+  margin-bottom: 0.25rem;
 }
 
 .plan-action-title {
