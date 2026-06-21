@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260524i" />
+    <link rel="stylesheet" href="styles.css?v=20260524k" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -89,29 +89,27 @@
             </label>
           </div>
 
-          <details class="form-accordion">
-            <summary class="form-accordion-summary">プレイヤー設定<span class="form-accordion-hint">試合形式・利き手</span></summary>
-            <div class="form-accordion-body">
-              <div class="row-2 player-profile-row">
-                <label class="field">
-                  <span class="field-label">試合形式</span>
-                  <select id="matchFormat" name="matchFormat">
-                    <option value="singles">シングルス</option>
-                    <option value="doubles">ダブルス</option>
-                    <option value="both">シングルス・ダブルス両方</option>
-                  </select>
-                </label>
-                <label class="field">
-                  <span class="field-label">利き手</span>
-                  <select id="dominantHand" name="dominantHand">
-                    <option value="unknown">未設定</option>
-                    <option value="right">右利き</option>
-                    <option value="left">左利き</option>
-                  </select>
-                </label>
-              </div>
+          <div class="player-settings-card">
+            <p class="player-settings-heading">プレイヤー設定</p>
+            <div class="row-2 player-profile-row">
+              <label class="field">
+                <span class="field-label">試合形式</span>
+                <select id="matchFormat" name="matchFormat">
+                  <option value="singles">シングルス</option>
+                  <option value="doubles">ダブルス</option>
+                  <option value="both">シングルス・ダブルス両方</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field-label">利き手</span>
+                <select id="dominantHand" name="dominantHand">
+                  <option value="unknown">未設定</option>
+                  <option value="right">右利き</option>
+                  <option value="left">左利き</option>
+                </select>
+              </label>
             </div>
-          </details>
+          </div>
 
           <div class="input-mode-bar input-mode-bar-large" role="tablist" aria-label="入力方式">
             <button
@@ -139,12 +137,11 @@
           </div>
 
           <div id="form-simple" class="simple-form">
-            <details class="form-accordion form-accordion-optional">
-              <summary class="form-accordion-summary">おすすめセット<span class="form-accordion-hint">ワンタップで入力</span></summary>
-              <div class="form-accordion-body">
-                <div class="quick-recommend-row" id="quick-recommend-row"></div>
-              </div>
-            </details>
+            <div class="quick-recommend-card">
+              <p class="quick-recommend-heading">おすすめセット</p>
+              <p class="quick-recommend-hint">タップ1つで課題・目標などをまとめて入力</p>
+              <div class="quick-recommend-row" id="quick-recommend-row"></div>
+            </div>
             <div class="simple-picker-grid">
               <button type="button" class="simple-picker-card" data-simple-picker="issues">
                 <span class="simple-picker-label">課題</span>

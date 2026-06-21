@@ -429,6 +429,27 @@ body {
   margin-bottom: 1.25rem;
 }
 
+.quick-recommend-card {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 140, 66, 0.28);
+  background: rgba(255, 140, 66, 0.07);
+}
+
+.quick-recommend-heading {
+  margin: 0 0 0.35rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.quick-recommend-hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
 .quick-recommend-label {
   margin: 0 0 0.55rem;
   font-size: 0.88rem;
@@ -447,11 +468,13 @@ body {
 .quick-recommend-chip,
 .example-chip {
   font: inherit;
-  font-size: 0.88rem;
-  padding: 0.45rem 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  min-height: 2.75rem;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255, 140, 66, 0.08);
+  border: 2px solid rgba(255, 140, 66, 0.35);
+  background: rgba(255, 140, 66, 0.12);
   color: var(--text);
   cursor: pointer;
 }
@@ -1330,6 +1353,34 @@ details.issue-section {
   border-radius: 14px;
   border: 2px solid rgba(110, 231, 255, 0.28);
   background: rgba(110, 231, 255, 0.07);
+}
+
+.player-settings-card {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 2px solid rgba(110, 231, 255, 0.22);
+  background: rgba(110, 231, 255, 0.05);
+}
+
+.player-settings-heading {
+  margin: 0 0 0.85rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.player-settings-card .field select {
+  min-height: 3rem;
+  font-size: 1rem;
+  padding: 0.75rem 0.85rem;
+  background: rgba(0, 0, 0, 0.38);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+.player-profile-row .field {
+  margin-bottom: 0;
 }
 
 .field-name {
