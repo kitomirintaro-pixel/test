@@ -543,6 +543,17 @@ const SimpleInput = {
     }
   },
 
+  applyCustomSchedule(schedule) {
+    const normalized =
+      typeof normalizeWeekSchedule === "function"
+        ? normalizeWeekSchedule(schedule)
+        : { ...schedule };
+    this.state.practicePreset = "custom";
+    this.state.customSchedule = { ...normalized };
+    this.syncToDetailedForm();
+    this.updateAllSummaries();
+  },
+
   getActiveSchedule() {
     if (this.state.customSchedule) return { ...this.state.customSchedule };
     return { ...(PRACTICE_PRESET_SCHEDULES[this.state.practicePreset] || PRACTICE_PRESET_SCHEDULES["weekday-30-weekend-60"]) };

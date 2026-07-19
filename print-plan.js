@@ -97,16 +97,7 @@ function buildPlanPrintHtml(plan, playerName) {
   if (plan.ttHistoryLabel) meta.push(`卓球歴: ${escapeHtml(plan.ttHistoryLabel)}`);
   if (meta.length) html += `<p class="print-meta-sub">${meta.join("　／　")}</p>`;
 
-  html += `<p>${escapeHtml(plan.summary)}</p>`;
-
-  if (plan.rubberAdvice?.length) {
-    html += `<h2>ラバーアドバイス</h2>`;
-    for (const block of plan.rubberAdvice) {
-      html += `<p><strong>${escapeHtml(block.title)}</strong></p><ul>`;
-      for (const b of block.bullets) html += `<li>${escapeHtml(b)}</li>`;
-      html += `</ul>`;
-    }
-  }
+  html += `<p>${escapeHtml(plan.summary || "")}</p>`;
 
   if (plan.improvements?.length) {
     html += `<h2>改善ポイント</h2><ol>`;
@@ -114,6 +105,21 @@ function buildPlanPrintHtml(plan, playerName) {
       html += `<li>${escapeHtml(i.text)}</li>`;
     }
     html += `</ol>`;
+  }
+
+  if (plan.rubberAdvice?.length) {
+    html += `<h2>ラバーアドバイス</h2>`;
+    for (const block of plan.rubberAdvice) {
+      html += `<p><strong>${escapeHtml(block.title)}</strong></p><ul>`;
+      for (const b of block.bullets || []) html += `<li>${escapeHtml(b)}</li>`;
+      html += `</ul>`;
+    }
+  }
+
+  if (plan.serveRubberExtras?.length) {
+    html += `<h2>サーブ×ラバー</h2><ul>`;
+    for (const t of plan.serveRubberExtras) html += `<li>${escapeHtml(t)}</li>`;
+    html += `</ul>`;
   }
 
   if (plan.drills?.length) {
@@ -133,8 +139,12 @@ function buildPlanPrintHtml(plan, playerName) {
   if (plan.week?.length) {
     html += `<h2>1週間の目安</h2><ul>`;
     for (const w of plan.week) {
+      if (w.isRest) {
+        html += `<li>${escapeHtml(w.day)}: 休み — 体を休める</li>`;
+        continue;
+      }
       const mode = w.modeLabel ? `【${escapeHtml(w.modeLabel)}】` : "";
-      html += `<li>${escapeHtml(w.day)}: ${mode} ${escapeHtml(w.focus)} — ${escapeHtml(w.extra)}`;
+      html += `<li>${escapeHtml(w.day)}: ${mode} ${escapeHtml(w.focus)} — ${escapeHtml(w.extra || "")}`;
       if (w.blocks?.length) {
         html += `<ul>`;
         for (const b of w.blocks) {
@@ -148,7 +158,7 @@ function buildPlanPrintHtml(plan, playerName) {
   }
 
   if (plan.spinsightHints?.length) {
-    html += `<h2>Spinsight ヒント</h2><ul>`;
+    html += `<h2>計測のヒント</h2><ul>`;
     for (const h of plan.spinsightHints) html += `<li>${escapeHtml(h)}</li>`;
     html += `</ul>`;
   }

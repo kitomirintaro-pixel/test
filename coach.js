@@ -2018,12 +2018,7 @@ function generatePlan(formData) {
     dominantHandNote: handInfo?.note || "",
   };
 
-  return typeof shouldSimplifyPlan() ? simplifyPlan(rawPlan) : rawPlan;
-}
-
-function shouldSimplifyPlan() {
-  const el = document.getElementById("simpleLanguageToggle");
-  return el ? el.checked : true;
+  return rawPlan;
 }
 
 let lastPlan = null;
@@ -2263,7 +2258,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.rubberAdvice?.length) {
-    const fold = appendPlanFold("ラバーのコツ", { variant: "rubber" });
+    const fold = appendPlanFold("ラバーアドバイス", { variant: "rubber" });
     const ul = document.createElement("ul");
     ul.className = "rubber-list";
     for (const block of plan.rubberAdvice) {
@@ -2297,7 +2292,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.improvements?.length) {
-    const fold = appendPlanFold("ポイント", { variant: "points" });
+    const fold = appendPlanFold("改善ポイント", { variant: "points" });
     const impOl = document.createElement("ol");
     impOl.className = "plan-list";
     for (const item of plan.improvements) {
@@ -2309,7 +2304,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.drills?.length) {
-    const fold = appendPlanFold("メニュー", { variant: "menu" });
+    const fold = appendPlanFold("練習メニュー", { variant: "menu" });
     const drillUl = document.createElement("ul");
     drillUl.className = "drill-cards";
     for (const d of plan.drills) {
@@ -2349,7 +2344,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.week?.length) {
-    const fold = appendPlanFold("スケジュール（1週間）", { variant: "schedule" });
+    const fold = appendPlanFold("1週間の目安", { variant: "schedule" });
     const weekTable = document.createElement("div");
     weekTable.className = "week-grid";
     for (const row of plan.week) {
@@ -2493,7 +2488,9 @@ function planToPlainText(plan) {
   const lines = ["【SpinCoach 練習メニュー】"];
   if (plan.playerName) lines.push(`名前: ${plan.playerName}`);
   if (plan.matchFormatLabel) lines.push(`試合形式: ${plan.matchFormatLabel}`);
-  if (plan.dominantHandLabel && plan.dominantHand !== "unknown") lines.push(`利き手: ${plan.dominantHandLabel}`);
+  if (plan.dominantHandLabel && plan.dominantHand !== "unknown") {
+    lines.push(`利き手: ${plan.dominantHandLabel}`);
+  }
   if (plan.ttHistoryLabel) lines.push(`卓球歴: ${plan.ttHistoryLabel}`);
   lines.push("", plan.summary || "");
 
@@ -2506,7 +2503,7 @@ function planToPlainText(plan) {
     lines.push("", "■ ラバーアドバイス");
     for (const block of plan.rubberAdvice) {
       lines.push(`・${block.title}`);
-      block.bullets.forEach((b) => lines.push(`  - ${b}`));
+      (block.bullets || []).forEach((b) => lines.push(`  - ${b}`));
     }
   }
 
@@ -2534,12 +2531,22 @@ function planToPlainText(plan) {
   if (plan.week?.length) {
     lines.push("", "■ 1週間の目安");
     for (const w of plan.week) {
-      lines.push(`${w.day}: ${w.modeLabel || ""} ${w.focus} — ${w.extra}`);
+      if (w.isRest) {
+        lines.push(`${w.day}: 休み — 体を休める`);
+        continue;
+      }
+      const mode = w.modeLabel ? `【${w.modeLabel}】` : "";
+      lines.push(`${w.day}: ${mode} ${w.focus} — ${w.extra || ""}`.trim());
+      if (w.blocks?.length) {
+        for (const b of w.blocks) {
+          lines.push(`  ・${b.label}（${b.min}分）: ${b.hint}`);
+        }
+      }
     }
   }
 
   if (plan.spinsightHints?.length) {
-    lines.push("", "■ Spinsight ヒント");
+    lines.push("", "■ 計測のヒント");
     plan.spinsightHints.forEach((h) => lines.push(`・${h}`));
   }
 

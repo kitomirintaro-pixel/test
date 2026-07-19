@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260624w" />
+    <link rel="stylesheet" href="styles.css?v=20260719c" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -35,19 +35,19 @@
               卓球の課題から、<span class="gradient-text">練習メニュー</span>を提案
             </h1>
             <p class="site-intro-text">
-              Spinsight と組み合わせやすい練習プランをブラウザで作成（非公式）。データはこの端末のみ保存。
+              Spinsight の計測メモと課題から、改善案と練習メニューをこのサイト上で作成（非公式）。データはこの端末のみ保存。
             </p>
             <ul class="site-intro-list">
-              <li>課題からメニュー生成・PDF対応</li>
-              <li>課題診断でおすすめを提案</li>
-              <li>日記で振り返り</li>
+              <li>課題から練習メニューを生成</li>
+              <li>部活予定の写真から練習日を反映</li>
+              <li>課題診断・日記で振り返り</li>
             </ul>
             <div class="quick-start-guide no-print">
               <p class="quick-start-heading">かんたん3ステップ</p>
               <ol class="quick-start-steps">
-                <li>課題診断または課題を選ぶ</li>
-                <li>「この課題でメニューを作る」でプラン生成</li>
-                <li>PDF保存・記録保存で残す</li>
+                <li>課題を選ぶ（または診断）</li>
+                <li>部活予定の写真を読み取る（任意）</li>
+                <li>メニューを生成して確認</li>
               </ol>
             </div>
           </div>
@@ -133,10 +133,6 @@
                 </select>
               </label>
             </div>
-            <label class="check check-inline plan-language-toggle">
-              <input type="checkbox" id="simpleLanguageToggle" checked />
-              <span>短い・わかりやすい表示</span>
-            </label>
           </div>
 
           <div class="input-mode-bar input-mode-bar-large" role="tablist" aria-label="入力方式">
@@ -193,10 +189,55 @@
               </button>
             </div>
             <div class="simple-optional-links no-print">
+              <button type="button" class="simple-optional-link" data-scroll-target="schedule-photo-section">部活予定を写真から読み取る</button>
               <button type="button" class="simple-optional-link" data-scroll-target="shared-rubber-section">ラバー設定（任意）</button>
               <button type="button" class="simple-optional-link" data-scroll-target="shared-spinsight-section">Spinsight数値（任意）</button>
             </div>
           </div>
+
+          <details id="schedule-photo-section" class="form-accordion schedule-photo-accordion">
+            <summary class="form-accordion-summary">
+              部活予定を写真から読み取る
+              <span class="form-accordion-hint">黒板・プリントの写真／貼り付けOK</span>
+            </summary>
+            <div class="form-accordion-body">
+              <p class="hint muted">
+                部活の週間予定表を撮った写真を選ぶか、ここに貼り付け（ペースト）します。練習がある曜日を自動で判定し、その日向けのメニューに使えます。読み取り後は必ず確認・手直ししてください。
+              </p>
+              <div
+                id="schedule-photo-zone"
+                class="schedule-photo-zone"
+                tabindex="0"
+                role="region"
+                aria-label="予定表の写真ドロップエリア"
+              >
+                <p class="schedule-photo-zone-title">写真をドロップ／ここにフォーカスして貼り付け</p>
+                <p class="schedule-photo-zone-sub">または下のボタンから選択（カメラ撮影も可）</p>
+                <div class="schedule-photo-actions">
+                  <button type="button" class="btn btn-primary" id="schedule-photo-pick">写真を選ぶ</button>
+                  <input
+                    type="file"
+                    id="schedule-photo-input"
+                    accept="image/*"
+                    capture="environment"
+                    hidden
+                  />
+                </div>
+                <img id="schedule-photo-preview" class="schedule-photo-preview" alt="読み取った予定表のプレビュー" hidden />
+              </div>
+              <p id="schedule-photo-status" class="schedule-photo-status" hidden role="status"></p>
+              <div id="schedule-photo-result" class="schedule-photo-result" hidden>
+                <p class="field-label">読み取り結果（手直しできます）</p>
+                <div id="schedule-photo-day-grid" class="schedule-photo-day-grid"></div>
+                <p id="schedule-photo-notes" class="hint muted"></p>
+                <pre id="schedule-photo-raw" class="schedule-photo-raw" hidden></pre>
+                <div class="schedule-photo-result-actions">
+                  <button type="button" class="btn btn-ghost" id="schedule-photo-apply">予定だけ反映</button>
+                  <button type="button" class="btn btn-primary" id="schedule-photo-generate">反映してメニュー作成</button>
+                </div>
+              </div>
+            </div>
+          </details>
 
           <div id="form-detailed" class="form-detailed" hidden>
           <fieldset class="fieldset">
@@ -709,17 +750,18 @@
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
-    <script defer src="simple-text.js?v=20260624w"></script>
-    <script defer src="storage.js?v=20260624w"></script>
-    <script defer src="poses.js?v=20260624w"></script>
-    <script defer src="print-plan.js?v=20260624w"></script>
-    <script defer src="rubber-catalog.js?v=20260624w"></script>
-    <script defer src="copy-text.js?v=20260624w"></script>
-    <script defer src="simple-input.js?v=20260624w"></script>
-    <script defer src="coach.js?v=20260624w"></script>
-    <script defer src="diagnosis.js?v=20260624w"></script>
-    <script defer src="diary.js?v=20260624w"></script>
-    <script defer src="ui-shared.js?v=20260624w"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script defer src="storage.js?v=20260719c"></script>
+    <script defer src="poses.js?v=20260719c"></script>
+    <script defer src="print-plan.js?v=20260719c"></script>
+    <script defer src="rubber-catalog.js?v=20260719c"></script>
+    <script defer src="copy-text.js?v=20260719c"></script>
+    <script defer src="simple-input.js?v=20260719c"></script>
+    <script defer src="coach.js?v=20260719c"></script>
+    <script defer src="schedule-photo.js?v=20260719c"></script>
+    <script defer src="diagnosis.js?v=20260719c"></script>
+    <script defer src="diary.js?v=20260719c"></script>
+    <script defer src="ui-shared.js?v=20260719c"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");

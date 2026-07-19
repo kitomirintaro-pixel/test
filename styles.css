@@ -115,10 +115,6 @@ body {
   background: rgba(110, 231, 255, 0.14);
 }
 
-.plan-language-toggle {
-  margin-top: 0.65rem;
-}
-
 .site-intro {
   max-width: 40rem;
   margin: 0 auto 1.25rem;
@@ -2968,6 +2964,117 @@ code {
 
 .site-footer p {
   margin: 0;
+}
+
+.schedule-photo-accordion {
+  margin: 1rem 0 1.25rem;
+}
+
+.schedule-photo-zone {
+  margin-top: 0.75rem;
+  padding: 1.1rem 1rem;
+  border: 2px dashed rgba(110, 231, 255, 0.35);
+  border-radius: 14px;
+  background: rgba(110, 231, 255, 0.05);
+  text-align: center;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.schedule-photo-zone:focus-visible,
+.schedule-photo-zone.is-dragover {
+  border-color: rgba(110, 231, 255, 0.8);
+  background: rgba(110, 231, 255, 0.12);
+}
+
+.schedule-photo-zone.is-busy {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.schedule-photo-zone-title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.schedule-photo-zone-sub {
+  margin: 0 0 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.schedule-photo-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.schedule-photo-preview {
+  display: block;
+  max-width: min(100%, 420px);
+  max-height: 220px;
+  margin: 0.9rem auto 0;
+  border-radius: 10px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.schedule-photo-status {
+  margin: 0.75rem 0 0;
+  font-size: 0.92rem;
+  color: #86efac;
+}
+
+.schedule-photo-status.is-error {
+  color: #fca5a5;
+}
+
+.schedule-photo-result {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.schedule-photo-day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.55rem;
+  margin: 0.55rem 0 0.75rem;
+}
+
+.schedule-photo-day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.schedule-photo-day select {
+  width: 100%;
+}
+
+.schedule-photo-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.schedule-photo-raw {
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 0.75rem;
+  max-height: 8rem;
+  overflow: auto;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 @media (prefers-reduced-motion: reduce) {
