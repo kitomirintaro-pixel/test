@@ -2077,7 +2077,7 @@ function renderPlan(plan, container) {
 
   const actionsHint = document.createElement("p");
   actionsHint.className = "plan-actions-hint";
-  actionsHint.textContent = "PDF出力・コピー・端末への記録・プランのリセット";
+  actionsHint.textContent = "PDF保存・コピー・端末への記録・プランのリセット";
 
   const toolbar = document.createElement("div");
   toolbar.className = "plan-toolbar";
@@ -2117,9 +2117,13 @@ function renderPlan(plan, container) {
   btnPrint.className = "plan-action-btn plan-action-btn-pdf";
   btnPrint.textContent = "PDFで保存";
   applyPlanActionTheme(btnPrint, "pdf");
-  btnPrint.addEventListener("click", () => {
-    if (typeof printPlan === "function") {
-      printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
+  btnPrint.addEventListener("click", async () => {
+    if (typeof printPlan !== "function") return;
+    btnPrint.disabled = true;
+    try {
+      await printPlan(plan, plan.playerName || document.getElementById("playerName")?.value);
+    } finally {
+      btnPrint.disabled = false;
     }
   });
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SpinCoach — 印刷・PDF</title>
+    <style>
+      :root {
+        color-scheme: only light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      }
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: #f3f4f6;
+        border-bottom: 1px solid #d1d5db;
+      }
+      .toolbar p {
+        margin: 0;
+        flex: 1 1 100%;
+        font-size: 0.9rem;
+        color: #111 !important;
+        -webkit-text-fill-color: #111 !important;
+      }
+      .toolbar button,
+      .toolbar a {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.75rem;
+        padding: 0.65rem 1rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .btn-print {
+        border: none;
+        background: #111;
+        color: #fff !important;
+        -webkit-text-fill-color: #fff !important;
+      }
+      .btn-back {
+        border: 1px solid #9ca3af;
+        background: #fff;
+        color: #111 !important;
+        -webkit-text-fill-color: #111 !important;
+      }
+      #doc {
+        padding: 1rem 1.1rem 2rem;
+        background: #fff !important;
+        color: #000 !important;
+        -webkit-text-fill-color: #000 !important;
+        font-size: 12pt;
+        line-height: 1.55;
+      }
+      #doc,
+      #doc * {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      #doc h1 {
+        font-size: 18pt;
+        margin: 0 0 10pt;
+      }
+      #doc h2 {
+        font-size: 13pt;
+        margin: 14pt 0 6pt;
+      }
+      #empty {
+        padding: 2rem 1rem;
+        color: #111 !important;
+      }
+      @media print {
+        .toolbar {
+          display: none !important;
+        }
+        html,
+        body,
+        #doc {
+          background: #fff !important;
+          color: #000 !important;
+          -webkit-text-fill-color: #000 !important;
+        }
+        #doc {
+          padding: 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar no-print">
+      <p>この画面の黒い文字が印刷・PDFの内容です。下のボタンから印刷してください。</p>
+      <button type="button" class="btn-print" id="print-btn">印刷する</button>
+      <a class="btn-back" id="back-link" href="./">アプリに戻る</a>
+    </div>
+    <div id="empty" hidden>印刷用データがありません。アプリに戻って「PDFで保存」からやり直してください。</div>
+    <div id="doc"></div>
+    <script>
+      (function () {
+        const html = sessionStorage.getItem("spincoach-print-html") || "";
+        const doc = document.getElementById("doc");
+        const empty = document.getElementById("empty");
+        const back = document.getElementById("back-link");
+        const returnTo = sessionStorage.getItem("spincoach-print-return") || "./";
+        back.setAttribute("href", returnTo);
+
+        if (!html.trim()) {
+          empty.hidden = false;
+          doc.hidden = true;
+          return;
+        }
+        doc.innerHTML = html;
+        document.getElementById("print-btn").addEventListener("click", function () {
+          window.print();
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -2602,6 +2602,141 @@ select.hardness-active {
   display: none;
 }
 
+.print-root.is-capturing {
+  display: block !important;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 794px;
+  max-width: 794px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  z-index: 0;
+  opacity: 1 !important;
+  pointer-events: none;
+  transform: translateX(-120vw);
+}
+
+.print-root.is-capturing,
+.print-root.is-capturing * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.print-root.is-capturing .print-doc {
+  color: #000000 !important;
+  font-size: 12pt;
+  line-height: 1.5;
+  background: #ffffff !important;
+}
+
+.print-root.is-capturing .print-doc h1 {
+  font-size: 18pt;
+  margin: 0 0 8pt;
+  color: #000000 !important;
+}
+
+.print-root.is-capturing .print-doc h2 {
+  font-size: 13pt;
+  margin: 14pt 0 6pt;
+  color: #000000 !important;
+}
+
+.print-root.is-capturing .print-meta-sub,
+.print-root.is-capturing .print-foot {
+  color: #222222 !important;
+}
+
+.pdf-save-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.pdf-save-sheet-card {
+  width: min(26rem, 100%);
+  padding: 1.15rem 1.1rem 1.25rem;
+  border-radius: 18px 18px 14px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #121722;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.pdf-save-sheet-title {
+  margin: 0 0 0.45rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pdf-save-sheet-status {
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(110, 231, 255, 0.12);
+  border: 1px solid rgba(110, 231, 255, 0.28);
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.pdf-save-sheet-status.is-error {
+  background: rgba(255, 107, 107, 0.12);
+  border-color: rgba(255, 107, 107, 0.35);
+  color: #fecaca;
+}
+
+.pdf-save-sheet-primary:disabled,
+.pdf-save-sheet-secondary:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.pdf-save-sheet-primary,
+.pdf-save-sheet-secondary,
+.pdf-save-sheet-ghost {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.55rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.pdf-save-sheet-primary {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #fb923c, #c2410c);
+  color: #1a0500;
+}
+
+.pdf-save-sheet-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.pdf-save-sheet-ghost {
+  margin-bottom: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 @media print {
   body.is-printing .site-header,
   body.is-printing .coach-hero,
