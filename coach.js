@@ -2229,7 +2229,7 @@ function renderPlan(plan, container) {
 
   if (plan.rubberAdvice?.length) {
     const rh = document.createElement("h2");
-    rh.textContent = "ラバー特性を踏まえたアドバイス";
+    rh.textContent = "ラバーのコツ";
     container.appendChild(rh);
     const ul = document.createElement("ul");
     ul.className = "rubber-list";
@@ -2253,7 +2253,7 @@ function renderPlan(plan, container) {
 
   if (plan.serveRubberExtras?.length) {
     const sh = document.createElement("h2");
-    sh.textContent = "サーブ×ラバー（裏・表・粒高）";
+    sh.textContent = "サーブ×ラバー";
     container.appendChild(sh);
     const sul = document.createElement("ul");
     sul.className = "plan-list muted";
@@ -2266,7 +2266,7 @@ function renderPlan(plan, container) {
   }
 
   const impH = document.createElement("h2");
-  impH.textContent = "改善のポイント";
+  impH.textContent = "ポイント";
   container.appendChild(impH);
 
   const impOl = document.createElement("ol");
@@ -2279,7 +2279,7 @@ function renderPlan(plan, container) {
   container.appendChild(impOl);
 
   const drillH = document.createElement("h2");
-  drillH.textContent = "練習メニュー（今日〜今週）";
+  drillH.textContent = "メニュー";
   container.appendChild(drillH);
 
   const drillUl = document.createElement("ul");
@@ -2301,7 +2301,7 @@ function renderPlan(plan, container) {
 
   if (plan.strengthDrills?.length) {
     const sh = document.createElement("h2");
-    sh.textContent = "筋トレ（卓球の動きに直結）";
+    sh.textContent = "筋トレ";
     container.appendChild(sh);
     const sul = document.createElement("ul");
     sul.className = "drill-cards";
@@ -2322,7 +2322,7 @@ function renderPlan(plan, container) {
   }
 
   const weekH = document.createElement("h2");
-  weekH.textContent = "1週間の進め方（練習時間別）";
+  weekH.textContent = "1週間";
   container.appendChild(weekH);
 
   const weekTable = document.createElement("div");
@@ -2356,22 +2356,24 @@ function renderPlan(plan, container) {
   }
   container.appendChild(weekTable);
 
-  const sh = document.createElement("h2");
-  sh.textContent = "Spinsight 活用のヒント";
-  container.appendChild(sh);
+  if (plan.spinsightHints?.length) {
+    const sh = document.createElement("h2");
+    sh.textContent = "計測のヒント";
+    container.appendChild(sh);
 
-  const hintP = document.createElement("ul");
-  hintP.className = "plan-list";
-  for (const h of plan.spinsightHints) {
-    const li = document.createElement("li");
-    li.textContent = h;
-    hintP.appendChild(li);
+    const hintP = document.createElement("ul");
+    hintP.className = "plan-list";
+    for (const h of plan.spinsightHints) {
+      const li = document.createElement("li");
+      li.textContent = h;
+      hintP.appendChild(li);
+    }
+    container.appendChild(hintP);
   }
-  container.appendChild(hintP);
 
-  if (plan.spinsightExtra.length) {
+  if (plan.spinsightExtra?.length) {
     const extraH = document.createElement("h3");
-    extraH.textContent = "あなたの入力に基づく計測メモ";
+    extraH.textContent = "計測メモ";
     container.appendChild(extraH);
     const extraUl = document.createElement("ul");
     extraUl.className = "plan-list muted";
@@ -2385,8 +2387,7 @@ function renderPlan(plan, container) {
 
   const disclaimer = document.createElement("p");
   disclaimer.className = "disclaimer muted";
-  disclaimer.textContent =
-    "本サイトは Spinsight 非公式の補助ツールです。数値の単位はアプリ表示に合わせて解釈してください。怪我のリスクがあるドリルは無理せず、コーチやパートナーと相談してください。";
+  disclaimer.textContent = "非公式の補助ツールです。無理せず練習してください。";
   container.appendChild(disclaimer);
 }
 
