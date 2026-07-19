@@ -63,11 +63,15 @@
         opacity: 0.6;
         cursor: wait;
       }
-      .btn-print {
+      .btn-pdf {
         border: 1px solid #9ca3af;
         background: #fff;
         color: #111 !important;
         -webkit-text-fill-color: #111 !important;
+      }
+      .btn-pdf:disabled {
+        opacity: 0.55;
+        cursor: wait;
       }
       .btn-back {
         border: 1px solid #9ca3af;
@@ -135,22 +139,22 @@
   <body>
     <div class="toolbar no-print">
       <p>
-        「印刷する」を押すと共有シートが開きます。一覧から
-        <strong>ファイルに保存</strong> を選ぶと、ファイルアプリに保存できます。
+        「印刷する」で共有シートが開きます。一覧の
+        <strong>ファイルに保存</strong> を選ぶと、ファイルアプリに入ります。
       </p>
       <p id="status" hidden></p>
       <button type="button" class="btn-save" id="save-btn">印刷する</button>
+      <button type="button" class="btn-pdf" id="pdf-btn" hidden disabled>PDFをファイルに保存</button>
       <a class="btn-back" id="back-link" href="./">アプリに戻る</a>
     </div>
     <div id="empty" hidden>
-      印刷用データがありません。アプリに戻って「印刷・PDF」からやり直してください。
+      保存用データがありません。アプリに戻って「印刷・PDF」からやり直してください。
     </div>
     <div id="doc"></div>
     <script>
       (function () {
         const html = sessionStorage.getItem("spincoach-print-html") || "";
-        const plain =
-          sessionStorage.getItem("spincoach-print-text") || "";
+        const plain = sessionStorage.getItem("spincoach-print-text") || "";
         const baseName =
           sessionStorage.getItem("spincoach-print-filename") || "SpinCoach-plan";
         const doc = document.getElementById("doc");
@@ -158,18 +162,87 @@
         const back = document.getElementById("back-link");
         const statusEl = document.getElementById("status");
         const saveBtn = document.getElementById("save-btn");
+        const pdfBtn = document.getElementById("pdf-btn");
         const returnTo = sessionStorage.getItem("spincoach-print-return") || "./";
         back.setAttribute("href", returnTo);
+
+        let pdfBlob = null;
 
         function setStatus(text, isError) {
           if (!text) {
             statusEl.hidden = true;
             statusEl.textContent = "";
+            statusEl.classList.remove("is-error");
             return;
           }
           statusEl.hidden = false;
           statusEl.textContent = text;
           statusEl.classList.toggle("is-error", Boolean(isError));
+        }
+
+        function canShareFiles() {
+          return Boolean(
+            window.isSecureContext &&
+              navigator.share &&
+              navigator.canShare &&
+              typeof File !== "undefined"
+          );
+        }
+
+        function textContent() {
+          return (plain || doc.innerText || "").trim();
+        }
+
+        function makeTextFile() {
+          const body = textContent();
+          if (!body) throw new Error("empty text");
+          return new File([body], baseName + ".txt", {
+            type: "text/plain",
+            lastModified: Date.now(),
+          });
+        }
+
+        async function shareFile(file) {
+          if (!navigator.share) throw new Error("share unsupported");
+          // canShare が false でも share が通る端末があるので、まず試す
+          if (navigator.canShare) {
+            try {
+              if (!navigator.canShare({ files: [file] })) {
+                throw new Error("canShare files false");
+              }
+            } catch (e) {
+              // canShare 自体が例外の端末向けに、そのまま share を試す
+              if (e && e.message === "canShare files false") throw e;
+            }
+          }
+          await navigator.share({ files: [file], title: file.name });
+        }
+
+        function openBlobInBrowser(blob, filename) {
+          const url = URL.createObjectURL(blob);
+          setStatus(
+            "ファイルを開きました。画面下の共有から「ファイルに保存」を選んでください。"
+          );
+          // 同一タブで開くと戻れる。新規タブはポップアップ阻害されやすい
+          window.location.href = url;
+          setTimeout(function () {
+            URL.revokeObjectURL(url);
+          }, 120000);
+        }
+
+        async function saveTextNow() {
+          const file = makeTextFile();
+          if (canShareFiles()) {
+            await shareFile(file);
+            setStatus("共有シートで「ファイルに保存」を選んでください。");
+            return "shared";
+          }
+          // HTTP（ローカルIP）など共有不可な環境
+          openBlobInBrowser(
+            new Blob([await file.text()], { type: "text/plain" }),
+            file.name
+          );
+          return "opened";
         }
 
         function loadScript(src) {
@@ -178,8 +251,19 @@
               resolve();
               return;
             }
+            var existing = document.querySelector('script[data-pdf-lib="1"]');
+            if (existing) {
+              existing.addEventListener("load", function () {
+                resolve();
+              });
+              existing.addEventListener("error", function () {
+                reject(new Error("script load failed"));
+              });
+              return;
+            }
             var s = document.createElement("script");
             s.src = src;
+            s.dataset.pdfLib = "1";
             s.onload = function () {
               resolve();
             };
@@ -215,56 +299,83 @@
             .outputPdf("blob");
         }
 
-        async function shareFile(file) {
-          if (!(navigator.canShare && navigator.canShare({ files: [file] }))) {
-            throw new Error("share unsupported");
-          }
-          await navigator.share({ files: [file], title: file.name });
-        }
-
-        async function saveToFiles() {
-          saveBtn.disabled = true;
-          setStatus("ファイルを準備しています…");
-          const textBody = (plain || doc.innerText || "").trim();
-
+        async function preparePdfInBackground() {
+          pdfBtn.hidden = false;
+          pdfBtn.disabled = true;
+          pdfBtn.textContent = "PDF準備中…";
           try {
             const blob = await makePdfBlob();
             if (!(blob instanceof Blob) || blob.size < 64) {
               throw new Error("empty pdf");
             }
-            const pdfFile = new File([blob], baseName + ".pdf", {
-              type: "application/pdf",
-              lastModified: Date.now(),
-            });
-            setStatus("共有シートで「ファイルに保存」を選んでください。");
-            await shareFile(pdfFile);
-            setStatus("共有シートを開きました。");
+            pdfBlob = blob;
+            pdfBtn.disabled = false;
+            pdfBtn.textContent = "PDFをファイルに保存";
+            setStatus("テキスト保存に加え、PDFでも保存できます。");
+          } catch (err) {
+            console.warn("pdf prep failed:", err);
+            pdfBtn.hidden = true;
+          }
+        }
+
+        async function onSaveClick() {
+          saveBtn.disabled = true;
+          setStatus("共有シートを開いています…");
+          try {
+            // 重要: PDF生成を待たず、タップ直後に共有する（iPhoneの操作切れ対策）
+            await saveTextNow();
+            // 共有後にPDFを裏で用意し、必要ならもう一度タップでPDF保存
+            preparePdfInBackground();
           } catch (err) {
             if (err && err.name === "AbortError") {
               setStatus("キャンセルしました。");
-              saveBtn.disabled = false;
-              return;
-            }
-            console.warn("pdf share failed, fallback to text:", err);
-            try {
-              if (!textBody) throw new Error("empty text");
-              const txtFile = new File([textBody], baseName + ".txt", {
-                type: "text/plain",
-                lastModified: Date.now(),
-              });
-              setStatus("PDFの代わりにテキストで共有します。「ファイルに保存」を選んでください。");
-              await shareFile(txtFile);
-              setStatus("共有シートを開きました。");
-            } catch (err2) {
-              if (err2 && err2.name === "AbortError") {
-                setStatus("キャンセルしました。");
-              } else {
-                console.warn("text share failed:", err2);
-                setStatus("共有できませんでした。しばらくしてから再試行してください。", true);
+            } else {
+              console.warn("save failed:", err);
+              try {
+                const body = textContent();
+                if (!body) throw new Error("empty");
+                openBlobInBrowser(
+                  new Blob([body], { type: "text/plain;charset=utf-8" }),
+                  baseName + ".txt"
+                );
+              } catch (err2) {
+                setStatus(
+                  "この通信環境では共有できません。GitHubの公開ページ（https）で開くか、内容をコピーして保存してください。",
+                  true
+                );
               }
             }
           } finally {
             saveBtn.disabled = false;
+          }
+        }
+
+        async function onPdfClick() {
+          if (!pdfBlob) {
+            setStatus("PDFの準備ができていません。少し待ってから押してください。", true);
+            return;
+          }
+          pdfBtn.disabled = true;
+          try {
+            const file = new File([pdfBlob], baseName + ".pdf", {
+              type: "application/pdf",
+              lastModified: Date.now(),
+            });
+            if (canShareFiles()) {
+              await shareFile(file);
+              setStatus("共有シートで「ファイルに保存」を選んでください。");
+            } else {
+              openBlobInBrowser(pdfBlob, baseName + ".pdf");
+            }
+          } catch (err) {
+            if (err && err.name === "AbortError") {
+              setStatus("キャンセルしました。");
+            } else {
+              console.warn("pdf share failed:", err);
+              openBlobInBrowser(pdfBlob, baseName + ".pdf");
+            }
+          } finally {
+            pdfBtn.disabled = false;
           }
         }
 
@@ -276,9 +387,8 @@
         }
 
         doc.innerHTML = html;
-        saveBtn.addEventListener("click", function () {
-          saveToFiles();
-        });
+        saveBtn.addEventListener("click", onSaveClick);
+        pdfBtn.addEventListener("click", onPdfClick);
       })();
     </script>
   </body>
