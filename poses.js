@@ -81,8 +81,8 @@ const POSE_TO_ICON = {
  * 推奨サイズ: 520×244px（横長）、暗め背景・矢印で球の軌道が分かる構成
  */
 const TECHNIQUE_IMAGE_BASE = "assets/techniques/";
-const TECHNIQUE_IMAGE_EXT = ".webp";
-const TECHNIQUE_IMAGE_ALT_EXT = ".png";
+const TECHNIQUE_IMAGE_EXT = ".png";
+const TECHNIQUE_IMAGE_ALT_EXT = ".webp";
 
 function escapeAttr(text) {
   return String(text)
