@@ -2115,7 +2115,11 @@ function renderPlan(plan, container) {
   const btnPrint = document.createElement("button");
   btnPrint.type = "button";
   btnPrint.className = "plan-action-btn plan-action-btn-pdf";
-  btnPrint.textContent = "PDFで保存";
+  const mobileSave =
+    typeof isMobileLike === "function"
+      ? isMobileLike()
+      : /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+  btnPrint.textContent = mobileSave ? "印刷・PDF" : "PDFで保存";
   applyPlanActionTheme(btnPrint, "pdf");
   btnPrint.addEventListener("click", async () => {
     if (typeof printPlan !== "function") return;

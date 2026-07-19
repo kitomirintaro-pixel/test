@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SpinCoach — 印刷・PDF</title>
+    <title>SpinCoach — ファイルに保存</title>
     <style>
       :root {
         color-scheme: only light;
@@ -53,17 +53,38 @@
         text-decoration: none;
         cursor: pointer;
       }
-      .btn-print {
+      .btn-save {
         border: none;
         background: #111;
         color: #fff !important;
         -webkit-text-fill-color: #fff !important;
+      }
+      .btn-save:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      .btn-print {
+        border: 1px solid #9ca3af;
+        background: #fff;
+        color: #111 !important;
+        -webkit-text-fill-color: #111 !important;
       }
       .btn-back {
         border: 1px solid #9ca3af;
         background: #fff;
         color: #111 !important;
         -webkit-text-fill-color: #111 !important;
+      }
+      #status {
+        margin: 0;
+        flex: 1 1 100%;
+        font-size: 0.88rem;
+        color: #065f46 !important;
+        -webkit-text-fill-color: #065f46 !important;
+      }
+      #status.is-error {
+        color: #b91c1c !important;
+        -webkit-text-fill-color: #b91c1c !important;
       }
       #doc {
         padding: 1rem 1.1rem 2rem;
@@ -113,29 +134,150 @@
   </head>
   <body>
     <div class="toolbar no-print">
-      <p>この画面の黒い文字が印刷・PDFの内容です。下のボタンから印刷してください。</p>
-      <button type="button" class="btn-print" id="print-btn">印刷する</button>
+      <p>
+        「印刷する」を押すと共有シートが開きます。一覧から
+        <strong>ファイルに保存</strong> を選ぶと、ファイルアプリに保存できます。
+      </p>
+      <p id="status" hidden></p>
+      <button type="button" class="btn-save" id="save-btn">印刷する</button>
       <a class="btn-back" id="back-link" href="./">アプリに戻る</a>
     </div>
-    <div id="empty" hidden>印刷用データがありません。アプリに戻って「PDFで保存」からやり直してください。</div>
+    <div id="empty" hidden>
+      印刷用データがありません。アプリに戻って「印刷・PDF」からやり直してください。
+    </div>
     <div id="doc"></div>
     <script>
       (function () {
         const html = sessionStorage.getItem("spincoach-print-html") || "";
+        const plain =
+          sessionStorage.getItem("spincoach-print-text") || "";
+        const baseName =
+          sessionStorage.getItem("spincoach-print-filename") || "SpinCoach-plan";
         const doc = document.getElementById("doc");
         const empty = document.getElementById("empty");
         const back = document.getElementById("back-link");
+        const statusEl = document.getElementById("status");
+        const saveBtn = document.getElementById("save-btn");
         const returnTo = sessionStorage.getItem("spincoach-print-return") || "./";
         back.setAttribute("href", returnTo);
+
+        function setStatus(text, isError) {
+          if (!text) {
+            statusEl.hidden = true;
+            statusEl.textContent = "";
+            return;
+          }
+          statusEl.hidden = false;
+          statusEl.textContent = text;
+          statusEl.classList.toggle("is-error", Boolean(isError));
+        }
+
+        function loadScript(src) {
+          return new Promise(function (resolve, reject) {
+            if (window.html2pdf) {
+              resolve();
+              return;
+            }
+            var s = document.createElement("script");
+            s.src = src;
+            s.onload = function () {
+              resolve();
+            };
+            s.onerror = function () {
+              reject(new Error("script load failed"));
+            };
+            document.head.appendChild(s);
+          });
+        }
+
+        async function makePdfBlob() {
+          await loadScript("vendor/html2pdf.bundle.min.js");
+          if (typeof window.html2pdf !== "function") {
+            throw new Error("html2pdf unavailable");
+          }
+          return window
+            .html2pdf()
+            .set({
+              margin: [8, 8, 8, 8],
+              filename: baseName + ".pdf",
+              image: { type: "jpeg", quality: 0.72 },
+              html2canvas: {
+                scale: 1,
+                backgroundColor: "#ffffff",
+                logging: false,
+                windowWidth: 640,
+              },
+              jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+              pagebreak: { mode: ["avoid-all"] },
+              enableLinks: false,
+            })
+            .from(doc)
+            .outputPdf("blob");
+        }
+
+        async function shareFile(file) {
+          if (!(navigator.canShare && navigator.canShare({ files: [file] }))) {
+            throw new Error("share unsupported");
+          }
+          await navigator.share({ files: [file], title: file.name });
+        }
+
+        async function saveToFiles() {
+          saveBtn.disabled = true;
+          setStatus("ファイルを準備しています…");
+          const textBody = (plain || doc.innerText || "").trim();
+
+          try {
+            const blob = await makePdfBlob();
+            if (!(blob instanceof Blob) || blob.size < 64) {
+              throw new Error("empty pdf");
+            }
+            const pdfFile = new File([blob], baseName + ".pdf", {
+              type: "application/pdf",
+              lastModified: Date.now(),
+            });
+            setStatus("共有シートで「ファイルに保存」を選んでください。");
+            await shareFile(pdfFile);
+            setStatus("共有シートを開きました。");
+          } catch (err) {
+            if (err && err.name === "AbortError") {
+              setStatus("キャンセルしました。");
+              saveBtn.disabled = false;
+              return;
+            }
+            console.warn("pdf share failed, fallback to text:", err);
+            try {
+              if (!textBody) throw new Error("empty text");
+              const txtFile = new File([textBody], baseName + ".txt", {
+                type: "text/plain",
+                lastModified: Date.now(),
+              });
+              setStatus("PDFの代わりにテキストで共有します。「ファイルに保存」を選んでください。");
+              await shareFile(txtFile);
+              setStatus("共有シートを開きました。");
+            } catch (err2) {
+              if (err2 && err2.name === "AbortError") {
+                setStatus("キャンセルしました。");
+              } else {
+                console.warn("text share failed:", err2);
+                setStatus("共有できませんでした。しばらくしてから再試行してください。", true);
+              }
+            }
+          } finally {
+            saveBtn.disabled = false;
+          }
+        }
 
         if (!html.trim()) {
           empty.hidden = false;
           doc.hidden = true;
+          saveBtn.disabled = true;
           return;
         }
+
         doc.innerHTML = html;
-        document.getElementById("print-btn").addEventListener("click", function () {
-          window.print();
+        saveBtn.addEventListener("click", function () {
+          saveToFiles();
         });
       })();
     </script>

@@ -198,30 +198,39 @@ function clearCaptureRoot() {
 
 async function pdfBlobFromElement(element, filename) {
   const html2pdf = await ensureHtml2Pdf();
-  const scale = isIOSLike() ? 1.15 : Math.min(2, window.devicePixelRatio || 1.5);
+  // スマホは軽量設定（画質より速度優先）。PCも過剰な高解像度は避ける。
+  const mobile = isMobileLike();
+  const scale = mobile ? 1 : 1.25;
   return html2pdf()
     .set({
-      margin: [10, 10, 12, 10],
+      margin: mobile ? [8, 8, 8, 8] : [10, 10, 10, 10],
       filename,
-      image: { type: "jpeg", quality: 0.9 },
+      image: { type: "jpeg", quality: mobile ? 0.72 : 0.82 },
       html2canvas: {
         scale,
         useCORS: true,
         backgroundColor: "#ffffff",
         logging: false,
-        windowWidth: 794,
+        windowWidth: mobile ? 640 : 794,
+        scrollX: 0,
+        scrollY: 0,
       },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"] },
+      // legacy pagebreak は遅いので使わない
+      pagebreak: { mode: ["avoid-all"] },
+      enableLinks: false,
     })
     .from(element)
     .outputPdf("blob");
 }
 
 async function createPdfBlob(innerHtml, filename) {
+  await ensureHtml2Pdf();
   const element = prepareCaptureRoot(innerHtml);
   if (!element) throw new Error("capture root missing");
   try {
+    // レイアウト確定のためのごく短い待ち（長すぎると体感が悪化する）
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     const blob = await pdfBlobFromElement(element, filename);
     if (!(blob instanceof Blob) || blob.size < 64) {
       throw new Error("empty pdf blob");
@@ -244,7 +253,7 @@ function removePrintFrame() {
  * 専用の白い印刷ページへ移動する。
  * iPhone で「白紙3ページ＋最後だけ薄い字」になる親ページ印刷を避ける。
  */
-function openDedicatedPrintPage(innerHtml) {
+function openDedicatedPrintPage(innerHtml, opts = {}) {
   closePdfSaveSheet();
   removePrintFrame();
   try {
@@ -253,9 +262,16 @@ function openDedicatedPrintPage(innerHtml) {
       "spincoach-print-return",
       `${window.location.pathname}${window.location.search}${window.location.hash}` || "./"
     );
+    if (opts.plainText != null) {
+      sessionStorage.setItem("spincoach-print-text", String(opts.plainText));
+    } else {
+      sessionStorage.removeItem("spincoach-print-text");
+    }
+    const base = String(opts.filename || "SpinCoach-plan").replace(/\.pdf$/i, "");
+    sessionStorage.setItem("spincoach-print-filename", base);
   } catch (err) {
     console.warn("sessionStorage failed:", err);
-    notifyPrintStatus("印刷ページを開けませんでした。");
+    notifyPrintStatus("保存ページを開けませんでした。");
     return;
   }
   window.location.href = "print-view.html";
@@ -315,123 +331,10 @@ async function sharePlainText(text, title) {
 }
 
 /**
- * iPhone: 専用印刷ページへ誘導。PDFは作成後に共有 or Safariで開く。
+ * 互換用（スマホは専用保存ページへ即移動）
  */
-function showIosSaveSheet({ innerHtml, plainText, title, filename }) {
-  closePdfSaveSheet();
-
-  const sheet = document.createElement("div");
-  sheet.id = "pdf-save-sheet";
-  sheet.className = "pdf-save-sheet";
-  sheet.setAttribute("role", "dialog");
-  sheet.setAttribute("aria-modal", "true");
-  sheet.setAttribute("aria-label", "PDF保存");
-
-  let pdfBlob = null;
-
-  sheet.innerHTML = `
-    <div class="pdf-save-sheet-card">
-      <p class="pdf-save-sheet-title">PDF・印刷</p>
-      <p class="pdf-save-sheet-text" data-role="help">
-        iPhoneでは、このアプリ画面を直接印刷すると<strong>白紙や薄い字</strong>になりやすいです。<br>
-        まず<strong>印刷用ページ</strong>を開くか、<strong>PDFを作成</strong>してください。
-      </p>
-      <p class="pdf-save-sheet-status" data-role="status" hidden></p>
-      <button type="button" class="pdf-save-sheet-primary" data-action="open-print-page">印刷用ページを開く</button>
-      <button type="button" class="pdf-save-sheet-secondary" data-action="make-pdf">PDFを作成する</button>
-      <button type="button" class="pdf-save-sheet-primary" data-action="share-pdf" hidden disabled>このPDFを共有・保存</button>
-      <button type="button" class="pdf-save-sheet-secondary" data-action="open-pdf" hidden disabled>PDFを表示する</button>
-      <button type="button" class="pdf-save-sheet-secondary" data-action="share-text">テキストだけ送る</button>
-      <button type="button" class="pdf-save-sheet-ghost" data-action="close">閉じる</button>
-    </div>
-  `;
-
-  const statusEl = sheet.querySelector("[data-role='status']");
-  const makeBtn = sheet.querySelector("[data-action='make-pdf']");
-  const shareBtn = sheet.querySelector("[data-action='share-pdf']");
-  const openBtn = sheet.querySelector("[data-action='open-pdf']");
-
-  const setStatus = (text, isError = false) => {
-    if (!statusEl) return;
-    statusEl.hidden = !text;
-    statusEl.textContent = text || "";
-    statusEl.classList.toggle("is-error", Boolean(isError));
-  };
-
-  sheet.addEventListener("click", async (ev) => {
-    const action = ev.target?.closest?.("[data-action]")?.getAttribute("data-action");
-    if (!action) return;
-
-    if (action === "open-print-page") {
-      openDedicatedPrintPage(innerHtml);
-      return;
-    }
-
-    if (action === "make-pdf") {
-      makeBtn.disabled = true;
-      setStatus("PDFを作成しています…画面を閉じないでください。");
-      try {
-        pdfBlob = await createPdfBlob(innerHtml, filename);
-        setStatus("PDFの準備ができました。「共有・保存」か「PDFを表示」を押してください。");
-        shareBtn.hidden = false;
-        shareBtn.disabled = false;
-        openBtn.hidden = false;
-        openBtn.disabled = false;
-        shareBtn.focus();
-      } catch (err) {
-        console.warn("pdf create failed:", err);
-        setStatus("PDF作成に失敗しました。先に「印刷用ページを開く」を試してください。", true);
-        makeBtn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "share-pdf") {
-      if (!pdfBlob) {
-        setStatus("先にPDFを作成してください。", true);
-        return;
-      }
-      shareBtn.disabled = true;
-      try {
-        await sharePdfBlob(pdfBlob, filename);
-        closePdfSaveSheet();
-      } catch (err) {
-        if (err && err.name === "AbortError") {
-          shareBtn.disabled = false;
-          return;
-        }
-        console.warn("pdf share failed:", err);
-        setStatus("共有に失敗したので、PDF表示に切り替えます。", true);
-        openPdfInSafari(pdfBlob, filename);
-      }
-      return;
-    }
-
-    if (action === "open-pdf") {
-      if (!pdfBlob) {
-        setStatus("先にPDFを作成してください。", true);
-        return;
-      }
-      openPdfInSafari(pdfBlob, filename);
-      return;
-    }
-
-    if (action === "share-text") {
-      try {
-        await sharePlainText(plainText, title);
-        closePdfSaveSheet();
-      } catch (err) {
-        if (err && err.name === "AbortError") return;
-        setStatus("テキスト共有に失敗しました。", true);
-      }
-      return;
-    }
-
-    if (action === "close") closePdfSaveSheet();
-  });
-
-  document.body.appendChild(sheet);
-  sheet.querySelector("[data-action='open-print-page']")?.focus();
+function showIosSaveSheet({ innerHtml, filename, plainText }) {
+  openDedicatedPrintPage(innerHtml, { filename, plainText });
 }
 
 function openPdfInViewer(blob) {
@@ -482,15 +385,10 @@ function runBrowserPrint(innerHtml) {
   openDedicatedPrintPage(innerHtml);
 }
 
-async function exportPrintDocAsPdf(innerHtml, filename, plainText, title) {
-  // スマホは専用印刷ページ／共有シートへ（親ページ印刷の不具合回避）
+async function exportPrintDocAsPdf(innerHtml, filename, plainText) {
+  // スマホでは重い処理をアプリ本体でせず、保存用ページへ即移動
   if (isMobileLike()) {
-    showIosSaveSheet({
-      innerHtml,
-      plainText: plainText || "",
-      title: title || "SpinCoach",
-      filename,
-    });
+    openDedicatedPrintPage(innerHtml, { filename, plainText });
     return;
   }
 
@@ -500,8 +398,8 @@ async function exportPrintDocAsPdf(innerHtml, filename, plainText, title) {
     await deliverPdfBlob(blob, filename);
   } catch (err) {
     console.warn("PDF export failed, falling back to print page:", err);
-    notifyPrintStatus("PDF作成に失敗したので、印刷用ページを開きます。");
-    openDedicatedPrintPage(innerHtml);
+    notifyPrintStatus("PDF作成に失敗したので、保存用ページを開きます。");
+    openDedicatedPrintPage(innerHtml, { filename, plainText });
   }
 }
 
@@ -512,7 +410,7 @@ async function printPlan(plan, playerName) {
     typeof planToPlainText === "function"
       ? planToPlainText(plan)
       : String(plan?.summary || "");
-  await exportPrintDocAsPdf(html, filename, plain, "SpinCoach 練習プラン");
+  await exportPrintDocAsPdf(html, filename, plain);
 }
 
 async function printDiaryEntry(entry) {
@@ -523,7 +421,7 @@ async function printDiaryEntry(entry) {
     typeof diaryEntryToPlainText === "function"
       ? diaryEntryToPlainText(entry)
       : [entry.issues, entry.content, entry.good, entry.reflection].filter(Boolean).join("\n\n");
-  await exportPrintDocAsPdf(html, filename, plain, "SpinCoach 練習日記");
+  await exportPrintDocAsPdf(html, filename, plain);
 }
 
 function escapeHtml(s) {
