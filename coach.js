@@ -2227,10 +2227,22 @@ function renderPlan(plan, container) {
   intro.textContent = plan.summary;
   container.appendChild(intro);
 
+  function appendPlanFold(title, { open = false } = {}) {
+    const details = document.createElement("details");
+    details.className = "plan-fold";
+    if (open) details.open = true;
+    const summary = document.createElement("summary");
+    summary.className = "plan-fold-summary";
+    summary.textContent = title;
+    const body = document.createElement("div");
+    body.className = "plan-fold-body";
+    details.append(summary, body);
+    container.appendChild(details);
+    return body;
+  }
+
   if (plan.rubberAdvice?.length) {
-    const rh = document.createElement("h2");
-    rh.textContent = "ラバーのコツ";
-    container.appendChild(rh);
+    const fold = appendPlanFold("ラバーのコツ");
     const ul = document.createElement("ul");
     ul.className = "rubber-list";
     for (const block of plan.rubberAdvice) {
@@ -2248,13 +2260,11 @@ function renderPlan(plan, container) {
       li.appendChild(sub);
       ul.appendChild(li);
     }
-    container.appendChild(ul);
+    fold.appendChild(ul);
   }
 
   if (plan.serveRubberExtras?.length) {
-    const sh = document.createElement("h2");
-    sh.textContent = "サーブ×ラバー";
-    container.appendChild(sh);
+    const fold = appendPlanFold("サーブ×ラバー");
     const sul = document.createElement("ul");
     sul.className = "plan-list muted";
     for (const line of plan.serveRubberExtras) {
@@ -2262,7 +2272,7 @@ function renderPlan(plan, container) {
       sli.textContent = line;
       sul.appendChild(sli);
     }
-    container.appendChild(sul);
+    fold.appendChild(sul);
   }
 
   const impH = document.createElement("h2");
@@ -2300,9 +2310,7 @@ function renderPlan(plan, container) {
   container.appendChild(drillUl);
 
   if (plan.strengthDrills?.length) {
-    const sh = document.createElement("h2");
-    sh.textContent = "筋トレ";
-    container.appendChild(sh);
+    const fold = appendPlanFold("筋トレ");
     const sul = document.createElement("ul");
     sul.className = "drill-cards";
     for (const d of plan.strengthDrills) {
@@ -2318,49 +2326,45 @@ function renderPlan(plan, container) {
       li.append(title, meta, body);
       sul.appendChild(li);
     }
-    container.appendChild(sul);
+    fold.appendChild(sul);
   }
 
-  const weekH = document.createElement("h2");
-  weekH.textContent = "1週間";
-  container.appendChild(weekH);
-
-  const weekTable = document.createElement("div");
-  weekTable.className = "week-grid";
-  for (const row of plan.week) {
-    const cell = document.createElement("div");
-    cell.className = `week-cell${row.isRest ? " week-cell-rest" : ""}`;
-    const d = document.createElement("strong");
-    d.textContent = `${row.day}曜`;
-    const mode = document.createElement("p");
-    mode.className = "week-mode";
-    mode.textContent = row.modeLabel || "";
-    const f = document.createElement("p");
-    f.className = "week-focus";
-    f.textContent = row.focus;
-    const e = document.createElement("p");
-    e.className = "week-extra muted";
-    e.textContent = row.extra;
-    cell.append(d, mode, f, e);
-    if (row.blocks?.length) {
-      const bl = document.createElement("ul");
-      bl.className = "week-blocks";
-      for (const b of row.blocks) {
-        const bli = document.createElement("li");
-        bli.textContent = `${b.label}（${b.min}分）: ${b.hint}`;
-        bl.appendChild(bli);
+  if (plan.week?.length) {
+    const fold = appendPlanFold("1週間の練習スケジュール");
+    const weekTable = document.createElement("div");
+    weekTable.className = "week-grid";
+    for (const row of plan.week) {
+      const cell = document.createElement("div");
+      cell.className = `week-cell${row.isRest ? " week-cell-rest" : ""}`;
+      const d = document.createElement("strong");
+      d.textContent = `${row.day}曜`;
+      const mode = document.createElement("p");
+      mode.className = "week-mode";
+      mode.textContent = row.modeLabel || "";
+      const f = document.createElement("p");
+      f.className = "week-focus";
+      f.textContent = row.focus;
+      const e = document.createElement("p");
+      e.className = "week-extra muted";
+      e.textContent = row.extra;
+      cell.append(d, mode, f, e);
+      if (row.blocks?.length) {
+        const bl = document.createElement("ul");
+        bl.className = "week-blocks";
+        for (const b of row.blocks) {
+          const bli = document.createElement("li");
+          bli.textContent = `${b.label}（${b.min}分）: ${b.hint}`;
+          bl.appendChild(bli);
+        }
+        cell.appendChild(bl);
       }
-      cell.appendChild(bl);
+      weekTable.appendChild(cell);
     }
-    weekTable.appendChild(cell);
+    fold.appendChild(weekTable);
   }
-  container.appendChild(weekTable);
 
   if (plan.spinsightHints?.length) {
-    const sh = document.createElement("h2");
-    sh.textContent = "計測のヒント";
-    container.appendChild(sh);
-
+    const fold = appendPlanFold("計測のヒント");
     const hintP = document.createElement("ul");
     hintP.className = "plan-list";
     for (const h of plan.spinsightHints) {
@@ -2368,13 +2372,23 @@ function renderPlan(plan, container) {
       li.textContent = h;
       hintP.appendChild(li);
     }
-    container.appendChild(hintP);
-  }
+    fold.appendChild(hintP);
 
-  if (plan.spinsightExtra?.length) {
-    const extraH = document.createElement("h3");
-    extraH.textContent = "計測メモ";
-    container.appendChild(extraH);
+    if (plan.spinsightExtra?.length) {
+      const extraH = document.createElement("h3");
+      extraH.textContent = "計測メモ";
+      fold.appendChild(extraH);
+      const extraUl = document.createElement("ul");
+      extraUl.className = "plan-list muted";
+      for (const line of plan.spinsightExtra) {
+        const li = document.createElement("li");
+        li.textContent = line;
+        extraUl.appendChild(li);
+      }
+      fold.appendChild(extraUl);
+    }
+  } else if (plan.spinsightExtra?.length) {
+    const fold = appendPlanFold("計測メモ");
     const extraUl = document.createElement("ul");
     extraUl.className = "plan-list muted";
     for (const line of plan.spinsightExtra) {
@@ -2382,7 +2396,7 @@ function renderPlan(plan, container) {
       li.textContent = line;
       extraUl.appendChild(li);
     }
-    container.appendChild(extraUl);
+    fold.appendChild(extraUl);
   }
 
   const disclaimer = document.createElement("p");

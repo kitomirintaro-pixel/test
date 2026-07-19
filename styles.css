@@ -1833,6 +1833,43 @@ details.issue-section {
   font-size: 1.02rem;
 }
 
+.plan-fold {
+  margin: 0 0 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.plan-fold-summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  user-select: none;
+}
+
+.plan-fold-summary::-webkit-details-marker {
+  display: none;
+}
+
+.plan-fold-summary::before {
+  content: "▸ ";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.plan-fold[open] > .plan-fold-summary::before {
+  content: "▾ ";
+}
+
+.plan-fold-body {
+  padding: 0 1rem 1rem;
+}
+
 .plan-list {
   margin: 0;
   padding-left: 1.25rem;
