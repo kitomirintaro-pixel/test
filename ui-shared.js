@@ -71,47 +71,6 @@ function initTabKeyboard(tablistSelector) {
   });
 }
 
-function setHeroCollapsed(collapsed) {
-  const hero = document.querySelector(".app-mode-hero");
-  const toggle = document.querySelector(".app-mode-hero-toggle");
-  if (!hero) return;
-  hero.classList.toggle("is-collapsed", collapsed);
-  if (toggle) {
-    toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-    toggle.textContent = collapsed ? "説明を開く" : "説明をたたむ";
-  }
-  try {
-    sessionStorage.setItem("spincoach_hero_collapsed", collapsed ? "1" : "0");
-  } catch {
-    /* ignore */
-  }
-}
-
-function initHeroCollapse() {
-  let collapsed = false;
-  try {
-    collapsed = sessionStorage.getItem("spincoach_hero_collapsed") === "1";
-  } catch {
-    /* ignore */
-  }
-  if (window.matchMedia("(max-width: 719px)").matches) {
-    setHeroCollapsed(collapsed);
-  }
-
-  document.querySelector(".app-mode-hero-toggle")?.addEventListener("click", () => {
-    const hero = document.querySelector(".app-mode-hero");
-    setHeroCollapsed(!hero?.classList.contains("is-collapsed"));
-  });
-
-  document.querySelectorAll("[data-app-mode]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (window.matchMedia("(max-width: 719px)").matches) {
-        setHeroCollapsed(true);
-      }
-    });
-  });
-}
-
 function initDataBackup() {
   const exportBtn = document.getElementById("btn-export-data");
   const importBtn = document.getElementById("btn-import-data");
@@ -157,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollLinks();
   initTabKeyboard(".app-mode-grid");
   initTabKeyboard(".input-mode-bar");
-  initHeroCollapse();
   initDataBackup();
 });
 

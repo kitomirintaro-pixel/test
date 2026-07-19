@@ -89,23 +89,6 @@ body {
   background: rgba(110, 231, 255, 0.06);
 }
 
-.app-mode-hero-toggle {
-  display: none;
-  margin: 0 0 0.75rem;
-  padding: 0.35rem 0.65rem;
-  font: inherit;
-  font-size: 0.82rem;
-  color: var(--accent);
-  background: transparent;
-  border: 1px dashed rgba(110, 231, 255, 0.35);
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.app-mode-hero.is-collapsed .app-mode-hero-body {
-  display: none;
-}
-
 .shared-form-optional {
   margin-top: 0.5rem;
 }
@@ -1029,10 +1012,6 @@ body {
   .app-mode-hero {
     padding-top: 0.85rem;
     padding-bottom: 0.85rem;
-  }
-
-  .app-mode-hero-toggle {
-    display: inline-block;
   }
 
   .app-mode-hero-inner {
