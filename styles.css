@@ -1976,6 +1976,79 @@ details.issue-section {
   margin-top: 0.25rem;
 }
 
+.rubber-property-preview {
+  margin: 1.15rem 0 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+.rubber-property-preview-title {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-3);
+}
+
+.rubber-property-preview-empty {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.rubber-property-preview-body {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.rubber-property-card {
+  padding: 0.85rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.rubber-property-card-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.rubber-property-category {
+  margin: 0 0 0.65rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.rubber-property-traits {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.35rem 0.65rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.rubber-property-traits dt {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.rubber-property-traits dd {
+  margin: 0;
+  color: var(--text);
+}
+
+.rubber-property-hardness,
+.rubber-property-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .surface-picker-legend {
   margin-bottom: 0.65rem;
   font-size: 1.05rem;

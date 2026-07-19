@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=Noto+Sans+JP:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260624b" />
+    <link rel="stylesheet" href="styles.css?v=20260624c" />
   </head>
   <body>
     <a class="skip-link" href="#main">本文へスキップ</a>
@@ -452,7 +452,7 @@
           <details id="shared-rubber-section" class="form-accordion form-accordion-optional">
             <summary class="form-accordion-summary">ラバー<span class="form-accordion-hint">任意・簡単/詳細どちらでも</span></summary>
             <div class="form-accordion-body">
-            <p class="hint muted">メーカー・ラバー名・種類を入力。カタログ <span id="rubber-catalog-count">—</span>件対応。</p>
+            <p class="hint muted">メーカー・ラバー名・種類を入れると、<strong>その場で性質の読み取り</strong>が表示されます。カタログ <span id="rubber-catalog-count">—</span>件対応。プラン生成時にも練習に反映されます。</p>
             <div class="rubber-side-block">
               <h3 class="rubber-side-title">フォア面</h3>
               <div class="row-2 rubber-fields-row">
@@ -522,6 +522,11 @@
                 </label>
               </div>
             </details>
+            <section id="rubber-property-preview" class="rubber-property-preview" aria-live="polite">
+              <h3 class="rubber-property-preview-title">ラバーの性質（入力から読み取り）</h3>
+              <p class="rubber-property-preview-empty muted">フォア／バックのメーカー・名前・種類を入れると、感触・回転・弾み・練習のコツが表示されます。</p>
+              <div id="rubber-property-preview-body" class="rubber-property-preview-body" hidden></div>
+            </section>
             </div>
           </details>
           <details id="shared-spinsight-section" class="form-accordion form-accordion-optional">
@@ -707,17 +712,17 @@
         <p class="muted small">© <span id="year"></span></p>
       </div>
     </footer>
-    <script defer src="simple-text.js?v=20260624b"></script>
-    <script defer src="storage.js?v=20260624b"></script>
-    <script defer src="poses.js?v=20260624b"></script>
-    <script defer src="print-plan.js?v=20260624b"></script>
-    <script defer src="rubber-catalog.js?v=20260624b"></script>
-    <script defer src="copy-text.js?v=20260624b"></script>
-    <script defer src="simple-input.js?v=20260624b"></script>
-    <script defer src="coach.js?v=20260624b"></script>
-    <script defer src="diagnosis.js?v=20260624b"></script>
-    <script defer src="diary.js?v=20260624b"></script>
-    <script defer src="ui-shared.js?v=20260624b"></script>
+    <script defer src="simple-text.js?v=20260624c"></script>
+    <script defer src="storage.js?v=20260624c"></script>
+    <script defer src="poses.js?v=20260624c"></script>
+    <script defer src="print-plan.js?v=20260624c"></script>
+    <script defer src="rubber-catalog.js?v=20260624c"></script>
+    <script defer src="copy-text.js?v=20260624c"></script>
+    <script defer src="simple-input.js?v=20260624c"></script>
+    <script defer src="coach.js?v=20260624c"></script>
+    <script defer src="diagnosis.js?v=20260624c"></script>
+    <script defer src="diary.js?v=20260624c"></script>
+    <script defer src="ui-shared.js?v=20260624c"></script>
     <script>
       document.getElementById("year").textContent = String(new Date().getFullYear());
       const catalogCount = document.getElementById("rubber-catalog-count");

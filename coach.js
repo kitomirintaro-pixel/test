@@ -851,6 +851,12 @@ const RUBBER_TYPES = {
   high_friction: {
     label: "裏／高摩擦裏ソフト（バランス型）",
     short: "裏・高摩擦",
+    profile: {
+      feel: "食いつきと弾みのバランス型。扱いやすいが、打点ズレが数値に出やすい。",
+      spin: "摩擦で回転を作りやすい。薄く当てすぎると回転が抜けやすい。",
+      bounce: "中程度。弾み任せにせず、芯で押し切ると安定する。",
+      practiceFocus: "打点をそろえ、押し込み距離を一定にする練習が効く。",
+    },
     global: [
       "バランス型の裏ソフトは摩擦と弾みの中間にあります。数値では『打点がズレた時の落ち幅』が指標になりやすいです。",
     ],
@@ -890,6 +896,12 @@ const RUBBER_TYPES = {
   tacky_chinese: {
     label: "裏／中国式（粘着系）",
     short: "裏・粘着",
+    profile: {
+      feel: "ボールを掴む時間が長い。振り終わりまで意識を抜かないと回転が落ちる。",
+      spin: "軌道とボールへの圧で回転差を作りやすい。薄い当たりは伸びにくい。",
+      bounce: "テンションより控えめで、食い込み寄り。弾み任せは向かない。",
+      practiceFocus: "厚めに捉える日と、引き→押し切りを分ける練習が効く。",
+    },
     global: [
       "粘着系は摩擦時間とスイング軌道で回転を作りやすい反面、打点がズレると数値が落ちやすい傾向があります。",
     ],
@@ -925,6 +937,12 @@ const RUBBER_TYPES = {
   tacky_hybrid: {
     label: "裏／粘着トップシート（ハイブリッド粘着）",
     short: "裏・粘着ハイブリッド",
+    profile: {
+      feel: "粘着トップ＋スプリング。掴みつつ弾みもあるので、弾み任せだと回転が伸びない。",
+      spin: "擦り込み→押し切りで回転が出る。薄く速く当てるより厚めが合う。",
+      bounce: "テンションより控えめで、粘着より弾む中間寄り。",
+      practiceFocus: "食い込ませてから前へ送る日を増やす。BHは振りを小さく。",
+    },
     global: [
       "粘着トップ＋スプリング（グレイザー09c、D09c系など）は、弾みだけに頼ると回転が伸びません。食い込ませてから前へ送る「擦り込み→押し切り」が核心です。",
       "バック面が粘着のときは振りを大きくしすぎるとネットに寄りやすいので、コンパクトに終端まで加速する練習を週に入れてください。",
@@ -969,6 +987,12 @@ const RUBBER_TYPES = {
   tensor_euro: {
     label: "裏／テンション系（ヨーロッパ系）",
     short: "裏・テンション",
+    profile: {
+      feel: "弾みと出球の速さが出やすい。振り幅に頼りすぎるとコントロールが落ちる。",
+      spin: "加速タイミングで回転と球速の両方が変わる。薄く当てるとスピード優先になりがち。",
+      bounce: "高め。速い球では弾みが助長されやすい。",
+      practiceFocus: "引きは遅く最後だけ加速。速度と回転のバランスをログする。",
+    },
     global: [
       "テンション系は弾みと出球スピードを活かしやすいです。回転だけでなく『速度とのバランス』を Spinsight で見ると伸びます。",
     ],
@@ -1006,6 +1030,12 @@ const RUBBER_TYPES = {
   short_pips: {
     label: "表／ショートピップス（表ソフト）",
     short: "表・ショート",
+    profile: {
+      feel: "裏より摩擦が弱く、角度とタイミング勝負になりやすい。",
+      spin: "絶対値の回転より変化・速度。自分用の基準でログを取る。",
+      bounce: "弾みが出やすい。振り幅を増やす前に面を固定する。",
+      practiceFocus: "コンパクトな芯打ちと、面の向きの再現性を優先。",
+    },
     global: [
       "表（ショート）では回転のかかり方が裏ソフトと異なります。Spinsight の数値は『自分のラバーでの基準』を自分用に作るのがおすすめです。",
     ],
@@ -1041,6 +1071,12 @@ const RUBBER_TYPES = {
   medium_pips: {
     label: "粒高／ミディアムピップス",
     short: "粒高・ミディアム",
+    profile: {
+      feel: "変化と安定の中間。打点の前後で球質が変わりやすい。",
+      spin: "裏ほどの絶対値より、変化と着台の挙動が主役。",
+      bounce: "条件によって伸び方が変わる。同じドリル条件で測る。",
+      practiceFocus: "振り幅より芯とタイミング。自分用の典型値をメモする。",
+    },
     global: [
       "粒高（ミディアム）は変化と安定の中間域です。自分のラバーでの『回転と速度の典型値』をメモしておくと練習設計が楽です。",
     ],
@@ -1075,6 +1111,12 @@ const RUBBER_TYPES = {
   long_pips: {
     label: "粒高／ロングピップス／一枚ラバー",
     short: "粒高・ロング",
+    profile: {
+      feel: "相手の回転を利用する要素が強い。無理な威力追求より精度。",
+      spin: "自分で強く掛けるより、返球の挙動・変化が主役。",
+      bounce: "条件依存が大きい。相手球とセットでログする。",
+      practiceFocus: "距離感と打点を固定し、ミスパターンを記録する。",
+    },
     global: [
       "粒高（ロング／一枚）は相手の回転を利用する要素が強いです。Spinsight は『自分の振り』だけでなく相手球条件のメモとセットが重要です。",
     ],
@@ -1110,6 +1152,12 @@ const RUBBER_TYPES = {
   anti: {
     label: "裏／アンチ・ソフトバンなど（ほぼ無摩擦）",
     short: "裏・アンチ",
+    profile: {
+      feel: "ほぼ無摩擦。面とタイミングの細かい調整が勝負。",
+      spin: "回転のかかり方が特殊。他人の裏ソフト数値と直接比較しない。",
+      bounce: "ラバーごとに差が大きい。自分用基準を必ず持つ。",
+      practiceFocus: "振りよりタイミングと薄さ。多球で面を固定する。",
+    },
     global: [
       "アンチ系は回転のかかり方が特殊です。数値の解釈は『このラバーでの基準』を必ず自分用に持ってください。",
     ],
@@ -1475,6 +1523,13 @@ function buildSideRubberBlock(sideLabel, side, issueIds) {
               ? "種類（裏・表・粒）から推定"
               : "入力から推定";
     add(`練習の考え方: ${RUBBER_TYPES[effective].label}（${via}）`);
+    const profile = RUBBER_TYPES[effective].profile;
+    if (profile) {
+      add(`感触: ${profile.feel}`);
+      add(`回転: ${profile.spin}`);
+      add(`弾み: ${profile.bounce}`);
+      add(`練習のコツ: ${profile.practiceFocus}`);
+    }
   }
   if (catalogHit?.note) add(catalogHit.note);
   else add(productNoteFromText(text));
@@ -1547,15 +1602,16 @@ function rubberDrillSuffix(issueId, formData) {
     if (!rubberSideHasInput(side)) continue;
     const display = formatRubberLine(side);
     const rid = effectivePresetForSide(side);
-    if (display) {
-      const short = display.length > 22 ? `${display.slice(0, 22)}…` : display;
-      parts.push(`${sideLabel}: ${short}`);
-      continue;
-    }
-    if (!rid) continue;
-    const R = RUBBER_TYPES[rid];
+    const R = rid ? RUBBER_TYPES[rid] : null;
     const note = R?.drillNote?.[issueId] || R?.drillNote?.[drillKey];
-    if (note) parts.push(`${sideLabel}・${R.short}: ${note}`);
+    const nameShort = display
+      ? display.length > 18
+        ? `${display.slice(0, 18)}…`
+        : display
+      : R?.short || "";
+    if (note && nameShort) parts.push(`${sideLabel}（${nameShort}）: ${note}`);
+    else if (note && R) parts.push(`${sideLabel}・${R.short}: ${note}`);
+    else if (nameShort) parts.push(`${sideLabel}: ${nameShort}`);
   }
   if (parts.length === 0) return "";
   return ` — ${parts.join(" / ")}`;
@@ -2541,6 +2597,7 @@ function restoreFormFromRecord(formData) {
     SimpleInput.syncFromDetailedForm();
     SimpleInput.applyMode("detailed", true);
   }
+  if (typeof renderRubberPropertyPreview === "function") renderRubberPropertyPreview();
 }
 
 function recordSummaryText(record) {
@@ -2687,6 +2744,132 @@ function generateAndShowPlan() {
   return true;
 }
 
+function hardnessPreviewLine(hardnessText, side, presetId) {
+  const t = String(hardnessText || "").trim();
+  if (!t) return "";
+  if (!isSideInvertedRubber(side, presetId)) return `硬さ表記: ${t}`;
+  if (/4[0-9]|5[0-9]|硬|hard/i.test(t)) {
+    return `硬さ（${t}）: タイミングと芯で球速を出す意識が合いやすい`;
+  }
+  if (/柔|ソフト|soft/i.test(t)) {
+    return `硬さ（${t}）: 食い込みやすい。薄く当てすぎに注意`;
+  }
+  return `硬さ表記: ${t}`;
+}
+
+function describeRubberSideForPreview(sideLabel, side) {
+  if (!rubberSideHasInput(side)) return null;
+  const display = formatRubberLine(side);
+  const catalogHit = lookupRubberCatalog(side);
+  const effective = effectivePresetForSide(side);
+  const R = effective ? RUBBER_TYPES[effective] : null;
+  const via =
+    side.categoryOverride && side.categoryOverride !== "auto"
+      ? "系統を手動指定"
+      : catalogHit
+        ? "カタログ一致"
+        : side.surface
+          ? "種類から推定"
+          : "入力から推定";
+
+  return {
+    sideLabel,
+    display: display || sideLabel,
+    categoryLabel: R?.label || "系統を特定できません（種類または系統を指定してください）",
+    via,
+    catalogNote: catalogHit?.note || "",
+    profile: R?.profile || null,
+    hardness: hardnessPreviewLine(side.hardness, side, effective),
+    globalTip: R?.global?.[0] || "",
+  };
+}
+
+function renderRubberPropertyPreview() {
+  const body = document.getElementById("rubber-property-preview-body");
+  const empty = document.querySelector(".rubber-property-preview-empty");
+  if (!body || !empty) return;
+
+  const cards = [
+    describeRubberSideForPreview("フォア面", readRubberSideFromDom("rubberFh")),
+    describeRubberSideForPreview("バック面", readRubberSideFromDom("rubberBh")),
+  ].filter(Boolean);
+
+  if (!cards.length) {
+    body.hidden = true;
+    body.innerHTML = "";
+    empty.hidden = false;
+    return;
+  }
+
+  empty.hidden = true;
+  body.hidden = false;
+  body.innerHTML = "";
+
+  for (const card of cards) {
+    const el = document.createElement("article");
+    el.className = "rubber-property-card";
+
+    const h = document.createElement("h4");
+    h.className = "rubber-property-card-title";
+    h.textContent = `${card.sideLabel}：${card.display}`;
+    el.appendChild(h);
+
+    const cat = document.createElement("p");
+    cat.className = "rubber-property-category";
+    cat.textContent = `${card.categoryLabel}（${card.via}）`;
+    el.appendChild(cat);
+
+    if (card.profile) {
+      const dl = document.createElement("dl");
+      dl.className = "rubber-property-traits";
+      const rows = [
+        ["感触", card.profile.feel],
+        ["回転", card.profile.spin],
+        ["弾み", card.profile.bounce],
+        ["練習のコツ", card.profile.practiceFocus],
+      ];
+      for (const [dt, dd] of rows) {
+        const dtEl = document.createElement("dt");
+        dtEl.textContent = dt;
+        const ddEl = document.createElement("dd");
+        ddEl.textContent = dd;
+        dl.append(dtEl, ddEl);
+      }
+      el.appendChild(dl);
+    }
+
+    if (card.hardness) {
+      const hard = document.createElement("p");
+      hard.className = "rubber-property-hardness";
+      hard.textContent = card.hardness;
+      el.appendChild(hard);
+    }
+
+    if (card.catalogNote) {
+      const note = document.createElement("p");
+      note.className = "rubber-property-note";
+      note.textContent = card.catalogNote;
+      el.appendChild(note);
+    } else if (card.globalTip) {
+      const tip = document.createElement("p");
+      tip.className = "rubber-property-note muted";
+      tip.textContent = card.globalTip;
+      el.appendChild(tip);
+    }
+
+    body.appendChild(el);
+  }
+}
+
+function initRubberPropertyPreview() {
+  const section = document.getElementById("shared-rubber-section");
+  if (!section) return;
+  const refresh = () => renderRubberPropertyPreview();
+  section.addEventListener("input", refresh);
+  section.addEventListener("change", refresh);
+  refresh();
+}
+
 function init() {
   const form = document.getElementById("coach-form");
   const out = document.getElementById("plan-output");
@@ -2696,6 +2879,7 @@ function init() {
   initPracticeMinuteSelects();
   initPracticeTimePresets();
   initGoalsExamples();
+  initRubberPropertyPreview();
 
   document.getElementById("btn-clear-all-records")?.addEventListener("click", () => {
     const n = RecordStore.list().length;
