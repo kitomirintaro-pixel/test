@@ -2227,22 +2227,35 @@ function renderPlan(plan, container) {
   intro.textContent = plan.summary;
   container.appendChild(intro);
 
-  function appendPlanFold(title, { open = false } = {}) {
-    const details = document.createElement("details");
-    details.className = "plan-fold";
-    if (open) details.open = true;
-    const summary = document.createElement("summary");
-    summary.className = "plan-fold-summary";
-    summary.textContent = title;
+  function appendPlanFold(title, { open = false, variant = "" } = {}) {
+    const wrap = document.createElement("div");
+    wrap.className = `plan-fold${variant ? ` plan-fold-${variant}` : ""}`;
+    if (open) wrap.classList.add("is-open");
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "plan-fold-summary";
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    btn.textContent = title;
+
     const body = document.createElement("div");
     body.className = "plan-fold-body";
-    details.append(summary, body);
-    container.appendChild(details);
+    body.hidden = !open;
+
+    btn.addEventListener("click", () => {
+      const nextOpen = !wrap.classList.contains("is-open");
+      wrap.classList.toggle("is-open", nextOpen);
+      btn.setAttribute("aria-expanded", String(nextOpen));
+      body.hidden = !nextOpen;
+    });
+
+    wrap.append(btn, body);
+    container.appendChild(wrap);
     return body;
   }
 
   if (plan.rubberAdvice?.length) {
-    const fold = appendPlanFold("ラバーのコツ");
+    const fold = appendPlanFold("ラバーのコツ", { variant: "rubber" });
     const ul = document.createElement("ul");
     ul.className = "rubber-list";
     for (const block of plan.rubberAdvice) {
@@ -2264,7 +2277,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.serveRubberExtras?.length) {
-    const fold = appendPlanFold("サーブ×ラバー");
+    const fold = appendPlanFold("サーブ×ラバー", { variant: "rubber" });
     const sul = document.createElement("ul");
     sul.className = "plan-list muted";
     for (const line of plan.serveRubberExtras) {
@@ -2275,42 +2288,40 @@ function renderPlan(plan, container) {
     fold.appendChild(sul);
   }
 
-  const impH = document.createElement("h2");
-  impH.textContent = "ポイント";
-  container.appendChild(impH);
-
-  const impOl = document.createElement("ol");
-  impOl.className = "plan-list";
-  for (const item of plan.improvements) {
-    const li = document.createElement("li");
-    li.textContent = item.text;
-    impOl.appendChild(li);
+  if (plan.improvements?.length) {
+    const fold = appendPlanFold("ポイント", { variant: "points" });
+    const impOl = document.createElement("ol");
+    impOl.className = "plan-list";
+    for (const item of plan.improvements) {
+      const li = document.createElement("li");
+      li.textContent = item.text;
+      impOl.appendChild(li);
+    }
+    fold.appendChild(impOl);
   }
-  container.appendChild(impOl);
 
-  const drillH = document.createElement("h2");
-  drillH.textContent = "メニュー";
-  container.appendChild(drillH);
-
-  const drillUl = document.createElement("ul");
-  drillUl.className = "drill-cards";
-  for (const d of plan.drills) {
-    const li = document.createElement("li");
-    li.className = "drill-card";
-    const title = document.createElement("h3");
-    title.textContent = d.name;
-    const meta = document.createElement("p");
-    meta.className = "drill-meta";
-    meta.textContent = `目安時間: ${d.time}`;
-    const body = document.createElement("p");
-    body.textContent = d.detail;
-    li.append(title, meta, body);
-    drillUl.appendChild(li);
+  if (plan.drills?.length) {
+    const fold = appendPlanFold("メニュー", { variant: "menu" });
+    const drillUl = document.createElement("ul");
+    drillUl.className = "drill-cards";
+    for (const d of plan.drills) {
+      const li = document.createElement("li");
+      li.className = "drill-card";
+      const title = document.createElement("h3");
+      title.textContent = d.name;
+      const meta = document.createElement("p");
+      meta.className = "drill-meta";
+      meta.textContent = `目安時間: ${d.time}`;
+      const body = document.createElement("p");
+      body.textContent = d.detail;
+      li.append(title, meta, body);
+      drillUl.appendChild(li);
+    }
+    fold.appendChild(drillUl);
   }
-  container.appendChild(drillUl);
 
   if (plan.strengthDrills?.length) {
-    const fold = appendPlanFold("筋トレ");
+    const fold = appendPlanFold("筋トレ", { variant: "strength" });
     const sul = document.createElement("ul");
     sul.className = "drill-cards";
     for (const d of plan.strengthDrills) {
@@ -2330,7 +2341,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.week?.length) {
-    const fold = appendPlanFold("1週間の練習スケジュール");
+    const fold = appendPlanFold("スケジュール（1週間）", { variant: "schedule" });
     const weekTable = document.createElement("div");
     weekTable.className = "week-grid";
     for (const row of plan.week) {
@@ -2364,7 +2375,7 @@ function renderPlan(plan, container) {
   }
 
   if (plan.spinsightHints?.length) {
-    const fold = appendPlanFold("計測のヒント");
+    const fold = appendPlanFold("計測のヒント", { variant: "measure" });
     const hintP = document.createElement("ul");
     hintP.className = "plan-list";
     for (const h of plan.spinsightHints) {
@@ -2388,7 +2399,7 @@ function renderPlan(plan, container) {
       fold.appendChild(extraUl);
     }
   } else if (plan.spinsightExtra?.length) {
-    const fold = appendPlanFold("計測メモ");
+    const fold = appendPlanFold("計測メモ", { variant: "measure" });
     const extraUl = document.createElement("ul");
     extraUl.className = "plan-list muted";
     for (const line of plan.spinsightExtra) {

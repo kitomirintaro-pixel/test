@@ -1790,7 +1790,7 @@ details.issue-section {
   margin-top: 1.5rem;
 }
 
-.coach-output-wrap:not(:has(.plan-output:not([hidden]), .plan-error:not([hidden])) {
+.coach-output-wrap:not(:has(.plan-output:not([hidden]), .plan-error:not([hidden]))) {
   display: none;
 }
 
@@ -1835,39 +1835,55 @@ details.issue-section {
 
 .plan-fold {
   margin: 0 0 0.85rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
   overflow: hidden;
+  box-shadow:
+    0 16px 44px rgba(110, 231, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .plan-fold-summary {
+  display: block;
+  width: 100%;
+  margin: 0;
   cursor: pointer;
-  list-style: none;
-  padding: 0.85rem 1rem;
+  text-align: left;
+  padding: 0.95rem 1.25rem;
   font-family: var(--font-sans);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 700;
-  color: var(--text);
+  letter-spacing: 0.03em;
+  color: #041016;
+  -webkit-text-fill-color: #041016;
   user-select: none;
+  background: linear-gradient(135deg, #a78bfa, var(--accent));
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.plan-fold-summary::-webkit-details-marker {
-  display: none;
+.plan-fold-summary:hover {
+  transform: none;
+  filter: brightness(1.05);
 }
 
-.plan-fold-summary::before {
-  content: "▸ ";
-  color: var(--accent);
-  font-weight: 700;
+.plan-fold-summary:active {
+  transform: none;
 }
 
-.plan-fold[open] > .plan-fold-summary::before {
-  content: "▾ ";
+.plan-fold.is-open > .plan-fold-summary {
+  border-bottom: 1px solid rgba(4, 16, 22, 0.15);
 }
 
 .plan-fold-body {
-  padding: 0 1rem 1rem;
+  padding: 0.85rem 1rem 1rem;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.plan-fold-body[hidden] {
+  display: none;
 }
 
 .plan-list {
